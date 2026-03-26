@@ -48,6 +48,46 @@
                 <button class="btn btn-primary" id="btn-afficher-ajout">+ Ajouter</button>
             </div>
 
+            <div class="card shadow-sm mb-4 border-0 bg-light" id="section-recherche">
+                <div class="card-body">
+                    <h5 class="card-title mb-3 text-secondary">🔍 Trouver un vêtement</h5>
+                    
+                    <form id="form-recherche" class="row g-3 align-items-end">
+                        <div class="col-12 col-md-4">
+                            <label for="search-texte" class="form-label fw-bold small">Mot-clé</label>
+                            <input type="text" class="form-control" id="search-texte" placeholder="Ex: Veste, Zara, Cuir...">
+                        </div>
+                        
+                        <div class="col-12 col-md-3">
+                            <label for="search-categorie" class="form-label fw-bold small">Catégorie</label>
+                            <select class="form-select" id="search-categorie">
+                                <option value="">Toutes les catégories</option>
+                                <option value="1">Hauts</option>
+                                <option value="2">Pantalons</option>
+                                <option value="3">Chaussures</option>
+                                <option value="4">Accessoires</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-3">
+                            <label for="search-etat" class="form-label fw-bold small">Statut</label>
+                            <select class="form-select" id="search-etat">
+                                <option value="">Tous les statuts</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="En prêt">En prêt</option>
+                                <option value="Au lavage">Au lavage</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-2 d-grid d-md-flex gap-2 justify-content-md-end">
+                            <button type="submit" class="btn btn-primary flex-grow-1">Filtrer</button>
+                            <button type="button" class="btn btn-outline-secondary" id="btn-reset-recherche" title="Effacer les filtres">✖</button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+
             <div class="row g-4" id="liste-vetements">
                 
                 <div class="col-12 col-md-6 col-lg-4">
