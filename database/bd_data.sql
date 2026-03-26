@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS clothes_to_share CHARACTER SET = 'utf8mb4';
 USE clothes_to_share;
 
 /* BASES DE DONNEES */
-CREATE TABLE IF NOT EXISTS site (
+CREATE TABLE IF NOT EXISTS site ( /* clothes_to_share */
 	idSite INT(20) NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	adresse TEXT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS site (
 	PRIMARY KEY(idSite)
 ) engine=innodb;
 
-CREATE TABLE IF NOT EXISTS local (
+CREATE TABLE IF NOT EXISTS local ( /* salle 1 */
 	idLocal INT(20) NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	infoLocal TEXT NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS local (
 	KEY(idSite)
 ) engine=innodb;
 
-CREATE TABLE IF NOT EXISTS rangement (
+CREATE TABLE IF NOT EXISTS rangement ( /* armoire */
 	idRangement INT(20) NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	infoRangement TEXT NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS rangement (
 	KEY(idLocal)
 ) engine=innodb;
 
-CREATE TABLE IF NOT EXISTS niveau (
+CREATE TABLE IF NOT EXISTS niveau ( /* etage */
 	idNiveau INT(20) NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	infoNiveau TEXT NOT NULL,
@@ -82,9 +82,11 @@ CREATE TABLE IF NOT EXISTS vetement (
 
 CREATE TABLE IF NOT EXISTS utilisateur (
 	idutilisateur INT(20) NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
-	pseudo VARCHAR(50) NOT NULL,
+	adresse TEXT NOT NULL,
+	login VARCHAR(50) NOT NULL UNIQUE,
 	mdp TEXT NOT NULL,
 	role VARCHAR(10) DEFAULT 'pending', /* admin, user, pending */
 	PRIMARY KEY(idutilisateur)
@@ -121,7 +123,29 @@ ALTER TABLE pret
 		
 
 /* DONNEES */
-INSERT INTO utilisateur(idutilisateur, nom, prenom, pseudo, mdp, role) VALUES
-(1, 'Tarisa', "Hannah", "hannahtaisa", "hannahtaisa", 'admin'),
-(2, 'Doe', "Suria", "doesuria", "doesuria", 'admin'),
-(3, 'Griffith', "Nephtali", "griffithnephtali", "griffithnephtali", 'admin');
+INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES
+(1, 'Clothes to Share', "https://clothestoshare.ovh/", 7000, "Mons", '');
+
+INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
+(1, '', "", 1, "");
+
+INSERT INTO rangement(idRangement, nom, infoRangement, idLocal, photo) VALUES
+(1, '', "", 1, "");
+
+INSERT INTO niveau(idNiveau, nom, infoNiveau, idRangement, photo) VALUES
+(1, '', "", 1, "");
+
+INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
+(1, 'Sportwear', 'Used for sports activities'),
+(2, 'Accessories', 'Accessories for daily use'),
+(3, 'Nightwear', 'Clothing for sleeping');
+
+INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, role) VALUES
+(1, 'tarisah@example.com', 'Tarisa', "Hannah", "123 Main St", "hannahtaisa", "hannahtaisa", 'admin'),
+(2, 'does@example.com', 'Doe', "Suria", "456 Oak Ave", "doesuria", "doesuria", 'admin'),
+(3, 'griffithn@example.com', 'Griffith', "Nephtali", "789 Pine Rd", "griffithnephtali", "griffithnephtali", 'admin');
+
+INSERT INTO vetement(idvetement, nom, taille, type, couleur, etat, genre, marque, photo, idcategorie, idniveau, idproprietaire, description) VALUES
+(1, '', "2XL", "", "", ''),
+(2, '', "L", "", "", ''),
+(3, '', "XS", "", "", '');
