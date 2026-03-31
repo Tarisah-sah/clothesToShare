@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-include('db_connect.php');
+include('../connexion/db_connect.php');
 
 $conn=pdo_connectDB();
 

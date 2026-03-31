@@ -1,5 +1,5 @@
 <?php
-include('db_connect.php');
+include('../connexion/db_connect.php');
 
 $conn=pdo_connectDB(); 
 

@@ -1,22 +1,23 @@
 <?php
-include('db_connect.php');
+include('../connexion/db_connect.php');
 
 $conn=pdo_connectDB(); 
 
-// Supprimer un utilisateur
+// Afficher les details d'un utilisateur
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $idvetement = $_DELETE['idvetement'];
     try {
         $conn->beginTransaction();
 
-        $stmt = $conn->prepare("DELETE FROM utilisateur WHERE idutilisateur = ?");
-        $stmt->execute([$idutil]);
+        $stmt = $conn->prepare("DELETE FROM vetement WHERE idvetement = ?");
+        $stmt->execute([$idvetement]);
 
         $conn->commit();
 
         $response = [
             "deleted" => $stmt->rowCount() > 0,
             "count"   => $stmt->rowCount(),
-            "id"      => $idutil
+            "id"      => $idvetement
         ];
     } catch (Exception $e) {
         $conn->rollBack();
@@ -25,8 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             "message" => $e->getMessage()
         ];
     }
-
-    echo json_encode($response);
 }
 
 $conn=null;

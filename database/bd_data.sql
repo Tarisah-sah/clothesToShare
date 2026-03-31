@@ -146,6 +146,7 @@ INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, 
 (3, 'griffithn@example.com', 'Griffith', "Nephtali", "789 Pine Rd", "griffithnephtali", "griffithnephtali", 'admin');
 
 INSERT INTO vetement(idvetement, nom, taille, type, couleur, etat, genre, marque, photo, idcategorie, idniveau, idproprietaire, description) VALUES
-(1, '', "2XL", "", "", ''),
-(2, '', "L", "", "", ''),
-(3, '', "XS", "", "", '');
+(1, 'T-shirt Running Pro', 'M', 'Haut', 'Rose', 'Disponible', 'homme', 'Nike', 'assets/img/wardrobe/tshirt_nike.jpg', 1, 1, 1, 'T-shirt très respirant, idéal pour le jogging. Très bon état.'),
+(2, 'Sacoche en cuir', 'TU', 'Sac', 'Marron', 'En prêt', 'mixte', 'Fossil', 'assets/img/wardrobe/sacoche_fossil.jpg', 2, 1, 2, 'Petite sacoche pratique pour tous les jours. Prêtée à Hannah jusqu''à la fin du mois.'),
+(3, 'Pyjama Pilou', 'L', 'Ensemble', 'Bleu', 'Au lavage', 'femme', 'Etam', 'assets/img/wardrobe/pyjama_etam.jpg', 3, 1, 3, 'Ensemble très chaud pour l''hiver.');
+(4, 'Bijoux vancleef', 'TU', 'Bracelet', 'Doré', 'Disponible', 'femme', 'Etam', 'assets/img/wardrobe/vancleef.jpg', 2, 1, 3, 'Bijoux Vancleef tendance.');
