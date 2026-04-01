@@ -124,11 +124,19 @@ ALTER TABLE pret
 
 /* DONNEES */
 INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES
-(1, 'Clothes to Share', "https://clothestoshare.ovh/", 7000, "Mons", '');
+(1, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/icons/ctos.png');
 
 INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
-(1, '', "", 1, "");
-
+(1, 'Casual', "Vetements et accessoires classiques.", 1, 'assets/img/local/y2k.jpg'),
+(2, 'Chic', "Vetements et accessoires chic.", 1, 'assets/img/local/chic.jpg'),
+(3, 'Business', "Vetements et accessoires professionnels.", 1, 'assets/img/local/Business.jpg'),
+(4, 'Boheme', "Vetements et accessoires boho.", 1, 'assets/img/local/boho.jpg'),
+(5, 'Street wear', "Vetements et accessoires streetwear.", 1, 'assets/img/local/streetwear.jpg'),
+(6, 'Emo', "Vetements et accessoires emo et punk.", 1, 'assets/img/local/emo.jpg'),
+(7, 'Sorties', "Vetements et accessoires pour sortir le soir.", 1, 'assets/img/local/nisy.jpg'),
+(8, 'Vintage', "Vetements et accessoires vintage.", 1, 'assets/img/local/VINTAGE.jpg'),
+(9, 'Y2k', "Vetements et accessoires des années 2000.", 1, 'assets/img/local/y2k.jpg'),
+(10, 'Autre', "Vetements et accessoires sans catégorie.", 1, 'assets/img/local/AUTRE.jpg'),
 INSERT INTO rangement(idRangement, nom, infoRangement, idLocal, photo) VALUES
 (1, '', "", 1, "");
 
