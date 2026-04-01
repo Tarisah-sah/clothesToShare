@@ -124,7 +124,10 @@ ALTER TABLE pret
 
 /* DONNEES */
 INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES
-(1, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/icons/ctos.png');
+(1, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/icons/ctos.png'),
+(2, 'CToS - Charleroi', "Grand’Rue 1", 6000, "Charleroi", 'assets/icons/ctos.png'),
+(3, 'CToS - La Louvière', "Rue Ferrer 159", 7100, "Haine-Saint-Paul", 'assets/icons/ctos.png'),
+(4, 'CToS - Tournai', "Rue Frinoise 12", 7500, "Tournai", 'assets/icons/ctos.png');
 
 INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
 (1, 'Casual', "Vetements et accessoires classiques.", 1, 'assets/img/local/y2k.jpg'),
@@ -136,7 +139,8 @@ INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
 (7, 'Sorties', "Vetements et accessoires pour sortir le soir.", 1, 'assets/img/local/nisy.jpg'),
 (8, 'Vintage', "Vetements et accessoires vintage.", 1, 'assets/img/local/VINTAGE.jpg'),
 (9, 'Y2k', "Vetements et accessoires des années 2000.", 1, 'assets/img/local/y2k.jpg'),
-(10, 'Autre', "Vetements et accessoires sans catégorie.", 1, 'assets/img/local/AUTRE.jpg'),
+(10, 'Autre', "Vetements et accessoires sans catégorie.", 1, 'assets/img/local/AUTRE.jpg');
+
 INSERT INTO rangement(idRangement, nom, infoRangement, idLocal, photo) VALUES
 (1, '', "", 1, "");
 
@@ -151,7 +155,8 @@ INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
 INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, role) VALUES
 (1, 'tarisah@example.com', 'Tarisa', "Hannah", "123 Main St", "hannahtaisa", "hannahtaisa", 'admin'),
 (2, 'does@example.com', 'Doe', "Suria", "456 Oak Ave", "doesuria", "doesuria", 'admin'),
-(3, 'griffithn@example.com', 'Griffith', "Nephtali", "789 Pine Rd", "griffithnephtali", "griffithnephtali", 'admin');
+(3, 'griffithn@example.com', 'Griffith', "Nephtali", "789 Pine Rd", "griffithnephtali", "griffithnephtali", 'admin'),
+(4, 'feliciaKan@example.com', 'Kanud', "Felicia", "321 Super Rd", "fekan", "fekan", 'user');
 
 INSERT INTO vetement(idvetement, nom, taille, type, couleur, etat, genre, marque, photo, idcategorie, idniveau, idproprietaire, description) VALUES
 (1, 'T-shirt Running Pro', 'M', 'Haut', 'Rose', 'Disponible', 'homme', 'Nike', 'assets/img/wardrobe/tshirt_nike.jpg', 1, 1, 1, 'T-shirt très respirant, idéal pour le jogging. Très bon état.'),
