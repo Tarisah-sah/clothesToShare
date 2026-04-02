@@ -1,44 +1,37 @@
 <?php
 include('../connexion/db_connect.php');
+$conn = pdo_connectDB();
 
-$conn=pdo_connectDB();
-
-// Afficher tous les vetements qui correspond a la recherche
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-	$vetement_recherche = $_GET['vetement_recherche'] ?: '';
-	$vetement_motcle = "%" . $vetement_recherche . "%";
-	$vetement_categorie = $_GET['vetement_categorie'] ?: 'toutes';
-	$vetement_etat = $_GET['vetement_etat'] ?: 'toutes';
+    // Récupération sécurisée des paramètres
+    $vetement_recherche = $_GET['vetement_recherche'] ?? '';
+    $vetement_motcle = "%" . $vetement_recherche . "%";
+    $vetement_categorie = $_GET['vetement_categorie'] ?? '';
+    $vetement_etat = $_GET['vetement_etat'] ?? '';
 
-    $vetementsCategorieSQL = "SELECT idcategorie FROM categorie WHERE nom LIKE BINARY ?";
-    $stmt = $conn->prepare($vetementsCategorieSQL);
-    $stmt->execute([$vetement_categorie]);
-    $id_categorie = $stmt->fetch();
+    // Construction dynamique de la requête
+    $sql = "SELECT * FROM vetement WHERE (nom LIKE :motcle1 OR marque LIKE :motcle2)";
+    $params = [
+        ':motcle1' => $vetement_motcle,
+        ':motcle2' => $vetement_motcle
+    ];
 
-    if (empty($id_categorie) && $vetement_etat === 'toutes') {
-        $vetementsRechercheSQL = "SELECT * FROM vetement WHERE nom LIKE BINARY ?";
-        $sqlExe = [$vetement_motcle];
-    } else if (empty($id_categorie)) {
-        $vetementsRechercheSQL = "SELECT * FROM vetement WHERE nom LIKE BINARY ? AND etat = ?";
-        $sqlExe = [$vetement_motcle, $vetement_etat];
-    } else if ($vetement_etat === 'toutes') {
-        $vetementsRechercheSQL = "SELECT * FROM vetement WHERE nom LIKE BINARY ? AND idcategorie = ?";
-        $sqlExe = [$vetement_motcle, $vetement_categorie];
-    } else {
-        $vetementsRechercheSQL = "SELECT * FROM vetement WHERE nom LIKE BINARY :nom AND etat = :etat AND idcategorie = :categorie";
-        $sqlExe = [
-            ':nom' => $vetement_motcle,
-            ':etat' => $vetement_etat,
-            ':categorie' => $vetement_categorie
-        ];
+    // On n'ajoute les filtres que s'ils sont remplis et différents de "toutes"
+    if ($vetement_categorie !== '' && $vetement_categorie !== 'toutes') {
+        $sql .= " AND idcategorie = :categorie";
+        $params[':categorie'] = $vetement_categorie;
     }
 
-    $stmt = $conn->prepare($vetementsRechercheSQL);
-    $stmt->execute($sqlExe);
-    $vetements = $stmt->fetchAll();
-	
-	echo json_encode($vetements);
-}
+    if ($vetement_etat !== '' && $vetement_etat !== 'tous') { 
+        $sql .= " AND etat = :etat";
+        $params[':etat'] = $vetement_etat;
+    }
 
-$conn=null;
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
+    $vetements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	
+    echo json_encode($vetements);
+}
+$conn = null;
 ?>
