@@ -9,9 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$mdpEntre = $_POST['mdp'];
 
 	// Rechercher l'utilisateur
-	$sql = "SELECT id, prenom, email, mdp FROM utilisateur WHERE login = ?";
+	$sql = "SELECT idutilisateur, prenom, email, mdp FROM utilisateur WHERE login LIKE :emailLogin OR email LIKE :emailLogin";
 	$stmt = $conn->prepare($sql);
-	$stmt->execute([$email]);
+	$stmt->execute([':emailLogin' => $email]);
 	$utilisateur = $stmt->fetch();
 
 	$res = array(

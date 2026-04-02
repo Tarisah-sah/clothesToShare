@@ -5,14 +5,13 @@ $conn=pdo_connectDB();
 
 // Supprimer un utilisateur
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $conn->beginTransaction();
+    $idutil = $_DELETE['idutilisateur'];
     try {
-        $conn->beginTransaction();
-
         $stmt = $conn->prepare("DELETE FROM utilisateur WHERE idutilisateur = ?");
         $stmt->execute([$idutil]);
 
         $conn->commit();
-
         $response = [
             "deleted" => $stmt->rowCount() > 0,
             "count"   => $stmt->rowCount(),
