@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
             $vetement_chemin = 'assets/img/wardrobe/' . $_FILES['photo']['name'];
-            move_uploaded_file($_FILES['photo']['tmp_name'], $vetement_chemin);
         } else {
             throw new Exception('Erreur lors du téléchargement de la photo');
         }
@@ -40,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Récupère l'ID du nouveau vetement inséré
         $id_newVetement = $conn->lastInsertId();
         $conn->commit();
+        move_uploaded_file($_FILES['photo']['tmp_name'], $vetement_chemin);
         echo json_encode($id_newVetement);
     } catch (Exception $e) {
         $conn->rollBack();

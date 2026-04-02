@@ -5,23 +5,30 @@ $conn=pdo_connectDB();
 
 // Afficher tous les vetements qui correspond a la recherche
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$vetement_nom = $_POST['vetement_nom'];
-	$vetement_taille = $_POST['vetement_taille'];
-	$vetement_type = $_POST['vetement_type'];
-	$vetement_description = $_POST['vetement_description'];
-	$vetement_couleur = $_POST['vetement_couleur'];
-	$vetement_etat = $_POST['vetement_etat'];
-	$vetement_genre = $_POST['vetement_genre'];
-	$vetement_marque = $_POST['vetement_marque'];
-	$vetement_photo = $_POST['vetement_photo'];
-	$vetement_idcategorie = $_POST['vetement_idcategorie'];
-	$vetement_idniveau = $_POST['vetement_idniveau'];
-	$vetement_idproprietaire = $_POST['vetement_idproprietaire'];
-	$vetement_categorie = $_POST['vetement_categorie'];
-	$vetement_idvetement = $_POST['vetement_idvetement'];
+	$vetement_nom = $_POST['nom'];
+	$vetement_taille = $_POST['taille'];
+	$vetement_type = $_POST['type'];
+	$vetement_description = $_POST['description'];
+	$vetement_couleur = $_POST['couleur'];
+	$vetement_etat = $_POST['etat'];
+	$vetement_genre = $_POST['genre'];
+	$vetement_marque = $_POST['marque'];
+	$vetement_idcategorie = $_POST['idcategorie'];
+	$vetement_idniveau = $_POST['idniveau'];
+	$vetement_idproprietaire = $_POST['idproprietaire'];
+	$vetement_categorie = $_POST['categorie'];
+	$vetement_idvetement = $_POST['idvetement'];
 
     $conn->beginTransaction();
     try {
+        if (isset($_FILES['photo'])) {
+            if ($_FILES['photo']['error'] === 0) {
+                $vetement_photo = 'assets/img/wardrobe/' . $_FILES['photo']['name'];
+            } else {
+                throw new Exception('Erreur lors du téléchargement de la photo');
+            }
+        }
+
         $vetementModifSQL = "UPDATE vetement SET 
             nom = :nom, taille = :taille, type = :type, description = :description, couleur = :couleur, etat = :etat, genre = :genre, marque = :marque, photo = :photo, idcategorie = :idcategorie, idniveau = :idniveau, idproprietaire = :idproprietaire 
             WHERE idvetement = :idvetement";
@@ -42,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':idvetement' => $vetement_idvetement
         ]);
         
+        move_uploaded_file($_FILES['photo']['tmp_name'], $vetement_photo);
         $conn->commit();
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {

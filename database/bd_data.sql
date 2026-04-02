@@ -4,7 +4,7 @@ USE clothes_to_share;
 
 /* BASES DE DONNEES */
 CREATE TABLE IF NOT EXISTS site ( /* clothes_to_share */
-	idSite INT(20) NOT NULL,
+	idSite INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
 	adresse TEXT NOT NULL,
 	code_postal INT(4) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS site ( /* clothes_to_share */
 ) engine=innodb;
 
 CREATE TABLE IF NOT EXISTS local ( /* salle 1 */
-	idLocal INT(20) NOT NULL,
+	idLocal INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
 	infoLocal TEXT NOT NULL,
 	idSite INT(20) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS local ( /* salle 1 */
 ) engine=innodb;
 
 CREATE TABLE IF NOT EXISTS rangement ( /* armoire */
-	idRangement INT(20) NOT NULL,
+	idRangement INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
 	infoRangement TEXT NOT NULL,
 	idLocal INT(20) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS rangement ( /* armoire */
 ) engine=innodb;
 
 CREATE TABLE IF NOT EXISTS niveau ( /* etage */
-	idNiveau INT(20) NOT NULL,
+	idNiveau INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
 	infoNiveau TEXT NOT NULL,
 	idRangement INT(20) NOT NULL,
@@ -55,14 +55,14 @@ ALTER TABLE niveau
 
 
 CREATE TABLE IF NOT EXISTS categorie (
-	idcategorie INT(20) NOT NULL,
+	idcategorie INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
 	infoPlus TEXT NOT NULL,
 	PRIMARY KEY(idcategorie)
 ) engine=innodb;
 
 CREATE TABLE IF NOT EXISTS vetement (
-	idvetement INT(20) NOT NULL,
+	idvetement INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
 	taille VARCHAR(3) NOT NULL,
 	type VARCHAR(20) NOT NULL, 
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS vetement (
 
 
 CREATE TABLE IF NOT EXISTS utilisateur (
-	idutilisateur INT(20) NOT NULL,
+	idutilisateur INT(20) NOT NULL AUTO_INCREMENT,
 	email VARCHAR(255) NOT NULL UNIQUE,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
@@ -93,13 +93,13 @@ CREATE TABLE IF NOT EXISTS utilisateur (
 ) engine=innodb;
 
 CREATE TABLE IF NOT EXISTS pret (
-	idpret INT(20) NOT NULL,
+	idpret INT(20) NOT NULL AUTO_INCREMENT,
 	idvetement INT(20) NOT NULL,
 	idemprunteur INT(20) NOT NULL,
 	datedebut DATETIME NOT NULL,
 	datefinprevue DATETIME NOT NULL,
-	datefinreelle DATETIME NOT NULL,
-	commentaire TEXT NOT NULL,
+	datefinreelle DATETIME,
+	commentaire TEXT,
 	statutpret VARCHAR(200) NOT NULL,
 	PRIMARY KEY(idpret),
 	KEY(idvetement, idemprunteur)
