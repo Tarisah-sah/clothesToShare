@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS vetement (
 	taille VARCHAR(3) NOT NULL,
 	type VARCHAR(20) NOT NULL, 
 	couleur VARCHAR(20) NOT NULL,
-	etat VARCHAR(20) NOT NULL, /* statut */
+	etat VARCHAR(20) NOT NULL, /* statut: dispo */
 	genre VARCHAR(10) DEFAULT "mixte",
 	marque VARCHAR(20) NOT NULL,
 	photo VARCHAR(200) NOT NULL,
@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS pret (
 	idpret INT(20) NOT NULL AUTO_INCREMENT,
 	idvetement INT(20) NOT NULL,
 	idemprunteur INT(20) NOT NULL,
-	datedebut DATETIME NOT NULL,
-	datefinprevue DATETIME NOT NULL,
+	datedebut DATETIME DEFAULT CURRENT_TIMESTAMP,
+	datefinprevue DATETIME DEFAULT DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 6 MONTH),
 	datefinreelle DATETIME,
 	commentaire TEXT,
 	statutpret VARCHAR(200) NOT NULL,

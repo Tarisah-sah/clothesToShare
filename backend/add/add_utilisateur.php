@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $utilisateur_new = $_POST['utilisateur_new'];
 	
     $utilisateurAjoutSQL = "INSERT INTO 
-        utilisateur (email, nom, prenom, adresse, pseudo, mdp, role) VALUES 
-        (:email, :nom, :prenom, :adresse, :pseudo, :mdp, :role)
+        utilisateur (email, nom, prenom, adresse, pseudo, mdp)
+        VALUES (:email, :nom, :prenom, :adresse, :pseudo, :mdp)
     ";
     $stmt = $conn->prepare($utilisateurAjoutSQL);
     $stmt->execute([
@@ -18,11 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':prenom' => $utilisateur_new['prenom'],
         ':adresse' => $utilisateur_new['adresse'],
         ':pseudo' => $utilisateur_new['pseudo'],
-        ':mdp' => password_hash($utilisateur_new['mdp'], PASSWORD_DEFAULT),
-        ':role' => 'pending'
+        ':mdp' => password_hash($utilisateur_new['mdp'], PASSWORD_DEFAULT)
     ]);
 
     $id_newUtilisateur = $conn->lastInsertId();
-    echo json_encode($id_newUtilisateur);
+    echo json_encode(['status' => 'success', 'id' => $id_newUtilisateur]);
 }
 ?>

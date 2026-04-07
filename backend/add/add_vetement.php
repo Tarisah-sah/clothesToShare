@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Récupère l'ID du nouveau vetement inséré
         $id_newVetement = $conn->lastInsertId();
-        $conn->commit();
         move_uploaded_file($_FILES['photo']['tmp_name'], $vetement_chemin);
-        echo json_encode($id_newVetement);
+        $conn->commit();
+        echo json_encode(['status' => 'success', 'id' => $id_newVetement]);
     } catch (Exception $e) {
         $conn->rollBack();
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

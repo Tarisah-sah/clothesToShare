@@ -7,25 +7,36 @@ $conn=pdo_connectDB();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vetement_idvetement = $_POST['idvetement'];
     $utilisateur_idutilisateur = $_POST['idutilisateur'];
+    $vetement_datefinpret = $_POST['datefinpret'];
     $statutpret = 'En prêt';
     
     $conn->beginTransaction();
     try {
         // 1. Modifier l'état du vêtement à "En prêt"
-        $vetementPretSQL = "UPDATE vetement SET etat = 'En prêt' WHERE idvetement = ?";
+        $vetementPretSQL = "UPDATE vetement SET etat = ? WHERE idvetement = ?";
         $stmt = $conn->prepare($vetementPretSQL);
-        $stmt->execute([$vetement_idvetement]);
+        $stmt->execute([$statutpret, $vetement_idvetement]);
 
-        // 2. Insérer une nouvelle entrée dans la table "pret"
-        $pretInsertSQL = "INSERT INTO 
-            pret (idvetement, idemprunteur, datedebut, datefinprevue, statutpret) 
-            VALUES (:idvetement, :idemprunteur, NOW(), DATE_ADD(NOW(), INTERVAL 6 MONTH), :statutpret)";
-        $stmt = $conn->prepare($pretInsertSQL);
-        $stmt->execute([
+        // 2. Préparer les données pour l'insertion dans la table "pret"
+        $sqlExecuter = [
             ':idvetement' => $vetement_idvetement,
             ':idemprunteur' => $utilisateur_idutilisateur,
             ':statutpret' => $statutpret
-        ]);
+        ];
+        if (isset($vetement_datefinpret)) {
+            $sqlExecuter[':datefinprevue'] = strtotime($vetement_datefinpret);
+            $pretInsertSQL = "INSERT INTO 
+                pret (idvetement, idemprunteur, datefinprevue, statutpret) 
+                VALUES (:idvetement, :idemprunteur, :datefinprevue, :statutpret)";
+        } else {
+            $pretInsertSQL = "INSERT INTO 
+                pret (idvetement, idemprunteur, statutpret) 
+                VALUES (:idvetement, :idemprunteur, :statutpret)";
+        }
+
+        // 3. Insérer une nouvelle entrée dans la table "pret"
+        $stmt = $conn->prepare($pretInsertSQL);
+        $stmt->execute($sqlExecuter);
 
         $conn->commit();
         echo json_encode(['status' => 'success']);
