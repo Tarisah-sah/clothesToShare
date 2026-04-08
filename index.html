@@ -80,6 +80,9 @@
                 </div>
                 <div class="card-body">
                     <form id="form-vetement">
+                        <input type="hidden" id="idproprietaire" value="1">
+                        <input type="hidden" id="idniveau" value="1">
+
                         <div class="row">
                             <div class="col-12 col-md-6 mb-3">
                                 <label class="form-label fw-bold">Nom du vêtement *</label>
@@ -90,14 +93,15 @@
                                 <input type="text" class="form-control" id="marque">
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-4 mb-3">
                                 <label class="form-label fw-bold">Taille</label>
-                                <input type="text" class="form-control" id="taille">
+                                <input type="text" class="form-control" id="taille" required>
                             </div>
                             <div class="col-4 mb-3">
                                 <label class="form-label fw-bold">Couleur</label>
-                                <input type="text" class="form-control" id="couleur">
+                                <input type="text" class="form-control" id="couleur" required>
                             </div>
                             <div class="col-4 mb-3">
                                 <label class="form-label fw-bold">Genre</label>
@@ -108,6 +112,27 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold">Type * (ex: Haut, Pantalon)</label>
+                                <input type="text" class="form-control" id="type" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold">Catégorie *</label>
+                                <select class="form-select" id="idcategorie" required>
+                                    <option value="1">Sportwear</option>
+                                    <option value="2">Accessories</option>
+                                    <option value="3">Nightwear</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Photo *</label>
+                            <input type="file" class="form-control" id="photo" accept="image/*" required>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">État *</label>
                             <select class="form-select" id="etat" required>
@@ -116,10 +141,26 @@
                                 <option value="Au lavage">Au lavage</option>
                             </select>
                         </div>
+
+                        <div id="section-pret-dynamique" class="bg-warning bg-opacity-10 p-3 rounded mb-3 border border-warning" style="display: none;">
+                            <h6 class="fw-bold text-warning-emphasis">Détails du prêt en cours</h6>
+                            <div class="mb-2">
+                                <label class="form-label small">Prêté à qui ? *</label>
+                                <select class="form-select" id="idemprunteur">
+                                    <option value="">Sélectionner un utilisateur...</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Date de fin prévue *</label>
+                                <input type="date" class="form-control" id="datefinprevue">
+                            </div>
+                        </div>
+                        
                         <div class="mb-4">
                             <label class="form-label fw-bold">Description</label>
-                            <textarea class="form-control" id="description" rows="3"></textarea>
+                            <textarea class="form-control" id="description" rows="3" required></textarea>
                         </div>
+                        
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success btn-lg">Enregistrer</button>
                             <button type="button" class="btn btn-outline-danger" id="btn-annuler">Annuler</button>
@@ -174,9 +215,11 @@
             </div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="frontend/js/auth.js"></script>
+    <script src="frontend/js/api.js"></script>
+    <script src="frontend/js/ui.js"></script>
+    <script src="frontend/js/vetements.js"></script>
     <script src="frontend/js/main.js"></script>
 </body>
 </html>

@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS pret (
 	idvetement INT(20) NOT NULL,
 	idemprunteur INT(20) NOT NULL,
 	datedebut DATETIME DEFAULT CURRENT_TIMESTAMP,
-	datefinprevue DATETIME DEFAULT DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 6 MONTH),
+	datefinprevue DATETIME,
 	datefinreelle DATETIME,
 	commentaire TEXT,
 	statutpret VARCHAR(200) NOT NULL,
