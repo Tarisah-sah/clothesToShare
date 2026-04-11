@@ -16,7 +16,7 @@ async function ajouterVetement(event) {
     // 1. Préparation des données (FormData est nécessaire à cause de l'image)
     const formData = new FormData();
     
-    // Le PHP attend $_POST['vetement_new']['nom'] etc... donc on nomme nos champs ainsi :
+    // Le PHP attend $_POST['vetement_new']['nom'] etc...
     formData.append('vetement_new[nom]', document.getElementById('nom').value);
     formData.append('vetement_new[marque]', document.getElementById('marque').value);
     formData.append('vetement_new[taille]', document.getElementById('taille').value);
@@ -67,7 +67,7 @@ async function filtrerVetements(event) {
     // Récupération des couleurs multiples (Lit toutes les cases cochées qui ont la classe 'couleur-checkbox')
     const checkboxesCouleurs = document.querySelectorAll('.couleur-checkbox:checked');
     const couleurs = Array.from(checkboxesCouleurs).map(cb => cb.value).join(',');
-    
+
     // Construction dynamique de l'URL avec URLSearchParams (plus propre)
     const params = new URLSearchParams();
     if (texte) params.append('motcle', texte);
