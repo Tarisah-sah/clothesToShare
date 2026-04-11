@@ -55,21 +55,29 @@ async function chargerBulles(type, parentId) {
     } else if (type === 'vetements') {
         // Ici on n'affiche plus des bulles, mais les cartes de vêtements normales
         titre.innerHTML = "👗 Vêtements trouvés";
-        const urlVetements = `get/getall_vetements.php?idNiveau=${parentId}`; // À adapter dans le PHP
+        const urlVetements = `get/getall_vetements.php?idNiveau=${parentId}`; 
         const dataVetements = await fetchDonnees(urlVetements);
         conteneur.innerHTML = ''; // On vide les bulles
         
-        // On réutilise la fonction de ui.js en contournant le conteneur habituel !
+        // Création du conteneur temporaire pour afficher les cartes
         const divTemp = document.createElement('div');
         divTemp.className = 'row g-4 w-100';
-        divTemp.id = 'temp-liste-vetements';
         conteneur.appendChild(divTemp);
         
-        // Petite astuce : on temporise l'ID pour utiliser ta fonction existante
-        const backupId = document.getElementById('liste-vetements');
+        // CORRECTION : On renomme temporairement le vrai conteneur caché pour éviter les conflits d'ID
+        const vraiConteneur = document.getElementById('liste-vetements');
+        if (vraiConteneur) vraiConteneur.id = 'liste-vetements-cache';
+        
+        // On donne l'ID attendu par ui.js à notre div temporaire
         divTemp.id = 'liste-vetements'; 
+        
+        // On appelle ta fonction ui.js qui va peupler la div
         afficherCartesVetements(dataVetements);
-        divTemp.id = 'temp-liste-vetements'; // on remet
+        
+        // On remet les vrais IDs en place pour ne pas casser le Dressing !
+        divTemp.id = 'temp-liste-vetements'; 
+        if (vraiConteneur) vraiConteneur.id = 'liste-vetements'; 
+        
         return; 
     }
 
