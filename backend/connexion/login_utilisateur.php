@@ -1,33 +1,48 @@
 <?php
-include('db_connect.php');
+header('Content-Type: application/json; charset=utf-8');
+include('../connexion/db_connect.php');
 
-$conn=pdo_connectDB();  
+$conn = pdo_connectDB();
 
-// Detecte login d'un utilisateur
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$email = $_POST['login'];
-	$mdpEntre = $_POST['mdp'];
+    $data = json_decode(file_get_contents('php://input'), true);
 
-	// Rechercher l'utilisateur
-	$sql = "SELECT idutilisateur, prenom, email, mdp FROM utilisateur WHERE login LIKE :emailLogin OR email LIKE :emailLogin";
-	$stmt = $conn->prepare($sql);
-	$stmt->execute([':emailLogin' => $email]);
-	$utilisateur = $stmt->fetch();
+    $email   = trim($data['email']   ?? '');
+    $nom     = trim($data['nom']     ?? '');
+    $prenom  = trim($data['prenom']  ?? '');
+    $adresse = trim($data['adresse'] ?? '');
+    $login   = trim($data['login']   ?? '');
+    $mdp     = $data['mdp']          ?? '';
 
-	$res = array(
-		'reussi' => ($utilisateur && password_verify($mdpEntre, $utilisateur['mdp'])),
-		'utilisateurNonExistant' => empty($utilisateur),
-		'mdpVerif' => password_verify($mdpEntre, $utilisateur['mdp'])
-	);
-	
-	if ($res['reussi']) {
-		$res['message'] = "Connexion réussie ✅ Bienvenue " . $utilisateur['nom'];
-	} else {
-		$res['message'] = "⚠️ Login ou mot de passe incorrect";
-	}
-	
-	echo json_encode($res);
+    if (!$email || !$nom || !$prenom || !$adresse || !$login || !$mdp) {
+        echo json_encode(['status' => 'error', 'message' => 'Tous les champs sont obligatoires.']);
+        exit;
+    }
+
+    // Vérifier si le login ou l'email est déjà pris
+    $checkSQL = "SELECT COUNT(*) FROM utilisateur WHERE email = :email OR login = :login";
+    $stmt = $conn->prepare($checkSQL);
+    $stmt->execute([':email' => $email, ':login' => $login]);
+    if ($stmt->fetchColumn() > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Cet email ou ce login est déjà utilisé.']);
+        exit;
+    }
+
+    // Insérer avec role = 'pending'
+    $sql = "INSERT INTO utilisateur (email, nom, prenom, adresse, login, mdp, role)
+            VALUES (:email, :nom, :prenom, :adresse, :login, :mdp, 'pending')";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':email'   => $email,
+        ':nom'     => $nom,
+        ':prenom'  => $prenom,
+        ':adresse' => $adresse,
+        ':login'   => $login,
+        ':mdp'     => password_hash($mdp, PASSWORD_DEFAULT)
+    ]);
+
+    echo json_encode(['status' => 'success', 'message' => 'Inscription envoyée, en attente de validation.']);
 }
 
-$conn=null;
+$conn = null;
 ?>
