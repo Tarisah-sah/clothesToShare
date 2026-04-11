@@ -1,0 +1,131 @@
+/* ==========================================
+   ANIMATIONS DES CARTES VÊTEMENTS
+========================================== */
+
+/* 1. Configuration de base de la carte */
+#liste-vetements .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Très important : empêche l'image de déborder quand elle va zoomer */
+    border-radius: 12px; /* Coins un peu plus arrondis pour la douceur */
+}
+
+/* 2. Ce qui se passe quand on passe la souris sur la carte */
+#liste-vetements .card:hover {
+    transform: translateY(-6px); /* Fait "flotter" la carte vers le haut */
+    box-shadow: 0 12px 24px rgba(233, 30, 140, 0.15) !important; /* Ajoute une belle ombre teintée de rose */
+}
+
+/* 3. Configuration de l'image dans la carte */
+#liste-vetements .card .card-img-top {
+    transition: transform 0.4s ease; /* Animation fluide pour le zoom */
+}
+
+/* 4. L'image zoome quand on survole la carte entière */
+#liste-vetements .card:hover .card-img-top {
+    transform: scale(1.08); /* Agrandit l'image de 8% */
+}
+
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e91e8c;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#panneau-admin { display: none; }
+.carte-demande {
+    background: #fff0f5;
+    border: 1px solid #f48fb1;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.carte-demande .info-user { flex: 1; }
+.carte-demande .info-user strong { display: block; color: #ad1457; }
+.carte-demande .info-user span  { font-size: 13px; color: #c2185b; }
+.btn-accepter {
+    background: #e91e8c;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.btn-accepter:hover { background: #c2185b; }
+.btn-refuser {
+    background: white;
+    border: 1px solid #f48fb1;
+    border-radius: 10px;
+    color: #ad1457;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.btn-refuser:hover { background: #fce4ec; }
+.badge-pending {
+    background: #fce4ec;
+    color: #ad1457;
+    border: 1px solid #f48fb1;
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 2px 10px;
+}
+/* Style des bulles d'arborescence */
+.bulle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Le filtre sombre sur l'image */
+.bulle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transition: background 0.3s ease;
+}
+
+.bulle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(233, 30, 140, 0.4); /* Ombre rose au survol */
+}
+
+.bulle:hover::before {
+    background: rgba(0, 0, 0, 0.2); /* S'éclaircit au survol */
+}
+
+/* Le texte au centre de la bulle */
+.bulle-texte {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    padding: 0 10px;
+}

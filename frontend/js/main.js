@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     chargerVetements();
 
     // Écouteurs pour le formulaire d'ajout
-    document.getElementById('btn-afficher-ajout').addEventListener('click', () => basculerAffichageFormulaire(true));
+    document.getElementById('btn-afficher-ajout').addEventListener('click', () => {
+        reinitialiserFormulaire();
+        basculerAffichageFormulaire(true);
+    });
     document.getElementById('btn-annuler').addEventListener('click', () => basculerAffichageFormulaire(false));
     document.getElementById('btn-fermer-form').addEventListener('click', () => basculerAffichageFormulaire(false));
     
