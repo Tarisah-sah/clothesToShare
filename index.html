@@ -218,15 +218,43 @@
                         <input type="text" class="form-control" id="search-marque" placeholder="Ex: Nike">
                     </div>
                     <div class="col-12 col-md-4">
-                        <label for="search-couleur" class="form-label fw-bold small">Couleurs (Ctrl+Clic)</label>
-                        <select class="form-select" id="search-couleur" multiple size="2">
-                            <option value="Noir">Noir</option>
-                            <option value="Blanc">Blanc</option>
-                            <option value="Rouge">Rouge</option>
-                            <option value="Bleu">Bleu</option>
-                            <option value="Rose">Rose</option>
-                            <option value="Marron">Marron</option>
-                        </select>
+                        <label class="form-label fw-bold small mb-1">Couleurs</label>
+                        <div class="d-flex flex-wrap gap-2 border rounded p-2 bg-white" style="max-height: 80px; overflow-y: auto;">
+                            
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Noir" id="c-noir">
+                                <label class="form-check-label small" for="c-noir">Noir</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Blanc" id="c-blanc">
+                                <label class="form-check-label small" for="c-blanc">Blanc</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Rouge" id="c-rouge">
+                                <label class="form-check-label small" for="c-rouge">Rouge</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Bleu" id="c-bleu">
+                                <label class="form-check-label small" for="c-bleu">Bleu</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Rose" id="c-rose">
+                                <label class="form-check-label small" for="c-rose">Rose</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Marron" id="c-marron">
+                                <label class="form-check-label small" for="c-marron">Marron</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Vert" id="c-vert">
+                                <label class="form-check-label small" for="c-vert">Vert</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2 mb-0">
+                                <input class="form-check-input couleur-checkbox" type="checkbox" value="Jaune" id="c-jaune">
+                                <label class="form-check-label small" for="c-jaune">Jaune</label>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="col-12 d-flex gap-2 justify-content-end mt-3">

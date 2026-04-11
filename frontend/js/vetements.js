@@ -64,10 +64,10 @@ async function filtrerVetements(event) {
     const type = document.getElementById('search-type').value.trim();
     const marque = document.getElementById('search-marque').value.trim();
 
-    // Récupération des couleurs multiples (transformées en chaîne séparée par des virgules)
-    const couleursSelect = document.getElementById('search-couleur');
-    const couleurs = Array.from(couleursSelect.selectedOptions).map(opt => opt.value).join(',');
-
+    // Récupération des couleurs multiples (Lit toutes les cases cochées qui ont la classe 'couleur-checkbox')
+    const checkboxesCouleurs = document.querySelectorAll('.couleur-checkbox:checked');
+    const couleurs = Array.from(checkboxesCouleurs).map(cb => cb.value).join(',');
+    
     // Construction dynamique de l'URL avec URLSearchParams (plus propre)
     const params = new URLSearchParams();
     if (texte) params.append('motcle', texte);

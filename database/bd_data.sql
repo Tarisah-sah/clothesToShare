@@ -144,50 +144,170 @@ INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
 /* RANGEMENTS */
 INSERT INTO rangement(idRangement, nom, infoRangement, idLocal, photo) VALUES
 -- Pour le local 1 (Casual)
-(1, 'Armoire Principale', 'Grande armoire 3 portes', 1, ''),
-(2, 'Commode en bois', 'Commode à tiroirs pour les basiques', 1, ''),
+(1, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements basiques.', 1, ''),
+(2, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires basiques.', 1, ''),
+(3, 'Meuble à chaussures', 'Rangement pour les chaussures.', 1, ''),
+-- Pour le local 2 (Chic)
+(4, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements chics.', 2, ''),
+(5, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires chics.', 2, ''),
+(6, 'Meuble à chaussures', 'Rangement pour les chaussures.', 2, ''),
 -- Pour le local 3 (Business)
-(3, 'Dressing Ouvert', 'Penderie pour costumes et chemises', 3, ''),
-(4, 'Meuble à chaussures', 'Meuble d''entrée', 3, ''),
+(7, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements professionnels.', 3, ''),
+(8, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires professionnels.', 3, ''),
+(9, 'Meuble à chaussures', 'Rangement pour les chaussures.', 3, ''),
+-- Pour le local 4 (Boho)
+(10, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements bohèmes.', 4, ''),
+(11, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires bohèmes.', 4, ''),
+(12, 'Meuble à chaussures', 'Rangement pour les chaussures.', 4, ''),
 -- Pour le local 5 (Street wear)
-(5, 'Portant métallique', 'Portant robuste pour vestes et sweats', 5, ''),
-(6, 'Mur de Sneakers', 'Étagères transparentes pour chaussures', 5, ''),
+(13, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements street wear.', 5, ''),
+(14, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires street wear.', 5, ''),
+(15, 'Meuble à chaussures', 'Rangement pour les chaussures.', 5, ''),
+-- Pour le local 6 (Emo)
+(16, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements punk/emo.', 6, ''),
+(17, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires punk/emo.', 6, ''),
+(18, 'Meuble à chaussures', 'Rangement pour les chaussures.', 6, ''),
+-- Pour le local 7 (Sorties)
+(19, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements de sorties.', 7, ''),
+(20, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires de sorties.', 7, ''),
+(21, 'Meuble à chaussures', 'Rangement pour les chaussures.', 7, ''),
 -- Pour le local 8 (Vintage)
-(7, 'Malle de voyage', 'Ancienne malle en cuir', 8, ''),
-(8, 'Armoire parisienne', 'Armoire chinée en brocante', 8, '');
+(22, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements vintage.', 8, ''),
+(23, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires vintage.', 8, ''),
+(24, 'Meuble à chaussures', 'Rangement pour les chaussures.', 8, ''),
+-- Pour le local 9 (2000s)
+(25, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements du style des annèes 2000s.', 9, ''),
+(26, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires des annèes 2000s.', 9, ''),
+(27, 'Meuble à chaussures', 'Rangement pour les chaussures.', 9, ''),
+-- Pour le local 10 (Autre)
+(28, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements.', 10, ''),
+(29, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires.', 10, ''),
+(30, 'Meuble à chaussures', 'Rangement pour les chaussures.', 10, '');
 
 /* NIVEAUX */
 INSERT INTO niveau(idNiveau, nom, infoNiveau, idRangement, photo) VALUES
--- Dans l'Armoire Principale Casual (idRangement = 1)
-(1, 'Étagère du haut', 'Pour les pulls et sweats', 1, ''),
-(2, 'Penderie', 'Pour les vestes, manteaux et chemises', 1, ''),
-(3, 'Étagère du bas', 'Pour les pantalons et jeans', 1, ''),
+-- ===============================
+-- LOCAL 1 : CASUAL (Rangements 1, 2, 3)
+-- ===============================
+(1, 'Penderie', 'Pour les vestes, chemises et manteaux basiques', 1, ''),
+(2, 'Étagères', 'Pour les t-shirts et pulls', 1, ''),
+(3, 'Tiroirs bas', 'Pour les pantalons, jeans et shorts', 1, ''),
+(4, 'Tiroir du haut', 'Bijoux, montres et lunettes de soleil', 2, ''),
+(5, 'Tiroir d''en bas', 'Sacs, ceintures et bonnets', 2, ''),
+(6, 'Niveau Supérieur', 'Baskets et chaussures de tous les jours', 3, ''),
+(7, 'Niveau Inférieur', 'Bottes et chaussures d''hiver', 3, ''),
 
--- Dans la Commode en bois Casual (idRangement = 2)
-(4, 'Tiroir 1 (Haut)', 'Sous-vêtements et chaussettes', 2, ''),
-(5, 'Tiroir 2', 'T-shirts manches courtes', 2, ''),
-(6, 'Tiroir 3', 'T-shirts manches longues', 2, ''),
+-- ===============================
+-- LOCAL 2 : CHIC (Rangements 4, 5, 6)
+-- ===============================
+(8, 'Penderie', 'Vestons, costumes et robes élégantes', 4, ''),
+(9, 'Étagères', 'Hauts habillés et chemisiers', 4, ''),
+(10, 'Tiroirs bas', 'Pantalons à pinces et jupes', 4, ''),
+(11, 'Tiroir du haut', 'Bijoux fins et montres de luxe', 5, ''),
+(12, 'Tiroir d''en bas', 'Sacs à main et pochettes de marque', 5, ''),
+(13, 'Niveau Supérieur', 'Mocassins et derbies', 6, ''),
+(14, 'Niveau Inférieur', 'Escarpins et chaussures habillées', 6, ''),
 
--- Dans le Dressing Ouvert Business (idRangement = 3)
-(7, 'Penderie Costumes', 'Cintres pour ensembles et vestons', 3, ''),
-(8, 'Penderie Chemises', 'Espace repassé', 3, ''),
-(9, 'Tiroir Accessoires', 'Cravates, ceintures, montres', 3, ''),
+-- ===============================
+-- LOCAL 3 : BUSINESS (Rangements 7, 8, 9)
+-- ===============================
+(15, 'Penderie', 'Costumes complets, blazers et tailleurs', 7, ''),
+(16, 'Étagères', 'Chemises repassées', 7, ''),
+(17, 'Tiroirs bas', 'Pantalons de costume', 7, ''),
+(18, 'Tiroir du haut', 'Cravates, nœuds papillon et boutons de manchette', 8, ''),
+(19, 'Tiroir d''en bas', 'Porte-documents et ceintures en cuir', 8, ''),
+(20, 'Niveau Supérieur', 'Chaussures de ville (Oxford, Richelieu)', 9, ''),
+(21, 'Niveau Inférieur', 'Chaussures de secours ou de confort', 9, ''),
 
--- Dans le Meuble à chaussures Business (idRangement = 4)
-(10, 'Niveau Supérieur', 'Chaussures de ville', 4, ''),
-(11, 'Niveau Inférieur', 'Chaussures détendues', 4, ''),
+-- ===============================
+-- LOCAL 4 : BOHO (Rangements 10, 11, 12)
+-- ===============================
+(22, 'Penderie', 'Robes longues, gilets à franges, kimonos', 10, ''),
+(23, 'Étagères', 'Hauts amples et tuniques', 10, ''),
+(24, 'Tiroirs bas', 'Pantalons fluides et jupes longues', 10, ''),
+(25, 'Tiroir du haut', 'Colliers longs, bracelets en perles et pierres', 11, ''),
+(26, 'Tiroir d''en bas', 'Chapeaux, foulards et sacs en macramé', 11, ''),
+(27, 'Niveau Supérieur', 'Sandales et espadrilles', 12, ''),
+(28, 'Niveau Inférieur', 'Bottes en daim', 12, ''),
 
--- Dans le Portant métallique Street wear (idRangement = 5)
-(12, 'Barre principale', 'Vestes oversize', 5, ''),
+-- ===============================
+-- LOCAL 5 : STREET WEAR (Rangements 13, 14, 15)
+-- ===============================
+(29, 'Penderie', 'Vestes oversize, doudounes et coupe-vents', 13, ''),
+(30, 'Étagères', 'Sweats à capuche, t-shirts graphiques', 13, ''),
+(31, 'Tiroirs bas', 'Pantalons, jeans, cargo, joggings', 13, ''),
+(32, 'Tiroir du haut', 'Casquettes, bobs et lunettes de soleil', 14, ''),
+(33, 'Tiroir d''en bas', 'Sacs banane, sacoches et sacs à dos', 14, ''),
+(34, 'Niveau Supérieur', 'Sneakers de collection', 15, ''),
+(35, 'Niveau Inférieur', 'Baskets de tous les jours', 15, ''),
 
--- Dans la Malle Vintage (idRangement = 7)
-(13, 'Fond de malle', 'Gros sacs et accessoires d''hiver', 7, ''),
-(14, 'Compartiment supérieur', 'Foulards, chapeaux et bijoux', 7, '');
+-- ===============================
+-- LOCAL 6 : EMO (Rangements 16, 17, 18)
+-- ===============================
+(36, 'Penderie', 'Vestes en cuir, manteaux sombres', 16, ''),
+(37, 'Étagères', 'T-shirts de groupes, hauts résille', 16, ''),
+(38, 'Tiroirs bas', 'Jeans skinny déchirés, pantalons à clous', 16, ''),
+(39, 'Tiroir du haut', 'Bracelets à clous, chaînes, bagues', 17, ''),
+(40, 'Tiroir d''en bas', 'Ceintures cloutées, mitaines', 17, ''),
+(41, 'Niveau Supérieur', 'Bottes à plateformes et creepers', 18, ''),
+(42, 'Niveau Inférieur', 'Converse et Vans usées', 18, ''),
+
+-- ===============================
+-- LOCAL 7 : SORTIES (Rangements 19, 20, 21)
+-- ===============================
+(43, 'Penderie', 'Robes de cocktail, vestes brillantes', 19, ''),
+(44, 'Étagères', 'Hauts de soirée, tops à paillettes', 19, ''),
+(45, 'Tiroirs bas', 'Pantalons en simili cuir, jupes courtes', 19, ''),
+(46, 'Tiroir du haut', 'Parures complètes, boucles d''oreilles', 20, ''),
+(47, 'Tiroir d''en bas', 'Petites pochettes de soirée', 20, ''),
+(48, 'Niveau Supérieur', 'Talons hauts et stilettos', 21, ''),
+(49, 'Niveau Inférieur', 'Chaussures de danse', 21, ''),
+
+-- ===============================
+-- LOCAL 8 : VINTAGE (Rangements 22, 23, 24)
+-- ===============================
+(50, 'Penderie', 'Manteaux rétro, vestes en velours côtelé', 22, ''),
+(51, 'Étagères', 'Chemisiers anciens, tricots', 22, ''),
+(52, 'Tiroirs bas', 'Pantalons patte d''éléphant', 22, ''),
+(53, 'Tiroir du haut', 'Broches, montres à gousset, colliers de perles', 23, ''),
+(54, 'Tiroir d''en bas', 'Sacs rétro en cuir, gants en dentelle', 23, ''),
+(55, 'Niveau Supérieur', 'Chaussures à boucles', 24, ''),
+(56, 'Niveau Inférieur', 'Bottes vintage', 24, ''),
+
+-- ===============================
+-- LOCAL 9 : 2000s (Rangements 25, 26, 27)
+-- ===============================
+(57, 'Penderie', 'Vestes en jean, survêtements en velours', 25, ''),
+(58, 'Étagères', 'Crop tops, t-shirts à strass', 25, ''),
+(59, 'Tiroirs bas', 'Jeans taille basse, mini-jupes plissées', 25, ''),
+(60, 'Tiroir du haut', 'Chokers, pinces papillon, lunettes colorées', 26, ''),
+(61, 'Tiroir d''en bas', 'Sacs baguette, ceintures chaînes', 26, ''),
+(62, 'Niveau Supérieur', 'Sneakers chunky, Bottes Ugg', 27, ''),
+(63, 'Niveau Inférieur', 'Chaussures compensées, talons', 27, ''),
+
+-- ===============================
+-- LOCAL 10 : AUTRE (Rangements 28, 29, 30)
+-- ===============================
+(64, 'Penderie', 'Vestes et manteaux divers', 28, ''),
+(65, 'Étagères', 'Hauts et pulls divers', 28, ''),
+(66, 'Tiroirs bas', 'Pantalons et shorts divers', 28, ''),
+(67, 'Tiroir du haut', 'Bijoux en vrac', 29, ''),
+(68, 'Tiroir d''en bas', 'Sacs et accessoires divers', 29, ''),
+(69, 'Niveau Supérieur', 'Chaussures avec talons divers', 30, ''),
+(70, 'Niveau Inférieur', 'Chaussures basses diverses', 30, '');
 
 INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
-(1, 'Sportwear', 'Used for sports activities'),
-(2, 'Accessories', 'Accessories for daily use'),
-(3, 'Nightwear', 'Clothing for sleeping');
+(1, 'Hauts', 'T-shirts, chemises, pulls, tops, débardeurs...'),
+(2, 'Bas', 'Jeans, pantalons, shorts, jupes...'),
+(3, 'Robes & Combinaisons', 'Tenues une pièce pour tous les jours ou soirées.'),
+(4, 'Manteaux & Vestes', 'Vêtements d''extérieur, blousons, trenchs, doudounes...'),
+(5, 'Chaussures', 'Baskets, bottes, talons, sandales, mocassins...'),
+(6, 'Accessoires', 'Sacs, ceintures, chapeaux, écharpes, gants...'),
+(7, 'Bijoux', 'Colliers, bracelets, bagues, montres, boucles d''oreilles...'),
+(8, 'Sportwear', 'Tenues, brassières et accessoires pour l''activité physique.'),
+(9, 'Vêtements de nuit', 'Pyjamas, nuisettes, peignoirs et vêtements d''intérieur.'),
+(10, 'Sous-vêtements', 'Lingerie, chaussettes, collants.'),
+(11, 'Autre','Autre categorie.');
 
 INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, role) VALUES
 (1, 'tarisah@example.com', 'Tarisa', "Hannah", "123 Main St", "hannahtaisa", "hannahtaisa", 'admin'),
