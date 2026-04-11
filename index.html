@@ -95,6 +95,7 @@
                                 <option value="8">Sportwear</option>
                                 <option value="9">Vêtements de nuit</option>
                                 <option value="10">Sous-vêtements</option>
+                                <option value="11">Autre</option>
                             </select>
                         </div>
                         <div class="col-12 col-md-4">
@@ -305,7 +306,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-secondary text-white">
-                    <h5 class="modal-title">✏️ Modifier le vêtement</h5>
+                    <h5 class="modal-title">Modifier le vêtement</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -380,6 +381,52 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                     <button type="button" class="btn btn-secondary" id="btn-sauvegarder-modif">Mettre à jour</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetailsVetement" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h4 class="modal-title fw-bold text-secondary" id="detail-nom">Nom du vêtement</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <img src="" id="detail-photo" class="img-fluid rounded shadow-sm p-3 bg-light" style="width: 100%; object-fit: contain; height: 350px;">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <span class="badge bg-secondary mb-3 fs-6" id="detail-etat">Etat</span>
+                            
+                            <div class="bg-light p-3 rounded mb-3">
+                                <p class="mb-1"><strong>Marque :</strong> <span id="detail-marque"></span></p>
+                                <p class="mb-1"><strong>Taille :</strong> <span id="detail-taille"></span></p>
+                                <p class="mb-1"><strong>Couleur :</strong> <span id="detail-couleur"></span></p>
+                                <p class="mb-1"><strong>Genre :</strong> <span id="detail-genre" class="text-capitalize"></span></p>
+                                <p class="mb-1"><strong>Type :</strong> <span id="detail-type"></span></p>
+                            </div>
+
+                            <h6 class="fw-bold">Description</h6>
+                            <p id="detail-description" class="text-muted small"></p>
+                        </div>
+                    </div>
+                    
+                    <div id="zone-emprunt" class="mt-3 p-3 bg-primary bg-opacity-10 rounded border border-primary d-none">
+                        <h6 class="fw-bold text-primary mb-3">👋 Tu veux l'emprunter ?</h6>
+                        <div class="row align-items-end">
+                            <div class="col-md-8 mb-2 mb-md-0">
+                                <label class="form-label small fw-bold text-primary">Jusqu'à quand en as-tu besoin ? *</label>
+                                <input type="date" class="form-control border-primary" id="emprunt-date-fin">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100 fw-bold" id="btn-confirmer-emprunt">Confirmer</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

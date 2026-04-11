@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     // Jointure nécessaire pour vérifier les emprunts si on est connecté
     if ($userId) {
-        $sql .= " LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret = 'En prêt' ";
+        $sql .= " LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente') ";
     }
     
     $sql .= " WHERE 1=1 ";

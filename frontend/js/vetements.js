@@ -352,3 +352,129 @@ function supprimerVetement(id) {
         });
     }
 }
+
+// ==========================================
+// DÉTAILS ET EMPRUNT (UTILISATEUR)
+// ==========================================
+
+let idVetementEnCoursDeDetail = null;
+
+// Ouvre la modale et remplit les détails
+function ouvrirModalDetails(id) {
+    const vetement = tousLesVetements.find(v => v.idvetement == id);
+    if (!vetement) return;
+
+    idVetementEnCoursDeDetail = id;
+
+    // 1. Remplir les informations texte et image
+    document.getElementById('detail-nom').textContent = vetement.nom;
+    document.getElementById('detail-photo').src = (vetement.photo && vetement.photo.trim() !== "") ? vetement.photo : 'https://placehold.co/500x300?text=Pas+de+photo';
+    document.getElementById('detail-marque').textContent = vetement.marque || 'Non spécifié';
+    document.getElementById('detail-taille').textContent = vetement.taille;
+    document.getElementById('detail-couleur').textContent = vetement.couleur;
+    document.getElementById('detail-genre').textContent = vetement.genre;
+    document.getElementById('detail-type').textContent = vetement.type;
+    document.getElementById('detail-description').textContent = vetement.description || 'Aucune description fournie.';
+    
+    // Gérer la couleur du badge état
+    const badgeEtat = document.getElementById('detail-etat');
+    badgeEtat.textContent = vetement.etat;
+    badgeEtat.className = 'badge mb-3 fs-6 ' + 
+        (vetement.etat === 'Disponible' ? 'bg-success' : 
+        (vetement.etat === 'En prêt' ? 'bg-warning text-dark' : 'bg-info text-dark'));
+
+    // 2. Gérer l'affichage de la zone d'emprunt
+    const zoneEmprunt = document.getElementById('zone-emprunt');
+    const userJson = sessionStorage.getItem('user');
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    // Règle : On affiche la zone emprunt SI l'utilisateur est connecté ET qu'il n'est PAS le propriétaire ET que le vêtement est Disponible
+    if (user && user.idutilisateur != vetement.idproprietaire && vetement.etat === 'Disponible') {
+        zoneEmprunt.classList.remove('d-none');
+        document.getElementById('emprunt-date-fin').value = ''; // Réinitialiser la date
+    } else {
+        zoneEmprunt.classList.add('d-none');
+    }
+
+    // 3. Afficher la modale
+    const modal = new bootstrap.Modal(document.getElementById('modalDetailsVetement'));
+    modal.show();
+}
+
+// Action quand l'utilisateur clique sur "Confirmer"
+document.addEventListener('DOMContentLoaded', () => {
+    const btnEmprunt = document.getElementById('btn-confirmer-emprunt');
+    
+    if(btnEmprunt) {
+        btnEmprunt.addEventListener('click', async () => {
+            const dateFin = document.getElementById('emprunt-date-fin').value;
+            
+            if(!dateFin) {
+                alert("Merci d'indiquer à quelle date tu prévois de rendre le vêtement !");
+                return;
+            }
+
+            const user = JSON.parse(sessionStorage.getItem('user'));
+            
+            // On prépare les données pour ton fichier PHP existant pret_vetement.php
+            const formData = new FormData();
+            formData.append('idvetement', idVetementEnCoursDeDetail);
+            formData.append('idutilisateur', user.idutilisateur); // C'est lui-même l'emprunteur !
+            formData.append('datefinpret', dateFin);
+
+            // On envoie la requête
+            const resultat = await postDonnees('post/pret_vetement.php', formData);
+            
+            if (resultat && resultat.status === 'success') {
+                // On ferme la modale
+                const modalElement = document.getElementById('modalDetailsVetement');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                modalInstance.hide();
+                
+                alert("Emprunt confirmé ! 🥳 Le vêtement est maintenant dans ton dressing.");
+                chargerVetements(modeActuel); // Recharge la page
+            } else {
+                alert("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"));
+            }
+        });
+    }
+});
+
+// Fonction pour accepter ou refuser une demande de prêt reçue
+async function repondreDemande(idVetement, action) {
+    let confirmation = true;
+    if (action === 'refuser') {
+        confirmation = confirm("Es-tu sûr de vouloir refuser cette demande de prêt ?");
+    }
+
+    if (confirmation) {
+        const formData = new FormData();
+        formData.append('idvetement', idVetement);
+        formData.append('action', action);
+
+        const resultat = await postDonnees('post/repondre_demande_pret.php', formData);
+        
+        if (resultat && resultat.status === 'success') {
+            alert(action === 'accepter' ? "Demande acceptée ! Le vêtement est en prêt." : "Demande refusée.");
+            chargerVetements(modeActuel); // On recharge la page pour voir le nouveau statut
+        } else {
+            alert("Erreur lors du traitement de la demande : " + (resultat.message || "inconnue"));
+        }
+    }
+}
+
+// Fonction pour que l'emprunteur signale qu'il a rendu le vêtement
+async function signalerRetour(idVetement) {
+    if(confirm("Confirmer que tu as bien rendu ce vêtement à son propriétaire ?")) {
+        const formData = new FormData();
+        formData.append('idvetement', idVetement);
+        
+        const resultat = await postDonnees('post/demande_retour.php', formData);
+        if (resultat && resultat.status === 'success') {
+            alert("Le propriétaire a été notifié ! En attente de sa confirmation.");
+            chargerVetements(modeActuel); // On recharge la page, le statut passera à "Retour en attente"
+        } else {
+            alert("Erreur lors de la notification : " + (resultat.message || "inconnue"));
+        }
+    }
+}

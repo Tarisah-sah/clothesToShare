@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 2. Mettre à jour la table "pret" avec la date de fin réelle et le commentaire
         $pretUpdateSQL = "UPDATE pret 
             SET datefinreelle = NOW(), commentaire = :commentaire, statutpret = 'Rendu' 
-            WHERE idvetement = :idvetement AND statutpret LIKE 'En prêt'";
+            WHERE idvetement = :idvetement AND statutpret IN ('En prêt', 'Retour en attente')";
         $stmt = $conn->prepare($pretUpdateSQL);
         $stmt->execute([
             ':commentaire' => $commentaire,

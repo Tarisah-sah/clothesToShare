@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // 2. Mode "Mon Dressing" (Mes possessions + Mes emprunts en cours)
     else if ($mode === 'dressing' && $userId) {
         $sql = "SELECT DISTINCT v.* FROM vetement v 
-                LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret = 'En prêt'
+                LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente')
                 WHERE v.idproprietaire = :uid1 OR p.idemprunteur = :uid2";
         $stmt = $conn->prepare($sql);
         // CORRECTION : On envoie la valeur dans deux variables différentes
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // 3. Mode "Accueil" connecté (Tout SAUF mes possessions et mes emprunts)
     else if ($mode === 'accueil' && $userId) {
         $sql = "SELECT DISTINCT v.* FROM vetement v 
-                LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret = 'En prêt'
+                LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente')
                 WHERE v.idproprietaire != :uid1 AND (p.idemprunteur IS NULL OR p.idemprunteur != :uid2)";
         $stmt = $conn->prepare($sql);
         // CORRECTION : On envoie la valeur dans deux variables différentes

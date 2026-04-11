@@ -3,19 +3,21 @@ include('../connexion/db_connect.php');
 
 $conn=pdo_connectDB();
 
-// Afficher tous les vetements qui correspond a la recherche
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vetement_idvetement = $_POST['idvetement'];
     $utilisateur_idutilisateur = $_POST['idutilisateur'];
     $vetement_datefinpret = $_POST['datefinpret'];
-    $statutpret = 'En prêt';
+    
+    // NOUVEAUTÉ : Le prêt commence en "En attente" et le vêtement en "Demande en cours"
+    $statutpret = 'En attente'; 
+    $etat_vetement = 'Demande en cours';
     
     $conn->beginTransaction();
     try {
-        // 1. Modifier l'état du vêtement à "En prêt"
+        // 1. Modifier l'état du vêtement à "Demande en cours"
         $vetementPretSQL = "UPDATE vetement SET etat = ? WHERE idvetement = ?";
         $stmt = $conn->prepare($vetementPretSQL);
-        $stmt->execute([$statutpret, $vetement_idvetement]);
+        $stmt->execute([$etat_vetement, $vetement_idvetement]);
 
         // 2. Préparer les données pour l'insertion dans la table "pret"
         $sqlExecuter = [
@@ -23,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':idemprunteur' => $utilisateur_idutilisateur,
             ':statutpret' => $statutpret
         ];
-        if (isset($vetement_datefinpret)) {
-            $sqlExecuter[':datefinprevue'] = strtotime($vetement_datefinpret);
+        if (isset($vetement_datefinpret) && !empty($vetement_datefinpret)) {
+            $sqlExecuter[':datefinprevue'] = $vetement_datefinpret; // On garde le format DATE (YYYY-MM-DD)
             $pretInsertSQL = "INSERT INTO 
                 pret (idvetement, idemprunteur, datefinprevue, statutpret) 
                 VALUES (:idvetement, :idemprunteur, :datefinprevue, :statutpret)";
