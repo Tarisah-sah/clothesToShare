@@ -1,47 +1,39 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-include('../connexion/db_connect.php');
+include('db_connect.php');
 
 $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $email   = trim($data['email']   ?? '');
-    $nom     = trim($data['nom']     ?? '');
-    $prenom  = trim($data['prenom']  ?? '');
-    $adresse = trim($data['adresse'] ?? '');
-    $login   = trim($data['login']   ?? '');
-    $mdp     = $data['mdp']          ?? '';
+    $login = trim($data['login'] ?? '');
+    $mdp   = $data['mdp'] ?? '';
 
-    if (!$email || !$nom || !$prenom || !$adresse || !$login || !$mdp) {
-        echo json_encode(['status' => 'error', 'message' => 'Tous les champs sont obligatoires.']);
+    if (!$login || !$mdp) {
+        echo json_encode(['status' => 'error', 'message' => 'Merci de remplir tous les champs.']);
         exit;
     }
 
-    // Vérifier si le login ou l'email est déjà pris
-    $checkSQL = "SELECT COUNT(*) FROM utilisateur WHERE email = :email OR login = :login";
-    $stmt = $conn->prepare($checkSQL);
-    $stmt->execute([':email' => $email, ':login' => $login]);
-    if ($stmt->fetchColumn() > 0) {
-        echo json_encode(['status' => 'error', 'message' => 'Cet email ou ce login est déjà utilisé.']);
-        exit;
+    // On cherche l'utilisateur dans la base de données
+    $stmt = $conn->prepare("SELECT * FROM utilisateur WHERE login = :login AND mdp = :mdp");
+    $stmt->execute([':login' => $login, ':mdp' => $mdp]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        // On empêche les utilisateurs non validés de se connecter
+        if ($user['role'] === 'pending') {
+            echo json_encode(['status' => 'error', 'message' => 'Votre compte est en attente de validation par un administrateur.']);
+        } else {
+            // Sécurité : On ne renvoie pas le mot de passe au client JS
+            unset($user['mdp']);
+            echo json_encode(['status' => 'success', 'user' => $user]);
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Login ou mot de passe incorrect.']);
     }
-
-    // Insérer avec role = 'pending'
-    $sql = "INSERT INTO utilisateur (email, nom, prenom, adresse, login, mdp, role)
-            VALUES (:email, :nom, :prenom, :adresse, :login, :mdp, 'pending')";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':email'   => $email,
-        ':nom'     => $nom,
-        ':prenom'  => $prenom,
-        ':adresse' => $adresse,
-        ':login'   => $login,
-        ':mdp'     => password_hash($mdp, PASSWORD_DEFAULT)
-    ]);
-
-    echo json_encode(['status' => 'success', 'message' => 'Inscription envoyée, en attente de validation.']);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
 }
 
 $conn = null;
