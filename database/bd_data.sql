@@ -130,7 +130,7 @@ INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES
 (4, 'CToS - Tournai', "Rue Frinoise 12", 7500, "Tournai", 'assets/icons/ctos.png');
 
 INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
-(1, 'Casual', "Vetements et accessoires classiques.", 1, 'assets/img/local/y2k.jpg'),
+(1, 'Casual', "Vetements et accessoires classiques.", 1, 'assets/img/local/CASUAL.jpg'),
 (2, 'Chic', "Vetements et accessoires chic.", 1, 'assets/img/local/chic.jpg'),
 (3, 'Business', "Vetements et accessoires professionnels.", 1, 'assets/img/local/Business.jpg'),
 (4, 'Boheme', "Vetements et accessoires boho.", 1, 'assets/img/local/boho.jpg'),
@@ -141,11 +141,48 @@ INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
 (9, 'Y2k', "Vetements et accessoires des années 2000.", 1, 'assets/img/local/y2k.jpg'),
 (10, 'Autre', "Vetements et accessoires sans catégorie.", 1, 'assets/img/local/AUTRE.jpg');
 
+/* RANGEMENTS */
 INSERT INTO rangement(idRangement, nom, infoRangement, idLocal, photo) VALUES
-(1, '', "", 1, "");
+-- Pour le local 1 (Casual)
+(1, 'Armoire Principale', 'Grande armoire 3 portes', 1, ''),
+(2, 'Commode en bois', 'Commode à tiroirs pour les basiques', 1, ''),
+-- Pour le local 3 (Business)
+(3, 'Dressing Ouvert', 'Penderie pour costumes et chemises', 3, ''),
+(4, 'Meuble à chaussures', 'Meuble d''entrée', 3, ''),
+-- Pour le local 5 (Street wear)
+(5, 'Portant métallique', 'Portant robuste pour vestes et sweats', 5, ''),
+(6, 'Mur de Sneakers', 'Étagères transparentes pour chaussures', 5, ''),
+-- Pour le local 8 (Vintage)
+(7, 'Malle de voyage', 'Ancienne malle en cuir', 8, ''),
+(8, 'Armoire parisienne', 'Armoire chinée en brocante', 8, '');
 
+/* NIVEAUX */
 INSERT INTO niveau(idNiveau, nom, infoNiveau, idRangement, photo) VALUES
-(1, '', "", 1, "");
+-- Dans l'Armoire Principale Casual (idRangement = 1)
+(1, 'Étagère du haut', 'Pour les pulls et sweats', 1, ''),
+(2, 'Penderie', 'Pour les vestes, manteaux et chemises', 1, ''),
+(3, 'Étagère du bas', 'Pour les pantalons et jeans', 1, ''),
+
+-- Dans la Commode en bois Casual (idRangement = 2)
+(4, 'Tiroir 1 (Haut)', 'Sous-vêtements et chaussettes', 2, ''),
+(5, 'Tiroir 2', 'T-shirts manches courtes', 2, ''),
+(6, 'Tiroir 3', 'T-shirts manches longues', 2, ''),
+
+-- Dans le Dressing Ouvert Business (idRangement = 3)
+(7, 'Penderie Costumes', 'Cintres pour ensembles et vestons', 3, ''),
+(8, 'Penderie Chemises', 'Espace repassé', 3, ''),
+(9, 'Tiroir Accessoires', 'Cravates, ceintures, montres', 3, ''),
+
+-- Dans le Meuble à chaussures Business (idRangement = 4)
+(10, 'Niveau Supérieur', 'Chaussures de ville', 4, ''),
+(11, 'Niveau Inférieur', 'Chaussures détendues', 4, ''),
+
+-- Dans le Portant métallique Street wear (idRangement = 5)
+(12, 'Barre principale', 'Vestes oversize', 5, ''),
+
+-- Dans la Malle Vintage (idRangement = 7)
+(13, 'Fond de malle', 'Gros sacs et accessoires d''hiver', 7, ''),
+(14, 'Compartiment supérieur', 'Foulards, chapeaux et bijoux', 7, '');
 
 INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
 (1, 'Sportwear', 'Used for sports activities'),

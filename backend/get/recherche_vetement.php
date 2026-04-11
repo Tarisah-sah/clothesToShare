@@ -3,28 +3,33 @@ include('../connexion/db_connect.php');
 $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Récupération sécurisée des paramètres
-    $vetement_recherche = $_GET['vetement_recherche'] ?? '';
-    $vetement_motcle = "%" . $vetement_recherche . "%";
-    $vetement_categorie = $_GET['vetement_categorie'] ?? '';
-    $vetement_etat = $_GET['vetement_etat'] ?? '';
+    $sql = "SELECT * FROM vetement WHERE 1=1";
+    $params = [];
 
-    // Construction dynamique de la requête
-    $sql = "SELECT * FROM vetement WHERE (nom LIKE :motcle1 OR marque LIKE :motcle2)";
-    $params = [
-        ':motcle1' => $vetement_motcle,
-        ':motcle2' => $vetement_motcle
-    ];
-
-    // On n'ajoute les filtres que s'ils sont remplis et différents de "toutes"
-    if ($vetement_categorie !== '' && $vetement_categorie !== 'toutes') {
-        $sql .= " AND idcategorie = :categorie";
-        $params[':categorie'] = $vetement_categorie;
+    // Recherche par mot-clé sur TOUS les attributs textuels
+    if (!empty($_GET['motcle'])) {
+        $sql .= " AND (nom LIKE :m OR marque LIKE :m OR description LIKE :m OR couleur LIKE :m OR type LIKE :m OR taille LIKE :m)";
+        $params[':m'] = "%" . $_GET['motcle'] . "%";
     }
 
-    if ($vetement_etat !== '' && $vetement_etat !== 'tous') { 
-        $sql .= " AND etat = :etat";
-        $params[':etat'] = $vetement_etat;
+    // Filtres exacts
+    if (!empty($_GET['categorie'])) { $sql .= " AND idcategorie = :cat"; $params[':cat'] = $_GET['categorie']; }
+    if (!empty($_GET['etat'])) { $sql .= " AND etat = :etat"; $params[':etat'] = $_GET['etat']; }
+    if (!empty($_GET['taille'])) { $sql .= " AND taille = :taille"; $params[':taille'] = $_GET['taille']; }
+    if (!empty($_GET['genre'])) { $sql .= " AND genre = :genre"; $params[':genre'] = $_GET['genre']; }
+    if (!empty($_GET['type'])) { $sql .= " AND type LIKE :type"; $params[':type'] = "%" . $_GET['type'] . "%"; }
+    if (!empty($_GET['marque'])) { $sql .= " AND marque LIKE :marque"; $params[':marque'] = "%" . $_GET['marque'] . "%"; }
+
+    // Filtre multi-couleurs (IN)
+    if (!empty($_GET['couleurs'])) {
+        $couleursArray = explode(',', $_GET['couleurs']);
+        $placeholders = [];
+        foreach($couleursArray as $index => $c) {
+            $nomParam = ":c" . $index;
+            $placeholders[] = $nomParam;
+            $params[$nomParam] = $c;
+        }
+        $sql .= " AND couleur IN (" . implode(',', $placeholders) . ")";
     }
 
     $stmt = $conn->prepare($sql);

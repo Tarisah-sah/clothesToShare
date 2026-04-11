@@ -1,5 +1,3 @@
-// frontend/js/vetements.js
-
 let tousLesVetements = [];
 
 async function chargerVetements() {
@@ -50,4 +48,53 @@ async function ajouterVetement(event) {
     } else {
         alert("Erreur lors de l'ajout : " + (resultat.message || "Erreur inconnue"));
     }
+
+}
+
+// Fonction pour filtrer les vêtements
+async function filtrerVetements(event) {
+    event.preventDefault(); 
+
+    // Récupération des valeurs simples
+    const texte = document.getElementById('search-texte').value.trim();
+    const categorie = document.getElementById('search-categorie').value;
+    const etat = document.getElementById('search-etat').value;
+    const taille = document.getElementById('search-taille').value.trim();
+    const genre = document.getElementById('search-genre').value;
+    const type = document.getElementById('search-type').value.trim();
+    const marque = document.getElementById('search-marque').value.trim();
+
+    // Récupération des couleurs multiples (transformées en chaîne séparée par des virgules)
+    const couleursSelect = document.getElementById('search-couleur');
+    const couleurs = Array.from(couleursSelect.selectedOptions).map(opt => opt.value).join(',');
+
+    // Construction dynamique de l'URL avec URLSearchParams (plus propre)
+    const params = new URLSearchParams();
+    if (texte) params.append('motcle', texte);
+    if (categorie) params.append('categorie', categorie);
+    if (etat) params.append('etat', etat);
+    if (taille) params.append('taille', taille);
+    if (genre) params.append('genre', genre);
+    if (type) params.append('type', type);
+    if (marque) params.append('marque', marque);
+    if (couleurs) params.append('couleurs', couleurs);
+
+    const url = `get/recherche_vetement.php?${params.toString()}`;
+    const data = await fetchDonnees(url);
+
+    if (data && Array.isArray(data)) {
+        if (data.length === 0) {
+            document.getElementById('liste-vetements').innerHTML = '<div class="col-12"><p class="text-center text-muted">Aucun vêtement ne correspond.</p></div>';
+        } else {
+            afficherCartesVetements(data);
+        }
+    } else {
+        alert("Erreur lors de la recherche.");
+    }
+}
+
+// Fonction pour réinitialiser la recherche
+function reinitialiserRecherche() {
+    document.getElementById('form-recherche').reset(); // Vide les champs du formulaire
+    chargerVetements(); // Recharge tous les vêtements par défaut
 }

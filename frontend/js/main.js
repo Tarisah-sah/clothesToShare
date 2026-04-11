@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Soumission du formulaire d'ajout
     document.getElementById('form-vetement').addEventListener('submit', ajouterVetement);
 
-    // Écouteurs pour la recherche (à implémenter dans vetements.js plus tard)
-    // document.getElementById('form-recherche').addEventListener('submit', filtrerVetements);
-    // document.getElementById('btn-reset-recherche').addEventListener('click', reinitialiserRecherche);
+    // Écouteurs pour la recherche
+    document.getElementById('form-recherche').addEventListener('submit', filtrerVetements);
+    document.getElementById('btn-reset-recherche').addEventListener('click', reinitialiserRecherche);
 });
 
 // Écouteur pour afficher/masquer les infos de prêt dynamiquement
