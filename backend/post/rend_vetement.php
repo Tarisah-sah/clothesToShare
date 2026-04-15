@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->beginTransaction();
     try {
         // 1. Modifier l'état du vêtement à "Au lavage"
-        $vetementRendSQL = "UPDATE vetement SET etat = 'Au lavage' WHERE idvetement = ?";
+        $vetementRendSQL = "UPDATE vetement SET etat = 'Au lavage' WHERE idvetement = ? AND etat IN ('En prêt', 'Retour en attente')";
         $stmt = $conn->prepare($vetementRendSQL);
         $stmt->execute([$vetement_idvetement]);
 

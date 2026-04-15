@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $conn->beginTransaction();
     try {
-        $vetementLaveSQL = "UPDATE vetement SET etat = 'Disponible' WHERE idvetement = ?";
+        $vetementLaveSQL = "UPDATE vetement SET etat = 'Disponible' WHERE idvetement = ? AND etat LIKE 'Au lavage'";
         $stmt = $conn->prepare($vetementLaveSQL);
         $stmt->execute([$vetement_idvetement]);
         $conn->commit();

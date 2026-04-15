@@ -45,13 +45,13 @@ CREATE TABLE IF NOT EXISTS niveau ( /* etage */
 
 ALTER TABLE local
 	ADD CONSTRAINT fklocalsite
-		FOREIGN KEY(idSite) REFERENCES site(idSite);
+		FOREIGN KEY(idSite) REFERENCES site(idSite) ON DELETE CASCADE;
 ALTER TABLE rangement
 	ADD CONSTRAINT fkrangementlocal
-		FOREIGN KEY(idLocal) REFERENCES local(idLocal);
+		FOREIGN KEY(idLocal) REFERENCES local(idLocal) ON DELETE CASCADE;
 ALTER TABLE niveau
 	ADD CONSTRAINT fkniveaurangement
-		FOREIGN KEY(idRangement) REFERENCES rangement(idRangement);
+		FOREIGN KEY(idRangement) REFERENCES rangement(idRangement) ON DELETE CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS categorie (
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS vetement (
 	marque VARCHAR(20) NOT NULL,
 	photo VARCHAR(200) NOT NULL,
 	idcategorie INT(20) NOT NULL,
-	idniveau INT(20) NOT NULL,
+	idniveau INT(20),
 	idproprietaire INT(20) NOT NULL,
 	description TEXT NOT NULL, /* infoPlus */
 	PRIMARY KEY(idvetement),
@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS vetement (
 CREATE TABLE IF NOT EXISTS utilisateur (
 	idutilisateur INT(20) NOT NULL AUTO_INCREMENT,
 	email VARCHAR(255) NOT NULL UNIQUE,
+	sexe CHAR(1) NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
 	adresse TEXT NOT NULL,
@@ -100,27 +101,26 @@ CREATE TABLE IF NOT EXISTS pret (
 	datefinprevue DATETIME,
 	datefinreelle DATETIME,
 	commentaire TEXT,
-	statutpret VARCHAR(200) NOT NULL,
+	statutpret VARCHAR(50) NOT NULL,
 	PRIMARY KEY(idpret),
 	KEY(idvetement, idemprunteur)
 ) engine=innodb;
 
 ALTER TABLE vetement
 	ADD CONSTRAINT fkvetementcategorie
-		FOREIGN KEY(idcategorie) REFERENCES categorie(idcategorie);
-ALTER TABLE vetement
+		FOREIGN KEY(idcategorie) REFERENCES categorie(idcategorie),
 	ADD CONSTRAINT fkvetementniveau
-		FOREIGN KEY(idniveau) REFERENCES niveau(idNiveau);
-ALTER TABLE vetement
+		FOREIGN KEY(idniveau) REFERENCES niveau(idNiveau) ON DELETE SET NULL,
+		/* Si un niveau est supprimé, les vêtements associés ne sont pas supprimés mais leur idniveau est mis à NULL */
 	ADD CONSTRAINT fkvetementproprietaire
-		FOREIGN KEY(idproprietaire) REFERENCES utilisateur(idutilisateur);
+		FOREIGN KEY(idproprietaire) REFERENCES utilisateur(idutilisateur) ON DELETE CASCADE;
+		/* Si un utilisateur est supprimé, tous les vêtements qu'il possède sont également supprimés. */
 ALTER TABLE pret
 	ADD CONSTRAINT fkpretvetement
-		FOREIGN KEY(idvetement) REFERENCES vetement(idvetement);
-ALTER TABLE pret
+		FOREIGN KEY(idvetement) REFERENCES vetement(idvetement),
 	ADD CONSTRAINT fkpretemprenteur
-		FOREIGN KEY(idemprunteur) REFERENCES utilisateur(idutilisateur);
-		
+		FOREIGN KEY(idemprunteur) REFERENCES utilisateur(idutilisateur) ON DELETE SET NULL;
+
 
 /* DONNEES */
 INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES

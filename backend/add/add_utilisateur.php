@@ -12,15 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom  = trim($data['prenom']  ?? '');
     $adresse = trim($data['adresse'] ?? '');
     $login   = trim($data['login']   ?? '');
+    $sexe    = trim($data['sexe']    ?? '');
     $mdp     = $data['mdp']          ?? '';
 
-    if (!$email || !$nom || !$prenom || !$adresse || !$login || !$mdp) {
+    if (!$email || !$nom || !$prenom || !$adresse || !$login || !$mdp || !$sexe) {
         echo json_encode(['status' => 'error', 'message' => 'Tous les champs sont obligatoires.']);
         exit;
     }
 
     // Vérifier si le login ou l'email est déjà pris
-    $checkSQL = "SELECT COUNT(*) FROM utilisateur WHERE email = :email OR login = :login";
+    $checkSQL = "SELECT COUNT(*) FROM utilisateur WHERE email LIKE :email OR login LIKE :login";
     $stmt = $conn->prepare($checkSQL);
     $stmt->execute([':email' => $email, ':login' => $login]);
     if ($stmt->fetchColumn() > 0) {
@@ -29,11 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insérer avec role = 'pending'
-    $sql = "INSERT INTO utilisateur (email, nom, prenom, adresse, login, mdp, role)
-            VALUES (:email, :nom, :prenom, :adresse, :login, :mdp, 'pending')";
+    $sql = "INSERT INTO utilisateur (email, sexe, nom, prenom, adresse, login, mdp)
+            VALUES (:email, :sexe, :nom, :prenom, :adresse, :login, :mdp)";
     $stmt = $conn->prepare($sql);
     $stmt->execute([
         ':email'   => $email,
+        ':sexe'    => $sexe,
         ':nom'     => $nom,
         ':prenom'  => $prenom,
         ':adresse' => $adresse,
