@@ -171,7 +171,14 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nom, prenom, email, adresse, login, mdp })
         })
-        .then(r => r.json())
+        .then(async r => {
+            // On lit la réponse "brute" du serveur pour voir ce que PHP dit vraiment
+            const texteBrut = await r.text();
+            console.log("🔍 Réponse exacte du serveur PHP :", texteBrut);
+            
+            // On essaie de transformer le texte en JSON
+            return JSON.parse(texteBrut);
+        })
         .then(data => {
             if (data.status === 'success') {
                 succes.classList.remove('d-none');
@@ -181,9 +188,11 @@
                 erreur.classList.remove('d-none');
             }
         })
-        .catch(() => {
-            erreur.textContent = 'Erreur de connexion au serveur.';
+        .catch((err) => {
+            // Si PHP n'a pas renvoyé de JSON, ça crashe ici, mais on a le log dans la console !
+            erreur.textContent = "Ouvre la console (F12) ! Le serveur a renvoyé une erreur PHP visible dans les logs.";
             erreur.classList.remove('d-none');
+            console.error("L'erreur Javascript :", err);
         })
         .finally(() => {
             btn.disabled = false;

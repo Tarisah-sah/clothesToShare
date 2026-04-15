@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS clothes_to_share CHARACTER SET = 'utf8mb4';
+CREATE DATABASE IF NOT EXISTS clothet53 CHARACTER SET = 'utf8mb4';
 
-USE clothes_to_share;
+USE clothet53;
 
 /* BASES DE DONNEES */
 CREATE TABLE IF NOT EXISTS site ( /* clothes_to_share */
@@ -310,10 +310,10 @@ INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
 (11, 'Autre','Autre categorie.');
 
 INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, role) VALUES
-(1, 'tarisah@example.com', 'Tarisa', "Hannah", "123 Main St", "hannahtaisa", "hannahtaisa", 'admin'),
-(2, 'does@example.com', 'Doe', "Suria", "456 Oak Ave", "doesuria", "doesuria", 'admin'),
-(3, 'griffithn@example.com', 'Griffith', "Nephtali", "789 Pine Rd", "griffithnephtali", "griffithnephtali", 'admin'),
-(4, 'feliciaKan@example.com', 'Kanud', "Felicia", "321 Super Rd", "fekan", "fekan", 'user');
+(1, 'hannah34@exemple.com', 'Tarisa', "Hannah", "123 Main St", "titi67", "$2y$10$X1QugRmLPF/x.H7kroXyFeKqeYP7Z/KK487lUnSws/ayKTMs.Db1.", 'admin'),
+(2, 'does@example.com', 'Doe', "Suria", "456 Oak Ave", "doesuria", "$2y$10$wwkkLT8/ludckNTZ74vLe.MVdKHOJzD699zmRCGuTBcmevhdyTj2C", 'admin'),
+(3, 'griffithn@example.com', 'Griffith', "Nephtali", "789 Pine Rd", "griffithnephtali", "$2y$10$wSjGBh27Vav1qiuOWwvYpe0ecvZj.BFOp1vy5fT1GgCF/pdJ/JHre", 'admin'),
+(4, 'feliciaKan@example.com', 'Kanud', "Felicia", "321 Super Rd", "fekan", "$2y$10$s3uvW27negmw1w/eHQ6HhO7JdX7yj3WB78Y/1TV8DJMvdOykRWD7i", 'user');
 
 INSERT INTO vetement(idvetement, nom, taille, type, couleur, etat, genre, marque, photo, idcategorie, idniveau, idproprietaire, description) VALUES
 (1, 'T-shirt Running Pro', 'M', 'Haut', 'Noir', 'Disponible', 'homme', 'Nike', 'assets/img/wardrobe/tshirt_nike.jpg', 1, 2, 1, 'T-shirt très respirant, idéal pour le jogging. Très bon état.'),

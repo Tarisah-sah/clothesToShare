@@ -1,7 +1,7 @@
 <?php
 function pdo_connectDB() {
     $host    = "localhost";
-    $db      = "clothes_to_share";
+    $db      = "clothet53";
     $user    = "root";
     $pass    = ""; 
     $charset = "utf8mb4";
@@ -17,7 +17,7 @@ function pdo_connectDB() {
         return new PDO($dsn, $user, $pass, $options);
     } catch (\PDOException $e) {
         header('Content-Type: application/json');
-        echo json_encode(["error" => "Erreur de connexion à la base"]);
+        echo json_encode(["error" => "Erreur MySQL détaillée : " . $e->getMessage()]);
         exit;
     }
 }

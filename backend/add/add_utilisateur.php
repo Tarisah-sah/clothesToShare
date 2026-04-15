@@ -5,6 +5,7 @@ include('../connexion/db_connect.php');
 $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. On lit le JSON envoyé par Javascript (C'est ça qu'il manquait !)
     $data = json_decode(file_get_contents('php://input'), true);
 
     $email   = trim($data['email']   ?? '');
@@ -19,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Vérifier si le login ou l'email est déjà pris
+    // 2. Vérifier si le login ou l'email est déjà pris
     $checkSQL = "SELECT COUNT(*) FROM utilisateur WHERE email = :email OR login = :login";
     $stmt = $conn->prepare($checkSQL);
     $stmt->execute([':email' => $email, ':login' => $login]);
@@ -28,21 +29,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Insérer avec role = 'pending'
-    $sql = "INSERT INTO utilisateur (email, nom, prenom, adresse, login, mdp, role)
-            VALUES (:email, :nom, :prenom, :adresse, :login, :mdp, 'pending')";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':email'   => $email,
-        ':nom'     => $nom,
-        ':prenom'  => $prenom,
-        ':adresse' => $adresse,
-        ':login'   => $login,
-        ':mdp'     => password_hash($mdp, PASSWORD_DEFAULT)
-    ]);
+    // 3. HACHAGE DU MOT DE PASSE
+    $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT);
 
-    $id_newUtilisateur = $conn->lastInsertId();
-    echo json_encode(['status' => 'success', 'id' => $id_newUtilisateur]);
+    try {
+        // 4. Insérer avec role = 'pending' et le mot de passe crypté
+        $sql = "INSERT INTO utilisateur (email, nom, prenom, adresse, login, mdp, role)
+                VALUES (:email, :nom, :prenom, :adresse, :login, :mdp, 'pending')";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':email'   => $email,
+            ':nom'     => $nom,
+            ':prenom'  => $prenom,
+            ':adresse' => $adresse,
+            ':login'   => $login,
+            ':mdp'     => $mdp_hash // On insère le hash ici !
+        ]);
+
+        $id_newUtilisateur = $conn->lastInsertId();
+        echo json_encode(['status' => 'success', 'id' => $id_newUtilisateur]);
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
 }
 
 $conn = null;

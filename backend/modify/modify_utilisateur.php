@@ -37,9 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $utilisateurModifSQL .= "login = :login, ";
             $params[':login'] = $utilisateur_login;
         }
-        if (!empty($utilisateur_mdp)) {
-            $utilisateurModifSQL .= "mdp = :mdp, ";
-            $params[':mdp'] = $utilisateur_mdp;
+        // Extrait de ce que tu devrais avoir dans modify_utilisateur.php :
+        if (!empty($_POST['nouveau_mdp'])) {
+            $nouveau_mdp_hash = password_hash($_POST['nouveau_mdp'], PASSWORD_DEFAULT);
+            
+            $stmt = $conn->prepare("UPDATE utilisateur SET mdp = :mdp WHERE idutilisateur = :id");
+            $stmt->execute([
+                ':mdp' => $nouveau_mdp_hash,
+                ':id' => $_SESSION['idutilisateur'] // Utilisation de la session pour la sécurité !
+            ]);
         }
         if (!empty($utilisateur_role)) {
             $utilisateurModifSQL .= "role = :role, ";
