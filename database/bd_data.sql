@@ -304,7 +304,7 @@ INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
 (5, 'Chaussures', 'Baskets, bottes, talons, sandales, mocassins...'),
 (6, 'Accessoires', 'Sacs, ceintures, chapeaux, écharpes, gants...'),
 (7, 'Bijoux', 'Colliers, bracelets, bagues, montres, boucles d''oreilles...'),
-(8, 'Sportwear', 'Tenues, brassières et accessoires pour l''activité physique.'),
+(8, 'Vêtements de sport', 'Tenues, brassières et accessoires pour l''activité physique.'),
 (9, 'Vêtements de nuit', 'Pyjamas, nuisettes, peignoirs et vêtements d''intérieur.'),
 (10, 'Sous-vêtements', 'Lingerie, chaussettes, collants.'),
 (11, 'Autre','Autre categorie.');
