@@ -52,23 +52,23 @@ function afficherCartesVetements(vetements) {
         if (currentUser && currentUser.idutilisateur == vetement.idproprietaire) {
             actionsHTML += `
                 <div class="d-flex gap-2 mb-2">
-                    <button class="btn btn-sm btn-secondary w-50" onclick="preparerEdition(${vetement.idvetement})">✏️ Modifier</button>
-                    <button class="btn btn-sm btn-outline-danger w-50" onclick="supprimerVetement(${vetement.idvetement})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-secondary w-50" onclick="preparerEdition(${vetement.idvetement})">Modifier</button>
+                    <button class="btn btn-sm btn-outline-danger w-50" onclick="supprimerVetement(${vetement.idvetement})">Supprimer</button>
                 </div>
             `;
             if (vetement.etat === 'Disponible') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-primary w-100" onclick="ouvrirModalPret(${vetement.idvetement}, '${vetement.nom.replace(/'/g, "\\'")}')">🤝 Prêter</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-primary w-100" onclick="ouvrirModalPret(${vetement.idvetement}, '${vetement.nom.replace(/'/g, "\\'")}')">Prêter</button>`;
             } else if (vetement.etat === 'En prêt') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">🔙 Forcer le retour</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">Forcer le retour</button>`;
             } else if (vetement.etat === 'Retour en attente') {
-                actionsHTML += `<button class="btn btn-sm btn-success w-100 fw-bold" onclick="rendreVetement(${vetement.idvetement})">✅ Confirmer la réception</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-success w-100 fw-bold" onclick="rendreVetement(${vetement.idvetement})">Confirmer la réception</button>`;
             } else if (vetement.etat === 'Au lavage') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">✨ Laver & Ranger</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">Laver & Ranger</button>`;
             }
         } 
         // ACTIONS EMPRUNTEUR (SÉCURISÉ : on vérifie l'id de l'emprunteur renvoyé par PHP)
         else if (currentUser && vetement.etat === 'En prêt' && vetement.idemprunteur == currentUser.idutilisateur) {
-            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">👋 Signaler comme rendu</button>`;
+            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">Signaler comme rendu</button>`;
         }
 
         let estFavori = favoris.includes(vetement.idvetement.toString());
@@ -96,11 +96,11 @@ function afficherCartesVetements(vetements) {
         const mesf = vetements.filter(v => favoris.includes(v.idvetement.toString()) && v.idproprietaire != currentUser.idutilisateur);
 
         conteneur.innerHTML = `
-            <h3 class="w-100 border-bottom pb-2">👕 Mes possessions</h3>
+            <h3 class="w-100 border-bottom pb-2">Mes possessions</h3>
             <div class="row g-4 w-100 mb-4">${mesh.length ? mesh.map(genererCarte).join('') : '<p class="text-muted">Aucun vêtement.</p></div>'}
-            <h3 class="w-100 border-bottom pb-2 mt-4">🤝 Mes emprunts</h3>
+            <h3 class="w-100 border-bottom pb-2 mt-4">Mes emprunts</h3>
             <div class="row g-4 w-100 mb-4">${mese.length ? mese.map(genererCarte).join('') : '<p class="text-muted">Aucun emprunt.</p></div>'}
-            <h3 class="w-100 border-bottom pb-2 mt-4 text-danger">❤️ Mes Favoris</h3>
+            <h3 class="w-100 border-bottom pb-2 mt-4 text-danger">Mes Favoris</h3>
             <div class="row g-4 w-100">${mesf.length ? mesf.map(genererCarte).join('') : '<p class="text-muted">Aucun favori.</p></div>'}`;
     } else {
         conteneur.innerHTML = vetements.map(genererCarte).join('');
