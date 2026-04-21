@@ -3,11 +3,6 @@
  * et les fonctions d'administration (validation des comptes).
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialisation de la session au chargement de la page
-    verifierSession();
-});
-
 /**
  * Vérifie si un utilisateur est connecté via le sessionStorage
  * et met à jour l'interface (Navbar, Avatar, Admin) en conséquence.

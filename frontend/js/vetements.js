@@ -1,20 +1,21 @@
-let tousLesVetements = [];
-
-// Variable globale pour mémoriser sur quel onglet on est
-let modeActuel = 'accueil'; 
-
-// Écouteurs pour le menu (A placer au tout début de vetements.js ou dans un DOMContentLoaded)
-document.addEventListener('DOMContentLoaded', () => {
+function initialiserMenuVetements() {
     document.getElementById('nav-accueil').addEventListener('click', (e) => {
         e.preventDefault();
+        window.history.pushState({}, '', 'dressing.html?tab=accueil'); // Met à jour l'URL silencieusement
         chargerVetements('accueil');
     });
 
     document.getElementById('nav-dressing').addEventListener('click', (e) => {
         e.preventDefault();
+        window.history.pushState({}, '', 'dressing.html?tab=dressing');
         chargerVetements('dressing');
     });
-});
+}
+
+let tousLesVetements = [];
+
+// Variable globale pour mémoriser sur quel onglet on est
+let modeActuel = 'accueil';
 
 // La fonction de chargement modifiée
 // La fonction de chargement modifiée
@@ -57,7 +58,16 @@ async function chargerVetements(mode = 'accueil') {
 
     // Construction de l'URL pour le PHP
     let url = `vetement/getall_vetements.php?mode=${mode}`;
-    if (user) url += `&userId=${user.idutilisateur}`;
+    if (user) {
+        url += `&userId=${user.idutilisateur}`;
+        // Si on est dans le dressing, on envoie la liste de nos favoris au PHP
+        if (mode === 'dressing') {
+            const favoris = JSON.parse(localStorage.getItem('favoris_' + user.idutilisateur)) || [];
+            if (favoris.length > 0) {
+                url += `&favoris=${favoris.join(',')}`;
+            }
+        }
+    }
 
     const data = await fetchDonnees(url);
     if (data && Array.isArray(data)) {

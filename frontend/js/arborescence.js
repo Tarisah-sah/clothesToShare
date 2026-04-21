@@ -1,29 +1,38 @@
 let historiqueArborescence = []; // Pour mémoriser où on est et pouvoir faire "Retour"
 
-// Fonction pour tout masquer et afficher uniquement l'arborescence
-document.getElementById('nav-arborescence').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('section-dressing').style.display = 'none';
-    document.getElementById('section-recherche').style.display = 'none';
-    document.getElementById('section-formulaire').style.display = 'none';
-    
-    document.getElementById('section-arborescence').style.display = 'block';
-    
-    // On charge la première étape : Les Locaux
-    chargerBulles('locaux', null);
-});
-
-// Bouton Retour
-document.getElementById('btn-retour-arborescence').addEventListener('click', () => {
-    historiqueArborescence.pop(); // Enlève l'état actuel
-    const etatPrecedent = historiqueArborescence.pop(); // Récupère l'état précédent
-    
-    if (etatPrecedent) {
-        chargerBulles(etatPrecedent.type, etatPrecedent.id);
-    } else {
-        chargerBulles('locaux', null); // Retour à la case départ
+// On englobe les écouteurs dans une fonction qu'on appellera plus tard
+function initialiserArborescence() {
+    // Fonction pour tout masquer et afficher uniquement l'arborescence
+    const navArborescence = document.getElementById('nav-arborescence');
+    if (navArborescence) {
+        navArborescence.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('section-dressing').style.display = 'none';
+            document.getElementById('section-recherche').style.display = 'none';
+            document.getElementById('section-formulaire').style.display = 'none';
+            
+            document.getElementById('section-arborescence').style.display = 'block';
+            
+            // On charge la première étape : Les Locaux
+            chargerBulles('locaux', null);
+        });
     }
-});
+
+    // Bouton Retour
+    const btnRetour = document.getElementById('btn-retour-arborescence');
+    if (btnRetour) {
+        btnRetour.addEventListener('click', () => {
+            historiqueArborescence.pop(); // Enlève l'état actuel
+            const etatPrecedent = historiqueArborescence.pop(); // Récupère l'état précédent
+            
+            if (etatPrecedent) {
+                chargerBulles(etatPrecedent.type, etatPrecedent.id);
+            } else {
+                chargerBulles('locaux', null); // Retour à la case départ
+            }
+        });
+    }
+}
 
 // Fonction générique pour charger les bulles selon le niveau
 async function chargerBulles(type, parentId) {

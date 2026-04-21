@@ -53,7 +53,6 @@
                 <div class="col-12 col-md-5">
 
                     <div class="text-center mb-4">
-                        <div style="font-size: 40px;">👗</div>
                         <h1 class="titre-app">ClothesToShare</h1>
                         <p class="sous-titre">Connecte-toi pour accéder à ta garde-robe</p>
                     </div>
@@ -120,10 +119,9 @@
                 .then(r => r.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        // Sauvegarder l'utilisateur connecté pour y accéder depuis index.html
                         sessionStorage.setItem('user', JSON.stringify(data.user));
                         // Redirection vers l'accueil
-                        window.location.href = 'index.html';
+                        window.location.href = 'dressing.html';
                     } else {
                         erreur.textContent = data.message || 'Login ou mot de passe incorrect.';
                         erreur.classList.remove('d-none');

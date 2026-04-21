@@ -1,0 +1,103 @@
+<div id="section-formulaire" style="display: none;">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h3 class="card-title h5 mb-0" id="form-titre">Ajouter un vêtement</h3>
+            <button type="button" class="btn-close btn-close-white" id="btn-fermer-form"></button>
+        </div>
+        <div class="card-body">
+            <form id="form-vetement">
+                <input type="hidden" id="idproprietaire" value="1">
+                <input type="hidden" id="idniveau" value="1">
+                <input type="hidden" id="edit-idvetement" value="">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Photo *</label>
+                    <input type="file" class="form-control" id="photo" accept="image/*" required>
+                    <small class="text-muted d-none" id="aide-photo">Laisse vide pour conserver l'image actuelle.</small>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label fw-bold">Nom du vêtement *</label>
+                        <input type="text" class="form-control" id="nom" required>
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label fw-bold">Marque</label>
+                        <input type="text" class="form-control" id="marque">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Taille</label>
+                        <input type="text" class="form-control" id="taille" required>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Couleur</label>
+                        <input type="text" class="form-control" id="couleur" required>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Genre</label>
+                        <select class="form-select" id="genre">
+                            <option value="mixte">Mixte</option>
+                            <option value="homme">Homme</option>
+                            <option value="femme">Femme</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Catégorie *</label>
+                        <select class="form-select" id="idcategorie" required>
+                            <option value="1">Hauts</option>
+                            <option value="2">Bas</option>
+                            <option value="3">Robes & Combinaisons</option>
+                            <option value="4">Manteaux & Vestes</option>
+                            <option value="5">Chaussures</option>
+                            <option value="6">Accessoires</option>
+                            <option value="7">Bijoux</option>
+                            <option value="8">Vêtements de sport</option>
+                            <option value="9">Vêtements de nuit</option>
+                            <option value="10">Sous-vêtements</option>
+                            <option value="11">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">État *</label>
+                    <select class="form-select" id="etat" required>
+                        <option value="Disponible">Disponible</option>
+                        <option value="En prêt">En prêt</option>
+                        <option value="Au lavage">Au lavage</option>
+                    </select>
+                </div>
+
+                <div id="section-pret-dynamique" class="bg-warning bg-opacity-10 p-3 rounded mb-3 border border-warning" style="display: none;">
+                    <h6 class="fw-bold text-warning-emphasis">Détails du prêt en cours</h6>
+                    <div class="mb-2">
+                        <label class="form-label small">Prêté à qui ? *</label>
+                        <select class="form-select" id="idemprunteur">
+                            <option value="">Sélectionner un utilisateur...</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Date de fin prévue *</label>
+                        <input type="date" class="form-control" id="datefinprevue">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Description</label>
+                    <textarea class="form-control" id="description" rows="3" required></textarea>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-danger" id="btn-annuler">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

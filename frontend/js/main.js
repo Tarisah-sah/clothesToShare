@@ -1,20 +1,42 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     
-    // Initialisation
-    chargerVetements();
+    // 1. On attend que TOUS les composants HTML soient injectés
+    await chargerComposant('composant-navbar', 'frontend/components/navbar.html');
+    await chargerComposant('composant-modals', 'frontend/components/modals.html');
+    await chargerComposant('composant-recherche', 'frontend/components/recherche.html');
+    await chargerComposant('composant-formulaire', 'frontend/components/formulaireAjout.html');
 
-    // Écouteurs pour le formulaire d'ajout
+    // 2. Maintenant que le HTML existe, on lance la vérification de connexion
+    verifierSession();
+
+    // 3. On active les boutons du menu
+    initialiserMenuVetements();
+    initialiserArborescence();
+
+    // 4. On charge le contenu principal (la page d'accueil)
+    // On lit l'URL pour savoir quel onglet ouvrir
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab') || 'accueil';
+    
+    if (tab === 'dressing') {
+        chargerVetements('dressing');
+    } else if (tab === 'explorer') {
+        // On attend 100ms que le composant soit bien prêt avant de cliquer
+        setTimeout(() => document.getElementById('nav-arborescence').click(), 100);
+    } else {
+        chargerVetements('accueil');
+    }
+    
+    // 5. On attache les événements aux éléments qui viennent d'être injectés
     document.getElementById('btn-afficher-ajout').addEventListener('click', () => {
         reinitialiserFormulaire();
         basculerAffichageFormulaire(true);
     });
+    
     document.getElementById('btn-annuler').addEventListener('click', () => basculerAffichageFormulaire(false));
     document.getElementById('btn-fermer-form').addEventListener('click', () => basculerAffichageFormulaire(false));
     
-    // Soumission du formulaire d'ajout
     document.getElementById('form-vetement').addEventListener('submit', ajouterVetement);
-
-    // Écouteurs pour la recherche
     document.getElementById('form-recherche').addEventListener('submit', filtrerVetements);
     document.getElementById('btn-reset-recherche').addEventListener('click', reinitialiserRecherche);
 });

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = JSON.parse(userJson);
     if (user.role !== 'admin') {
         alert("Accès refusé. Cette page est réservée aux administrateurs.");
-        window.location.href = 'index.html';
+        window.location.href = 'dressing.html';
         return;
     }
 
