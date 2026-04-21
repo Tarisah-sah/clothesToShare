@@ -62,7 +62,7 @@ function verifierSession() {
  * Récupère le nombre de demandes en attente pour mettre à jour le badge dans le menu.
  */
 function actualiserBadgeDemandes() {
-    fetch('backend/get/getpending_utilisateurs.php')
+    fetch('backend/utilisateur/getpending_utilisateurs.php')
         .then(r => r.json())
         .then(data => {
             if (data.length > 0) {
@@ -83,7 +83,7 @@ function chargerDemandes() {
     const liste = document.getElementById('liste-demandes');
     liste.innerHTML = '<p class="text-muted">Chargement...</p>';
 
-    fetch('backend/get/getpending_utilisateurs.php')
+    fetch('backend/utilisateur/getpending_utilisateurs.php')
         .then(r => r.json())
         .then(data => {
             if (!data.length) {

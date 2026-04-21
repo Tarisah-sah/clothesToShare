@@ -36,8 +36,8 @@ function afficherCartesVetements(vetements) {
             // Modifier / Supprimer
             actionsHTML += `
                 <div class="d-flex gap-2 mb-2">
-                    <button class="btn btn-sm btn-secondary w-50" onclick="preparerEdition(${vetement.idvetement})">✏️ Modifier</button>
-                    <button class="btn btn-sm btn-outline-danger w-50" onclick="supprimerVetement(${vetement.idvetement})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-secondary w-50" onclick="preparerEdition(${vetement.idvetement})">Modifier</button>
+                    <button class="btn btn-sm btn-outline-danger w-50" onclick="supprimerVetement(${vetement.idvetement})">Sup.</button>
                 </div>
             `;
 
@@ -45,17 +45,17 @@ function afficherCartesVetements(vetements) {
             if (vetement.etat === 'Disponible') {
                 actionsHTML += `<button class="btn btn-sm btn-outline-primary w-100" onclick="ouvrirModalPret(${vetement.idvetement}, '${vetement.nom.replace(/'/g, "\\'")}')">🤝 Prêter (Manuellement)</button>`;
             } else if (vetement.etat === 'En prêt') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">🔙 Forcer le retour</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">Forcer le retour</button>`;
             } else if (vetement.etat === 'Retour en attente') {
                 // Le propriétaire confirme qu'il a bien récupéré son habit
-                actionsHTML += `<button class="btn btn-sm btn-success w-100 fw-bold" onclick="rendreVetement(${vetement.idvetement})">✅ Confirmer la réception</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-success w-100 fw-bold" onclick="rendreVetement(${vetement.idvetement})">Confirmer la réception</button>`;
             } else if (vetement.etat === 'Au lavage') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">✨ Laver & Ranger (Dispo)</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">Laver & Ranger (Dispo)</button>`;
             } else if (vetement.etat === 'Demande en cours') {
                 actionsHTML += `
                     <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-success w-50" onclick="repondreDemande(${vetement.idvetement}, 'accepter')">✅ Accepter</button>
-                        <button class="btn btn-sm btn-danger w-50" onclick="repondreDemande(${vetement.idvetement}, 'refuser')">❌ Refuser</button>
+                        <button class="btn btn-sm btn-success w-50" onclick="repondreDemande(${vetement.idvetement}, 'accepter')">Accepter</button>
+                        <button class="btn btn-sm btn-danger w-50" onclick="repondreDemande(${vetement.idvetement}, 'refuser')">Refuser</button>
                     </div>
                 `;
             }
@@ -63,7 +63,7 @@ function afficherCartesVetements(vetements) {
         // --- 2. BOUTONS POUR L'EMPRUNTEUR ---
         // S'il n'est pas le propriétaire mais qu'il voit l'habit "En prêt", c'est que c'est lui l'emprunteur !
         else if (currentUser && vetement.etat === 'En prêt') {
-            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">👋 Signaler comme rendu</button>`;
+            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">Signaler comme rendu</button>`;
         }
 
         const carteHTML = `

@@ -45,17 +45,17 @@ async function chargerBulles(type, parentId) {
     // Selon le type, on appelle le bon fichier PHP
     if (type === 'locaux') {
         titre.innerHTML = "📍 Choisis un Local";
-        url = 'get/get_locaux.php'; 
+        url = 'local/get_locaux.php'; 
     } else if (type === 'rangements') {
         titre.innerHTML = "🗄️ Choisis un Rangement";
-        url = `get/get_rangements.php?idLocal=${parentId}`;
+        url = `rangement/get_rangements.php?idLocal=${parentId}`;
     } else if (type === 'niveaux') {
         titre.innerHTML = "📏 Choisis un Niveau";
-        url = `get/get_niveaux.php?idRangement=${parentId}`;
+        url = `niveau/get_niveaux.php?idRangement=${parentId}`;
     } else if (type === 'vetements') {
         // Ici on n'affiche plus des bulles, mais les cartes de vêtements normales
         titre.innerHTML = "👗 Vêtements trouvés";
-        const urlVetements = `get/getall_vetements.php?idNiveau=${parentId}`; 
+        const urlVetements = `vetement/getall_vetements.php?idNiveau=${parentId}`; 
         const dataVetements = await fetchDonnees(urlVetements);
         conteneur.innerHTML = ''; // On vide les bulles
         

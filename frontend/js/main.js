@@ -32,8 +32,7 @@ document.getElementById('etat').addEventListener('change', async function() {
 
         // Charger les utilisateurs si la liste est vide
         if (emprunteurSelect.options.length <= 1) {
-            // Remplacer getpending_utilisateurs par get_all_utilisateurs quand il existera
-            const utilisateurs = await fetchDonnees('get/getpending_utilisateurs.php'); 
+            const utilisateurs = await fetchDonnees('utilisateur/get_all_utilisateurs.php'); 
             if (utilisateurs) {
                 utilisateurs.forEach(user => {
                     emprunteurSelect.innerHTML += `<option value="${user.idutilisateur}">${user.nom} ${user.prenom}</option>`;

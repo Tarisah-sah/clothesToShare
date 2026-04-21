@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Administration - ClothesToShare</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body class="bg-light">
+
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ad1457;">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="#">⚙️ CToS - Espace Admin</a>
+                <div class="d-flex gap-3 align-items-center">
+                    <a href="index.html" class="text-white text-decoration-none">⬅ Retour au site</a>
+                    <button class="btn btn-sm btn-outline-light" id="btn-deconnexion-admin">Déconnexion</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container my-5">
+            <h2 class="mb-4">Tableau de bord Administrateur</h2>
+
+            <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">🏷️ Catégories</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="locaux-tab" data-bs-toggle="tab" data-bs-target="#locaux" type="button" role="tab">🏠 Locaux</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="rangements-tab" data-bs-toggle="tab" data-bs-target="#rangements" type="button" role="tab">🗄️ Rangements</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="adminTabsContent">
+                
+                <div class="tab-pane fade show active" id="categories" role="tabpanel">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-categorie">+ Nouvelle Catégorie</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Nom</th><th>Description</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-categories">
+                                    <tr><td colspan="4" class="text-center text-muted">Chargement...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="locaux" role="tabpanel">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-local">+ Nouveau Local</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Informations</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-locaux">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="rangements" role="tabpanel">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-rangement">+ Nouveau Rangement</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Local</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-rangements">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <div class="modal fade" id="modalLocal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalLocalTitre">Ajouter un local</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-local">
+                            <input type="hidden" id="local-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom du local *</label>
+                                <input type="text" class="form-control" id="local-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Informations</label>
+                                <textarea class="form-control" id="local-info" rows="2"></textarea>
+                            </div>
+                            <input type="hidden" id="local-idsite" value="1"> 
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-local">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalRangement" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalRangementTitre">Ajouter un rangement</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-rangement">
+                            <input type="hidden" id="rangement-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom du rangement *</label>
+                                <input type="text" class="form-control" id="rangement-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Local auquel il appartient *</label>
+                                <select class="form-select" id="rangement-idlocal" required>
+                                    <option value="">Choisir un local...</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Informations</label>
+                                <textarea class="form-control" id="rangement-info" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-rangement">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="frontend/js/api.js"></script>
+        <script src="frontend/js/admin.js"></script>
+    </body>
+</html>

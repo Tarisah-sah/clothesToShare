@@ -36,7 +36,7 @@ async function chargerVetements(mode = 'accueil') {
     
     // Changement du titre H2
     const titre = document.getElementById('titre-section-vetements');
-    if (titre) titre.innerHTML = mode === 'dressing' ? '👗 Mon Dressing' : '🌍 Accueil';
+    if (titre) titre.innerHTML = mode === 'dressing' ? 'Mon Dressing' : 'Accueil';
 
     // --- NOUVEAUTÉ : GESTION DU BOUTON "+ AJOUTER" ---
     const btnAjout = document.getElementById('btn-afficher-ajout');
@@ -56,7 +56,7 @@ async function chargerVetements(mode = 'accueil') {
     document.getElementById('section-dressing').style.display = 'block';
 
     // Construction de l'URL pour le PHP
-    let url = `get/getall_vetements.php?mode=${mode}`;
+    let url = `vetement/getall_vetements.php?mode=${mode}`;
     if (user) url += `&userId=${user.idutilisateur}`;
 
     const data = await fetchDonnees(url);
@@ -93,7 +93,7 @@ async function ajouterVetement(event) {
     formData.append('vetement_new[datefinprevue]', document.getElementById('datefinprevue').value);
     if (photoFile) formData.append('photo', photoFile);
 
-    const resultat = await postDonnees('add/add_vetement.php', formData);
+    const resultat = await postDonnees('vetement/add_vetement.php', formData);
     
     if (resultat && resultat.status === 'success') {
         alert("Vêtement ajouté avec succès !");
@@ -139,7 +139,7 @@ async function filtrerVetements(event) {
     params.append('mode', modeActuel);
     if (user) params.append('userId', user.idutilisateur);
 
-    const url = `get/recherche_vetement.php?${params.toString()}`;
+    const url = `vetement/recherche_vetement.php?${params.toString()}`;
     const data = await fetchDonnees(url);
 
     if (data && Array.isArray(data)) {
@@ -172,7 +172,7 @@ async function ouvrirModalPret(idVetement, nomVetement) {
     // Charger les utilisateurs si la liste déroulante est vide
     const select = document.getElementById('pret-emprunteur');
     if (select.options.length <= 1) {
-        const utilisateurs = await fetchDonnees('get/get_all_utilisateurs.php');
+        const utilisateurs = await fetchDonnees('utilisateur/get_all_utilisateurs.php');
         if (utilisateurs) {
             utilisateurs.forEach(u => {
                 select.innerHTML += `<option value="${u.idutilisateur}">${u.prenom} ${u.nom}</option>`;
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const resultat = await postDonnees('post/pret_vetement.php', formData);
+        const resultat = await postDonnees('pret/pret_vetement.php', formData);
         
         if (resultat && resultat.status === 'success') {
             // Fermer la modale proprement
@@ -224,7 +224,7 @@ async function rendreVetement(idVetement) {
         formData.append('idvetement', idVetement);
         formData.append('commentaire', commentaire);
 
-        const resultat = await postDonnees('post/rend_vetement.php', formData);
+        const resultat = await postDonnees('vetement/rend_vetement.php', formData);
         if (resultat && resultat.status === 'success') {
             chargerVetements(); // Recharge l'affichage, il passera en "Au lavage"
         } else {
@@ -239,7 +239,7 @@ async function vetementLave(idVetement) {
         const formData = new FormData();
         formData.append('idvetement', idVetement);
 
-        const resultat = await postDonnees('post/lave_vetement.php', formData);
+        const resultat = await postDonnees('vetement/lave_vetement.php', formData);
         if (resultat && resultat.status === 'success') {
             chargerVetements(); // Recharge l'affichage, il passera en "Disponible"
         }
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Appel au backend
-        const resultat = await postDonnees('modify/modify_vetement.php', formData);
+        const resultat = await postDonnees('vetement/modify_vetement.php', formData);
         
         if (resultat && resultat.status === 'success') {
             // Fermer la modale
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Supprimer un vêtement
 function supprimerVetement(id) {
     if(confirm("Es-tu sûr de vouloir supprimer définitivement ce vêtement ?")) {
-        fetch('backend/delete/delete_vetement.php', {
+        fetch('backend/vetement/delete_vetement.php', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idvetement: id })
@@ -423,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('datefinpret', dateFin);
 
             // On envoie la requête
-            const resultat = await postDonnees('post/pret_vetement.php', formData);
+            const resultat = await postDonnees('pret/pret_vetement.php', formData);
             
             if (resultat && resultat.status === 'success') {
                 // On ferme la modale
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 modalInstance.hide();
                 
-                alert("Emprunt confirmé ! 🥳 Le vêtement est maintenant dans ton dressing.");
+                alert("Emprunt confirmé ! Le vêtement est maintenant dans ton dressing.");
                 chargerVetements(modeActuel); // Recharge la page
             } else {
                 alert("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"));
@@ -452,7 +452,7 @@ async function repondreDemande(idVetement, action) {
         formData.append('idvetement', idVetement);
         formData.append('action', action);
 
-        const resultat = await postDonnees('post/repondre_demande_pret.php', formData);
+        const resultat = await postDonnees('pret/repondre_demande_pret.php', formData);
         
         if (resultat && resultat.status === 'success') {
             alert(action === 'accepter' ? "Demande acceptée ! Le vêtement est en prêt." : "Demande refusée.");
@@ -469,7 +469,7 @@ async function signalerRetour(idVetement) {
         const formData = new FormData();
         formData.append('idvetement', idVetement);
         
-        const resultat = await postDonnees('post/demande_retour.php', formData);
+        const resultat = await postDonnees('pret/demande_retour.php', formData);
         if (resultat && resultat.status === 'success') {
             alert("Le propriétaire a été notifié ! En attente de sa confirmation.");
             chargerVetements(modeActuel); // On recharge la page, le statut passera à "Retour en attente"

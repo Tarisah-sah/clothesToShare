@@ -1,4 +1,13 @@
 <?php
+session_start();
+
+// Vérification de sécurité : Est-ce que l'utilisateur est connecté ET est-il un admin ?
+if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['status' => 'error', 'message' => 'Accès refusé. Action réservée aux administrateurs.']);
+    exit; // On stoppe l'exécution du script ici !
+}
+
 header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);

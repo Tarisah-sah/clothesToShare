@@ -1,4 +1,13 @@
 <?php
+session_start(); // 1. On démarre la session
+
+// 2. On vérifie que la personne est bien connectée
+if (!isset($_SESSION['idutilisateur'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['status' => 'error', 'message' => 'Non autorisé. Veuillez vous connecter.']);
+    exit;
+}
+
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 
@@ -6,6 +15,10 @@ $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vetement_new = isset($_POST['vetement_new']) ? $_POST['vetement_new'] : [];
+    
+    // 3. LA SÉCURITÉ : On écrase l'idproprietaire envoyé par le JS
+    // On force l'utilisation de l'ID de la session PHP !
+    $vetement_new['idproprietaire'] = $_SESSION['idutilisateur'];
 	
     $conn->beginTransaction();
     try {
