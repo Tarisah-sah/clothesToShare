@@ -121,7 +121,7 @@
                     if (data.status === 'success') {
                         sessionStorage.setItem('user', JSON.stringify(data.user));
                         // Redirection vers l'accueil
-                        window.location.href = 'dressing.html';
+                        window.location.href = 'dressing.html?tab=accueil';
                     } else {
                         erreur.textContent = data.message || 'Login ou mot de passe incorrect.';
                         erreur.classList.remove('d-none');

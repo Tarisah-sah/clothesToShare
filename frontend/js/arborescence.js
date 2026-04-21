@@ -7,6 +7,7 @@ function initialiserArborescence() {
     if (navArborescence) {
         navArborescence.addEventListener('click', (e) => {
             e.preventDefault();
+            window.history.pushState({}, '', 'dressing.html?tab=explorer');
             document.getElementById('section-dressing').style.display = 'none';
             document.getElementById('section-recherche').style.display = 'none';
             document.getElementById('section-formulaire').style.display = 'none';

@@ -1,5 +1,3 @@
-// frontend/js/ui.js
-
 async function chargerComposant(idConteneur, urlFichier) {
     try {
         const reponse = await fetch(urlFichier);
