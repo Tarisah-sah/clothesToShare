@@ -7,10 +7,12 @@ $conn = pdo_connectDB();
 $userId = $_GET['userId'] ?? null;
 $mode = $_GET['mode'] ?? 'accueil';
 
-// Jointure pour récupérer l'emprunteur
-$sql = "SELECT v.*, p.idemprunteur 
+// --- MODIFICATION ICI AUSSI ---
+$sql = "SELECT v.*, p.idemprunteur, n.idRangement, r.idLocal 
         FROM vetement v 
         LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente')
+        LEFT JOIN niveau n ON v.idniveau = n.idNiveau
+        LEFT JOIN rangement r ON n.idRangement = r.idRangement
         WHERE 1=1";
 
 $params = [];
@@ -28,7 +30,6 @@ if (isset($_GET['etat'])) {
     $params[':etat'] = $_GET['etat'];
 }
 
-// Filtre selon le mode (Accueil vs Dressing)
 if ($mode === 'accueil' && $userId) {
     $sql .= " AND v.idproprietaire != :uid AND (p.idemprunteur IS NULL OR p.idemprunteur != :uid)";
     $params[':uid'] = $userId;

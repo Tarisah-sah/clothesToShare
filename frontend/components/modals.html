@@ -62,7 +62,28 @@
                     </div>
 
                     <input type="hidden" id="edit-etat">
-                    <input type="hidden" id="edit-idniveau" value="1"> <div class="mb-3">
+                    <div class="row bg-light p-3 rounded mb-3 border mx-0">
+                        <h6 class="fw-bold text-secondary mb-3">📍 Emplacement du vêtement *</h6>
+                        <div class="col-12 col-md-4 mb-2">
+                            <label class="form-label small fw-bold">Local</label>
+                            <select class="form-select" id="edit-idlocal" required>
+                                <option value="">Choisir...</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4 mb-2">
+                            <label class="form-label small fw-bold">Rangement</label>
+                            <select class="form-select" id="edit-idrangement" required disabled>
+                                <option value="">Choisir un local d'abord...</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4 mb-2">
+                            <label class="form-label small fw-bold">Niveau (Étagère)</label>
+                            <select class="form-select" id="edit-idniveau" required disabled>
+                                <option value="">Choisir un rangement d'abord...</option>
+                            </select>
+                        </div>
+                    </div> 
+                    <div class="mb-3">
                         <label class="form-label fw-bold">Nouvelle Photo (Optionnel)</label>
                         <input type="file" class="form-control" id="edit-photo" accept="image/*">
                         <small class="text-muted">Laisse ce champ vide pour conserver l'image actuelle.</small>
@@ -104,6 +125,7 @@
                             <p class="mb-1"><strong>Couleur :</strong> <span id="detail-couleur"></span></p>
                             <p class="mb-1"><strong>Genre :</strong> <span id="detail-genre" class="text-capitalize"></span></p>
                             <p class="mb-1"><strong>Type :</strong> <span id="detail-type"></span></p>
+                            <p class="mb-1"><strong>Propriétaire :</strong> <span id="detail-proprio"></span></p>
                         </div>
 
                         <h6 class="fw-bold">Description</h6>

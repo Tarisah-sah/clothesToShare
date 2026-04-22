@@ -7,7 +7,6 @@
         <div class="card-body">
             <form id="form-vetement">
                 <input type="hidden" id="idproprietaire" value="1">
-                <input type="hidden" id="idniveau" value="1">
                 <input type="hidden" id="edit-idvetement" value="">
 
                 <div class="mb-3">
@@ -48,6 +47,10 @@
 
                 <div class="row">
                     <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Type * (ex: Haut, Pantalon)</label>
+                        <input type="text" class="form-control" id="type" required>
+                    </div>
+                    <div class="col-6 mb-3">
                         <label class="form-label fw-bold">Catégorie *</label>
                         <select class="form-select" id="idcategorie" required>
                             <option value="1">Hauts</option>
@@ -61,6 +64,28 @@
                             <option value="9">Vêtements de nuit</option>
                             <option value="10">Sous-vêtements</option>
                             <option value="11">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row bg-light p-3 rounded mb-3 border mx-0">
+                    <h6 class="fw-bold text-secondary mb-3">📍 Emplacement du vêtement *</h6>
+                    <div class="col-12 col-md-4 mb-2">
+                        <label class="form-label small fw-bold">Local</label>
+                        <select class="form-select" id="idlocal" required>
+                            <option value="">Choisir...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <label class="form-label small fw-bold">Rangement</label>
+                        <select class="form-select" id="idrangement" required disabled>
+                            <option value="">Choisir un local d'abord...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <label class="form-label small fw-bold">Niveau (Étagère)</label>
+                        <select class="form-select" id="idniveau" required disabled>
+                            <option value="">Choisir un rangement d'abord...</option>
                         </select>
                     </div>
                 </div>

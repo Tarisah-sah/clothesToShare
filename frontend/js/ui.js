@@ -1,30 +1,46 @@
+// ==========================================
+// 1. INJECTION DE COMPOSANTS HTML (AVEC ANTI-CACHE)
+// ==========================================
 async function chargerComposant(idConteneur, urlFichier) {
     try {
-        const reponse = await fetch(urlFichier);
+        // L'astuce magique : On rajoute une suite de chiffres aléatoires à la fin du nom du fichier.
+        // Comme le nom change à chaque milliseconde, le navigateur est obligé de télécharger le nouveau fichier !
+        const urlAntiCache = urlFichier + '?v=' + new Date().getTime();
+        
+        const reponse = await fetch(urlAntiCache);
         if (!reponse.ok) throw new Error('Composant introuvable : ' + urlFichier);
+        
         const html = await reponse.text();
         document.getElementById(idConteneur).innerHTML = html;
     } catch (erreur) {
-        console.error("Erreur chargement", erreur);
+        console.error("Erreur chargement de " + urlFichier, erreur);
     }
 }
 
 window.toggleFavori = function(id, event) {
-    event.stopPropagation();
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    if (!user) return;
+    event.stopPropagation(); // Empêche d'ouvrir la modale de détails en même temps
     
+    // VÉRIFICATION : L'utilisateur est-il connecté ?
+    const userJson = sessionStorage.getItem('user');
+    if (!userJson) {
+        alert("Tu dois être connecté pour ajouter des vêtements en favoris !");
+        // Tu pourrais même le rediriger vers la page de connexion s'il clique sur OK :
+        // window.location.href = 'login.html';
+        return;
+    }
+    
+    const user = JSON.parse(userJson);
     let favoris = JSON.parse(localStorage.getItem('favoris_' + user.idutilisateur)) || [];
     const idStr = id.toString();
     
     if (favoris.includes(idStr)) {
-        favoris = favoris.filter(f => f !== idStr);
+        favoris = favoris.filter(f => f !== idStr); // Retire des favoris
     } else {
-        favoris.push(idStr);
+        favoris.push(idStr); // Ajoute aux favoris
     }
     
     localStorage.setItem('favoris_' + user.idutilisateur, JSON.stringify(favoris));
-    chargerVetements(modeActuel);
+    chargerVetements(modeActuel); // Rafraîchit l'affichage en direct
 };
 
 function afficherCartesVetements(vetements) {
@@ -52,27 +68,33 @@ function afficherCartesVetements(vetements) {
         if (currentUser && currentUser.idutilisateur == vetement.idproprietaire) {
             actionsHTML += `
                 <div class="d-flex gap-2 mb-2">
-                    <button class="btn btn-sm btn-secondary w-50" onclick="preparerEdition(${vetement.idvetement})">Modifier</button>
-                    <button class="btn btn-sm btn-outline-danger w-50" onclick="supprimerVetement(${vetement.idvetement})">Supprimer</button>
+                    <button class="btn btn-sm btn-secondary w-50" onclick="preparerEdition(${vetement.idvetement})">✏️ Modifier</button>
+                    <button class="btn btn-sm btn-outline-danger w-50" onclick="supprimerVetement(${vetement.idvetement})">🗑️ Sup.</button>
                 </div>
             `;
             if (vetement.etat === 'Disponible') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-primary w-100" onclick="ouvrirModalPret(${vetement.idvetement}, '${vetement.nom.replace(/'/g, "\\'")}')">Prêter</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-primary w-100" onclick="ouvrirModalPret(${vetement.idvetement}, '${vetement.nom.replace(/'/g, "\\'")}')">🤝 Prêter</button>`;
             } else if (vetement.etat === 'En prêt') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">Forcer le retour</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">🔙 Forcer le retour</button>`;
             } else if (vetement.etat === 'Retour en attente') {
-                actionsHTML += `<button class="btn btn-sm btn-success w-100 fw-bold" onclick="rendreVetement(${vetement.idvetement})">Confirmer la réception</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-success w-100 fw-bold" onclick="rendreVetement(${vetement.idvetement})">✅ Confirmer la réception</button>`;
             } else if (vetement.etat === 'Au lavage') {
-                actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">Laver & Ranger</button>`;
+                actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">✨ Laver & Ranger</button>`;
             }
         } 
-        // ACTIONS EMPRUNTEUR (SÉCURISÉ : on vérifie l'id de l'emprunteur renvoyé par PHP)
+        // ACTIONS EMPRUNTEUR
         else if (currentUser && vetement.etat === 'En prêt' && vetement.idemprunteur == currentUser.idutilisateur) {
-            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">Signaler comme rendu</button>`;
+            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">👋 Signaler comme rendu</button>`;
         }
 
-        let estFavori = favoris.includes(vetement.idvetement.toString());
-        let btnFavoriHTML = currentUser ? `<button class="btn btn-link text-decoration-none p-0 ms-2 fs-5" onclick="toggleFavori(${vetement.idvetement}, event)">${estFavori ? '❤️' : '🤍'}</button>` : '';
+        // --- LOGIQUE D'AFFICHAGE DU CŒUR ---
+        let estFavori = currentUser ? favoris.includes(vetement.idvetement.toString()) : false;
+        let btnFavoriHTML = '';
+        
+        // On génère le cœur SI l'utilisateur n'est pas connecté, OU s'il l'est mais n'est PAS le propriétaire
+        if (!currentUser || currentUser.idutilisateur != vetement.idproprietaire) {
+            btnFavoriHTML = `<button class="btn btn-link text-decoration-none p-0 ms-2 fs-5" onclick="toggleFavori(${vetement.idvetement}, event)">${estFavori ? '❤️' : '🤍'}</button>`;
+        }
 
         return `
             <div class="col-12 col-md-6 col-lg-4">
@@ -91,18 +113,23 @@ function afficherCartesVetements(vetements) {
     };
 
     if (modeActuel === 'dressing' && currentUser) {
-        const mesh = vetements.filter(v => v.idproprietaire == currentUser.idutilisateur);
-        const mese = vetements.filter(v => v.idemprunteur == currentUser.idutilisateur);
-        const mesf = vetements.filter(v => favoris.includes(v.idvetement.toString()) && v.idproprietaire != currentUser.idutilisateur);
+        const listeComplete = vetements || [];
+        const mesh = listeComplete.filter(v => v.idproprietaire == currentUser.idutilisateur);
+        const mese = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur);
+        const mesf = listeComplete.filter(v => favoris.includes(v.idvetement.toString()) && v.idproprietaire != currentUser.idutilisateur);
 
         conteneur.innerHTML = `
-            <h3 class="w-100 border-bottom pb-2">Mes possessions</h3>
+            <h3 class="w-100 border-bottom pb-2">👕 Mes possessions</h3>
             <div class="row g-4 w-100 mb-4">${mesh.length ? mesh.map(genererCarte).join('') : '<p class="text-muted">Aucun vêtement.</p></div>'}
-            <h3 class="w-100 border-bottom pb-2 mt-4">Mes emprunts</h3>
+            <h3 class="w-100 border-bottom pb-2 mt-4">🤝 Mes emprunts</h3>
             <div class="row g-4 w-100 mb-4">${mese.length ? mese.map(genererCarte).join('') : '<p class="text-muted">Aucun emprunt.</p></div>'}
-            <h3 class="w-100 border-bottom pb-2 mt-4 text-danger">Mes Favoris</h3>
+            <h3 class="w-100 border-bottom pb-2 mt-4 text-danger">❤️ Mes Favoris</h3>
             <div class="row g-4 w-100">${mesf.length ? mesf.map(genererCarte).join('') : '<p class="text-muted">Aucun favori.</p></div>'}`;
     } else {
+        if (!vetements || vetements.length === 0) {
+            conteneur.innerHTML = '<div class="col-12"><p class="text-center text-muted">Aucun vêtement trouvé.</p></div>';
+            return;
+        }
         conteneur.innerHTML = vetements.map(genererCarte).join('');
     }
 }

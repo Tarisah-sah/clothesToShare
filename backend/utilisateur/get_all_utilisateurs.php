@@ -6,7 +6,7 @@ $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // On récupère uniquement les utilisateurs validés (admin ou user)
-    $stmt = $conn->prepare("SELECT idutilisateur, nom, prenom FROM utilisateur WHERE role IN ('admin', 'user')");
+    $stmt = $conn->prepare("SELECT idutilisateur, nom, prenom, login FROM utilisateur WHERE role IN ('admin', 'user')");
     $stmt->execute();
     $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
