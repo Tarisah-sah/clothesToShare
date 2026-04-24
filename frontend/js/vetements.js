@@ -178,36 +178,6 @@ async function ouvrirModalPret(idVetement, nomVetement) {
     modal.show();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const btnValiderPret = document.getElementById('btn-valider-pret');
-    if (btnValiderPret) {
-        btnValiderPret.addEventListener('click', async () => {
-            const formData = new FormData();
-            formData.append('idvetement', document.getElementById('pret-id-vetement').value);
-            formData.append('idutilisateur', document.getElementById('pret-emprunteur').value);
-            formData.append('datefinpret', document.getElementById('pret-date-fin').value);
-
-            if (!document.getElementById('pret-emprunteur').value || !document.getElementById('pret-date-fin').value) {
-                alert("Merci de sélectionner un emprunteur et une date de fin.");
-                return;
-            }
-
-            const resultat = await postDonnees('pret/pret_vetement.php', formData);
-            
-            if (resultat && resultat.status === 'success') {
-                const modalElement = document.getElementById('modalPret');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                modalInstance.hide();
-                
-                alert('Vêtement prêté avec succès !');
-                chargerVetements(); 
-            } else {
-                alert("Erreur lors du prêt : " + (resultat.message || "Erreur inconnue"));
-            }
-        });
-    }
-});
-
 async function rendreVetement(idVetement) {
     const commentaire = prompt("Un petit commentaire sur l'état du vêtement rendu ? (facultatif)");
     if (commentaire !== null) {
@@ -288,53 +258,6 @@ async function preparerEdition(id) {
     modal.show();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const btnSauvegarderModif = document.getElementById('btn-sauvegarder-modif');
-    if (btnSauvegarderModif) {
-        btnSauvegarderModif.addEventListener('click', async () => {
-            const form = document.getElementById('form-modifier-vetement');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('idvetement', document.getElementById('edit-idvetement-modal').value);
-            formData.append('nom', document.getElementById('edit-nom').value);
-            formData.append('marque', document.getElementById('edit-marque').value);
-            formData.append('taille', document.getElementById('edit-taille').value);
-            formData.append('couleur', document.getElementById('edit-couleur').value);
-            formData.append('genre', document.getElementById('edit-genre').value);
-            formData.append('etat', document.getElementById('edit-etat').value); 
-            formData.append('description', document.getElementById('edit-description').value);
-            formData.append('type', document.getElementById('edit-type').value);
-            formData.append('idcategorie', document.getElementById('edit-idcategorie').value);
-            formData.append('idniveau', document.getElementById('edit-idniveau').value);
-
-            const user = JSON.parse(sessionStorage.getItem('user'));
-            formData.append('idproprietaire', user.idutilisateur);
-
-            const photoFile = document.getElementById('edit-photo').files[0];
-            if (photoFile) {
-                formData.append('photo', photoFile);
-            }
-
-            const resultat = await postDonnees('vetement/modify_vetement.php', formData);
-            
-            if (resultat && resultat.status === 'success') {
-                const modalElement = document.getElementById('modalModifier');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                modalInstance.hide();
-                
-                alert("Vêtement mis à jour avec succès !");
-                chargerVetements(modeActuel); 
-            } else {
-                alert("Erreur lors de la modification : " + (resultat.message || "Erreur inconnue"));
-            }
-        });
-    }
-});
-
 function supprimerVetement(id) {
     if(confirm("Es-tu sûr de vouloir supprimer définitivement ce vêtement ?")) {
         fetch('backend/vetement/delete_vetement.php', {
@@ -401,40 +324,6 @@ async function ouvrirModalDetails(id) {
     const modal = new bootstrap.Modal(document.getElementById('modalDetailsVetement'));
     modal.show();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const btnEmprunt = document.getElementById('btn-confirmer-emprunt');
-    if(btnEmprunt) {
-        btnEmprunt.addEventListener('click', async () => {
-            const dateFin = document.getElementById('emprunt-date-fin').value;
-            
-            if(!dateFin) {
-                alert("Merci d'indiquer à quelle date tu prévois de rendre le vêtement !");
-                return;
-            }
-
-            const user = JSON.parse(sessionStorage.getItem('user'));
-            
-            const formData = new FormData();
-            formData.append('idvetement', idVetementEnCoursDeDetail);
-            formData.append('idutilisateur', user.idutilisateur); 
-            formData.append('datefinpret', dateFin);
-
-            const resultat = await postDonnees('pret/pret_vetement.php', formData);
-            
-            if (resultat && resultat.status === 'success') {
-                const modalElement = document.getElementById('modalDetailsVetement');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                modalInstance.hide();
-                
-                alert("Emprunt confirmé ! Le vêtement est maintenant dans ton dressing.");
-                chargerVetements(modeActuel); 
-            } else {
-                alert("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"));
-            }
-        });
-    }
-});
 
 async function repondreDemande(idVetement, action) {
     let confirmation = true;
@@ -531,6 +420,118 @@ function attacherEventCascades(prefix) {
         });
         rangement.addEventListener('change', function() {
             chargerSelectNiveaux(prefix, this.value);
+        });
+    }
+}
+
+// ==========================================
+// INITIALISATION DES BOUTONS DES MODALES
+// ==========================================
+function initialiserEcouteursVetements() {
+
+    // 1. Bouton "Mettre à jour" (Modale Modification)
+    const btnSauvegarderModif = document.getElementById('btn-sauvegarder-modif');
+    if (btnSauvegarderModif) {
+        btnSauvegarderModif.addEventListener('click', async () => {
+            const form = document.getElementById('form-modifier-vetement');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('idvetement', document.getElementById('edit-idvetement-modal').value);
+            formData.append('nom', document.getElementById('edit-nom').value);
+            formData.append('marque', document.getElementById('edit-marque').value);
+            formData.append('taille', document.getElementById('edit-taille').value);
+            formData.append('couleur', document.getElementById('edit-couleur').value);
+            formData.append('genre', document.getElementById('edit-genre').value);
+            formData.append('etat', document.getElementById('edit-etat').value); 
+            formData.append('description', document.getElementById('edit-description').value);
+            formData.append('type', document.getElementById('edit-type').value);
+            formData.append('idcategorie', document.getElementById('edit-idcategorie').value);
+            formData.append('idniveau', document.getElementById('edit-idniveau').value);
+
+            const user = JSON.parse(sessionStorage.getItem('user'));
+            formData.append('idproprietaire', user.idutilisateur);
+
+            const photoFile = document.getElementById('edit-photo').files[0];
+            if (photoFile) {
+                formData.append('photo', photoFile);
+            }
+
+            const resultat = await postDonnees('vetement/modify_vetement.php', formData);
+            
+            if (resultat && resultat.status === 'success') {
+                const modalElement = document.getElementById('modalModifier');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                modalInstance.hide();
+                
+                alert("Vêtement mis à jour avec succès !");
+                chargerVetements(modeActuel); 
+            } else {
+                alert("Erreur lors de la modification : " + (resultat.message || "Erreur inconnue"));
+            }
+        });
+    }
+
+    // 2. Bouton "Confirmer" (Modale Emprunt Utilisateur)
+    const btnEmprunt = document.getElementById('btn-confirmer-emprunt');
+    if(btnEmprunt) {
+        btnEmprunt.addEventListener('click', async () => {
+            const dateFin = document.getElementById('emprunt-date-fin').value;
+            if(!dateFin) {
+                alert("Merci d'indiquer à quelle date tu prévois de rendre le vêtement !");
+                return;
+            }
+
+            const user = JSON.parse(sessionStorage.getItem('user'));
+            const formData = new FormData();
+            formData.append('idvetement', idVetementEnCoursDeDetail);
+            formData.append('idutilisateur', user.idutilisateur); 
+            formData.append('datefinpret', dateFin);
+
+            const resultat = await postDonnees('pret/pret_vetement.php', formData);
+            
+            if (resultat && resultat.status === 'success') {
+                const modalElement = document.getElementById('modalDetailsVetement');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                modalInstance.hide();
+                
+                alert("Emprunt confirmé ! Le vêtement est maintenant dans ton dressing.");
+                chargerVetements(modeActuel); 
+            } else {
+                alert("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"));
+            }
+        });
+    }
+
+    // 3. Bouton "Valider" (Modale Prêt Propriétaire)
+    const btnValiderPret = document.getElementById('btn-valider-pret');
+    if (btnValiderPret) {
+        btnValiderPret.addEventListener('click', async () => {
+            const formData = new FormData();
+            formData.append('idvetement', document.getElementById('pret-id-vetement').value);
+            formData.append('idutilisateur', document.getElementById('pret-emprunteur').value);
+            formData.append('datefinpret', document.getElementById('pret-date-fin').value);
+
+            if (!document.getElementById('pret-emprunteur').value || !document.getElementById('pret-date-fin').value) {
+                alert("Merci de sélectionner un emprunteur et une date de fin.");
+                return;
+            }
+
+            const resultat = await postDonnees('pret/pret_vetement.php', formData);
+            
+            if (resultat && resultat.status === 'success') {
+                const modalElement = document.getElementById('modalPret');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                modalInstance.hide();
+                
+                alert('Vêtement prêté avec succès !');
+                chargerVetements(); 
+            } else {
+                alert("Erreur lors du prêt : " + (resultat.message || "Erreur inconnue"));
+            }
         });
     }
 }

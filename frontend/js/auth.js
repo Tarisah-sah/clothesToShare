@@ -9,9 +9,9 @@
  */
 function verifierSession() {
     const userJson = sessionStorage.getItem('user');
+    const user = userJson ? JSON.parse(userJson) : null;
 
-    if (userJson) {
-        const user = JSON.parse(userJson);
+    if (user) {
 
         // Mise à jour de la Navbar : cache le bouton Connexion, montre le Profil
         document.getElementById('nav-login').classList.add('d-none');
@@ -29,6 +29,12 @@ function verifierSession() {
         if (user.role === 'admin') {
             document.getElementById('lien-admin-demandes').classList.remove('d-none');
             actualiserBadgeDemandes();
+        }
+
+        // SI L'UTILISATEUR EST ADMIN, ON AFFICHE LE LIEN
+        const adminLink = document.getElementById('nav-admin-link');
+        if (adminLink && user.role === 'admin') {
+            adminLink.style.display = 'block';
         }
 
         // Configuration du bouton de déconnexion

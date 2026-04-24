@@ -149,7 +149,8 @@ async function sauvegarderSite() {
 }
 
 async function supprimerSite(id) {
-    if (confirm("Es-tu sûr de vouloir supprimer ce site ?")) {
+    if (id == 1) { alert("Tu ne peux pas supprimer le Site n°1 car il sert de 'Reserve Secours' !"); return; }
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce site définitivement ?\n\n⚠️ En supprimant celui-ci, les locaux, rangements et niveaux qui y sont seront également supprimés.\n👕 Les habits, eux, seront redirigés vers le site 'Garde tout' (ID 1).")) {
         const response = await fetch('backend/site/delete_site.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idSite: id })
@@ -355,7 +356,8 @@ async function sauvegarderLocal() {
 }
 
 async function supprimerLocal(id) {
-    if (confirm("Es-tu sûr de vouloir supprimer ce local ? Cela supprimera peut-être aussi les rangements à l'intérieur !")) {
+    if (id == 1) { alert("Tu ne peux pas supprimer le Local n°1 car il sert de 'Reserve Secours' !"); return; }
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce local définitivement ?\n\n⚠️ En supprimant celui-ci, les rangements et niveaux qui y sont seront également supprimés.\n👕 Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
         const response = await fetch('backend/local/delete_local.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idLocal: id })
@@ -472,7 +474,8 @@ async function sauvegarderRangement() {
 }
 
 async function supprimerRangement(id) {
-    if (confirm("Es-tu sûr de vouloir supprimer ce rangement ? Attention, cela supprimera peut-être aussi les niveaux à l'intérieur !")) {
+    if (id == 1) { alert("Tu ne peux pas supprimer le Rangement n°1 car il sert de 'Reserve Secours' !"); return; }
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?\n\n⚠️ En supprimant celui-ci, les niveaux (étagères) qui y sont seront également supprimés.\n👕 Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
         const response = await fetch('backend/rangement/delete_rangement.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idRangement: id })
@@ -621,7 +624,8 @@ async function sauvegarderNiveau() {
 }
 
 async function supprimerNiveau(id) {
-    if (confirm("Es-tu sûr de vouloir supprimer ce niveau ?")) {
+    if (id == 1) { alert("Tu ne peux pas supprimer le Niveau n°1 car il sert de 'Reserve Secours' !"); return; }
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce niveau (étagère) définitivement ?\n\n👕 Les habits qui s'y trouvent seront redirigés vers le 'Garde tout' (ID 1).")) {
         const response = await fetch('backend/niveau/delete_niveau.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idNiveau: id })

@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     initialiserMenuVetements();
     initialiserArborescence();
 
+    // --- NOUVEAUTÉ : On active les clics des modales (Mise à jour, Prêt, Emprunt) ---
+    initialiserEcouteursVetements();
+
     // --- NOUVEAUTÉ : On active le "suivi" des listes déroulantes (pour détecter les clics) ---
     attacherEventCascades('');      // Formulaire d'ajout
     attacherEventCascades('edit-'); // Fenêtre de modification

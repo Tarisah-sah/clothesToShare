@@ -1,40 +1,24 @@
 <?php
 session_start();
-if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
-    exit;
-}
-
+if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') { exit; }
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
-$conn = pdo_connectDB();
 
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $idLocal = $data['idLocal'] ?? null;
+$data = json_decode(file_get_contents("php://input"), true);
+$id = $data['idLocal'] ?? null;
+if (!$id || $id == 1) exit; 
 
-    if (!$idLocal) {
-        echo json_encode(['status' => 'error', 'message' => 'ID manquant.']);
-        exit;
-    }
-
-    try {
-        // Sécurité : On vérifie si des rangements utilisent ce local
-        $stmtCheck = $conn->prepare("SELECT COUNT(*) FROM rangement WHERE idLocal = ?");
-        $stmtCheck->execute([$idLocal]);
-        if ($stmtCheck->fetchColumn() > 0) {
-            echo json_encode(['status' => 'error', 'message' => 'Impossible de supprimer : ce local contient encore des rangements.']);
-            exit;
-        }
-
-        $stmt = $conn->prepare("DELETE FROM local WHERE idLocal = ?");
-        $stmt->execute([$idLocal]);
-        
-        echo json_encode(['status' => 'success']);
-    } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-    }
-}
-$conn = null;
+try {
+    $conn = pdo_connectDB();
+    // 1. Sauver les vêtements
+    $conn->prepare("UPDATE vetement v JOIN niveau n ON v.idniveau = n.idNiveau JOIN rangement r ON n.idRangement = r.idRangement SET v.idniveau = 1 WHERE r.idLocal = ?")->execute([$id]);
+    // 2. Détruire les niveaux
+    $conn->prepare("DELETE n FROM niveau n JOIN rangement r ON n.idRangement = r.idRangement WHERE r.idLocal = ?")->execute([$id]);
+    // 3. Détruire les rangements
+    $conn->prepare("DELETE FROM rangement WHERE idLocal = ?")->execute([$id]);
+    // 4. Détruire le local
+    $conn->prepare("DELETE FROM local WHERE idLocal = ?")->execute([$id]);
+    
+    echo json_encode(['status' => 'success']);
+} catch (Exception $e) { echo json_encode(['status' => 'error', 'message' => $e->getMessage()]); }
 ?>

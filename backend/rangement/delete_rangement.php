@@ -1,40 +1,22 @@
 <?php
 session_start();
-if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
-    exit;
-}
-
+if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') { exit; }
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
-$conn = pdo_connectDB();
 
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $idRangement = $data['idRangement'] ?? null;
+$data = json_decode(file_get_contents("php://input"), true);
+$id = $data['idRangement'] ?? null;
+if (!$id || $id == 1) exit; 
 
-    if (!$idRangement) {
-        echo json_encode(['status' => 'error', 'message' => 'ID manquant.']);
-        exit;
-    }
-
-    try {
-        // Sécurité : On vérifie si des niveaux utilisent ce rangement
-        $stmtCheck = $conn->prepare("SELECT COUNT(*) FROM niveau WHERE idRangement = ?");
-        $stmtCheck->execute([$idRangement]);
-        if ($stmtCheck->fetchColumn() > 0) {
-            echo json_encode(['status' => 'error', 'message' => 'Impossible de supprimer : ce rangement contient encore des niveaux.']);
-            exit;
-        }
-
-        $stmt = $conn->prepare("DELETE FROM rangement WHERE idRangement = ?");
-        $stmt->execute([$idRangement]);
-        
-        echo json_encode(['status' => 'success']);
-    } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-    }
-}
-$conn = null;
+try {
+    $conn = pdo_connectDB();
+    // 1. Sauver les vêtements des niveaux de ce rangement
+    $conn->prepare("UPDATE vetement v JOIN niveau n ON v.idniveau = n.idNiveau SET v.idniveau = 1 WHERE n.idRangement = ?")->execute([$id]);
+    // 2. Détruire les niveaux enfants
+    $conn->prepare("DELETE FROM niveau WHERE idRangement = ?")->execute([$id]);
+    // 3. Détruire le rangement
+    $conn->prepare("DELETE FROM rangement WHERE idRangement = ?")->execute([$id]);
+    
+    echo json_encode(['status' => 'success']);
+} catch (Exception $e) { echo json_encode(['status' => 'error', 'message' => $e->getMessage()]); }
 ?>

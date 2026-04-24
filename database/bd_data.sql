@@ -124,177 +124,181 @@ ALTER TABLE pret
 
 /* DONNEES */
 INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES
-(1, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/icons/ctos.png'),
-(2, 'CToS - Charleroi', "Grand’Rue 1", 6000, "Charleroi", 'assets/icons/ctos.png'),
-(3, 'CToS - La Louvière', "Rue Ferrer 159", 7100, "Haine-Saint-Paul", 'assets/icons/ctos.png'),
-(4, 'CToS - Tournai', "Rue Frinoise 12", 7500, "Tournai", 'assets/icons/ctos.png');
+(1, 'CToS - Durbuy', "Chaussée de la Princesse 67", 6940, "Durbuy", 'assets/icons/ctos.png'),
+(2, 'CToS - Charleroi', "Grand Rue 1", 6000, "Charleroi", 'assets/icons/ctos.png'),
+(3, 'CToS - La Louvière', "Rue Ferrer 193", 7100, "Haine-Saint-Paul", 'assets/icons/ctos.png'),
+(4, 'CToS - Tournai', "Rue Frinoise 12", 7500, "Tournai", 'assets/icons/ctos.png'),
+(5, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/icons/ctos.png');
 
 INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
-(1, 'Casual', "Vetements et accessoires classiques.", 1, 'assets/img/local/CASUAL.jpg'),
-(2, 'Chic', "Vetements et accessoires chic.", 1, 'assets/img/local/chic.jpg'),
-(3, 'Business', "Vetements et accessoires professionnels.", 1, 'assets/img/local/Business.jpg'),
-(4, 'Boheme', "Vetements et accessoires boho.", 1, 'assets/img/local/boho.jpg'),
-(5, 'Street wear', "Vetements et accessoires streetwear.", 1, 'assets/img/local/streetwear.jpg'),
-(6, 'Emo', "Vetements et accessoires emo et punk.", 1, 'assets/img/local/emo.jpg'),
-(7, 'Sorties', "Vetements et accessoires pour sortir le soir.", 1, 'assets/img/local/nisy.jpg'),
-(8, 'Vintage', "Vetements et accessoires vintage.", 1, 'assets/img/local/VINTAGE.jpg'),
-(9, 'Y2k', "Vetements et accessoires des années 2000.", 1, 'assets/img/local/y2k.jpg'),
-(10, 'Autre', "Vetements et accessoires sans catégorie.", 1, 'assets/img/local/AUTRE.jpg');
+(1, 'Reserve CToS', "Vetements et accessoires en attente de catégorisation.", 1, 'assets/icons/ctos.png'),
+(2, 'Chic', "Vetements et accessoires chic.", 2, 'assets/img/local/chic.jpg'),
+(3, 'Business', "Vetements et accessoires professionnels.", 3, 'assets/img/local/Business.jpg'),
+(4, 'Boheme', "Vetements et accessoires boho.", 4, 'assets/img/local/boho.jpg'),
+(5, 'Street wear', "Vetements et accessoires streetwear.", 5, 'assets/img/local/streetwear.jpg'),
+(6, 'Emo', "Vetements et accessoires emo et punk.", 2, 'assets/img/local/emo.jpg'),
+(7, 'Sorties', "Vetements et accessoires pour sortir le soir.", 3, 'assets/img/local/nisy.jpg'),
+(8, 'Vintage', "Vetements et accessoires vintage.", 4, 'assets/img/local/VINTAGE.jpg'),
+(9, 'Y2k', "Vetements et accessoires des années 2000.", 5, 'assets/img/local/y2k.jpg'),
+(10, 'Autre', "Vetements et accessoires sans catégorie.", 2, 'assets/img/local/AUTRE.jpg'),
+(11, 'Casual', "Vetements et accessoires classiques.", 3, 'assets/img/local/CASUAL.jpg');
 
 /* RANGEMENTS */
 INSERT INTO rangement(idRangement, nom, infoRangement, idLocal, photo) VALUES
 -- Pour le local 1 (Casual)
-(1, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements basiques.', 1, ''),
-(2, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires basiques.', 1, ''),
-(3, 'Meuble à chaussures', 'Rangement pour les chaussures.', 1, ''),
+(1, 'Armoire réserve', 'Grande armoire pour toutes sortes de vetements et accessoires.', 1, ''),
+(2, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements basiques.', 11, ''),
+(3, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires basiques.', 11, ''),
+(4, 'Meuble à chaussures', 'Rangement pour les chaussures.', 11, ''),
 -- Pour le local 2 (Chic)
-(4, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements chics.', 2, ''),
-(5, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires chics.', 2, ''),
-(6, 'Meuble à chaussures', 'Rangement pour les chaussures.', 2, ''),
+(5, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements chics.', 2, ''),
+(6, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires chics.', 2, ''),
+(7, 'Meuble à chaussures', 'Rangement pour les chaussures.', 2, ''),
 -- Pour le local 3 (Business)
-(7, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements professionnels.', 3, ''),
-(8, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires professionnels.', 3, ''),
-(9, 'Meuble à chaussures', 'Rangement pour les chaussures.', 3, ''),
+(8, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements professionnels.', 3, ''),
+(9, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires professionnels.', 3, ''),
+(10, 'Meuble à chaussures', 'Rangement pour les chaussures.', 3, ''),
 -- Pour le local 4 (Boho)
-(10, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements bohèmes.', 4, ''),
-(11, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires bohèmes.', 4, ''),
-(12, 'Meuble à chaussures', 'Rangement pour les chaussures.', 4, ''),
+(11, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements bohèmes.', 4, ''),
+(12, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires bohèmes.', 4, ''),
+(13, 'Meuble à chaussures', 'Rangement pour les chaussures.', 4, ''),
 -- Pour le local 5 (Street wear)
-(13, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements street wear.', 5, ''),
-(14, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires street wear.', 5, ''),
-(15, 'Meuble à chaussures', 'Rangement pour les chaussures.', 5, ''),
+(14, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements street wear.', 5, ''),
+(15, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires street wear.', 5, ''),
+(16, 'Meuble à chaussures', 'Rangement pour les chaussures.', 5, ''),
 -- Pour le local 6 (Emo)
-(16, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements punk/emo.', 6, ''),
-(17, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires punk/emo.', 6, ''),
-(18, 'Meuble à chaussures', 'Rangement pour les chaussures.', 6, ''),
+(17, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements punk/emo.', 6, ''),
+(18, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires punk/emo.', 6, ''),
+(19, 'Meuble à chaussures', 'Rangement pour les chaussures.', 6, ''),
 -- Pour le local 7 (Sorties)
-(19, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements de sorties.', 7, ''),
-(20, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires de sorties.', 7, ''),
-(21, 'Meuble à chaussures', 'Rangement pour les chaussures.', 7, ''),
+(20, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements de sorties.', 7, ''),
+(21, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires de sorties.', 7, ''),
+(22, 'Meuble à chaussures', 'Rangement pour les chaussures.', 7, ''),
 -- Pour le local 8 (Vintage)
-(22, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements vintage.', 8, ''),
-(23, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires vintage.', 8, ''),
-(24, 'Meuble à chaussures', 'Rangement pour les chaussures.', 8, ''),
+(23, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements vintage.', 8, ''),
+(24, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires vintage.', 8, ''),
+(25, 'Meuble à chaussures', 'Rangement pour les chaussures.', 8, ''),
 -- Pour le local 9 (2000s)
-(25, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements du style des annèes 2000s.', 9, ''),
-(26, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires des annèes 2000s.', 9, ''),
-(27, 'Meuble à chaussures', 'Rangement pour les chaussures.', 9, ''),
+(26, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements du style des annèes 2000s.', 9, ''),
+(27, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires des annèes 2000s.', 9, ''),
+(28, 'Meuble à chaussures', 'Rangement pour les chaussures.', 9, ''),
 -- Pour le local 10 (Autre)
-(28, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements.', 10, ''),
-(29, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires.', 10, ''),
-(30, 'Meuble à chaussures', 'Rangement pour les chaussures.', 10, '');
+(29, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements.', 10, ''),
+(30, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires.', 10, ''),
+(31, 'Meuble à chaussures', 'Rangement pour les chaussures.', 10, '');
 
 /* NIVEAUX */
 INSERT INTO niveau(idNiveau, nom, infoNiveau, idRangement, photo) VALUES
 -- ===============================
--- LOCAL 1 : CASUAL (Rangements 1, 2, 3)
+-- LOCAL 11 : CASUAL (Rangements 2, 3, 4)
 -- ===============================
-(1, 'Penderie', 'Pour les vestes, chemises et manteaux basiques', 1, ''),
-(2, 'Étagères', 'Pour les t-shirts et pulls', 1, ''),
-(3, 'Tiroirs bas', 'Pour les pantalons, jeans et shorts', 1, ''),
-(4, 'Tiroir du haut', 'Bijoux, montres et lunettes de soleil', 2, ''),
-(5, 'Tiroir d''en bas', 'Sacs, ceintures et bonnets', 2, ''),
-(6, 'Niveau Supérieur', 'Baskets et chaussures de tous les jours', 3, ''),
-(7, 'Niveau Inférieur', 'Bottes et chaussures d''hiver', 3, ''),
+(1, 'Penderie reserve', 'Pour tout type des vetements et accessoires.', 1, ''),
+(2, 'Penderie', 'Pour les vestes, chemises et manteaux basiques', 2, ''),
+(3, 'Étagères', 'Pour les t-shirts et pulls', 2, ''),
+(4, 'Tiroirs bas', 'Pour les pantalons, jeans et shorts', 2, ''),
+(5, 'Tiroir du haut', 'Bijoux, montres et lunettes de soleil', 3, ''),
+(6, 'Tiroir d''en bas', 'Sacs, ceintures et bonnets', 3, ''),
+(7, 'Niveau Supérieur', 'Baskets et chaussures de tous les jours', 4, ''),
+(8, 'Niveau Inférieur', 'Bottes et chaussures d''hiver', 4, ''),
 
 -- ===============================
--- LOCAL 2 : CHIC (Rangements 4, 5, 6)
+-- LOCAL 2 : CHIC (Rangements 5, 6, 7)
 -- ===============================
-(8, 'Penderie', 'Vestons, costumes et robes élégantes', 4, ''),
-(9, 'Étagères', 'Hauts habillés et chemisiers', 4, ''),
-(10, 'Tiroirs bas', 'Pantalons à pinces et jupes', 4, ''),
-(11, 'Tiroir du haut', 'Bijoux fins et montres de luxe', 5, ''),
-(12, 'Tiroir d''en bas', 'Sacs à main et pochettes de marque', 5, ''),
-(13, 'Niveau Supérieur', 'Mocassins et derbies', 6, ''),
-(14, 'Niveau Inférieur', 'Escarpins et chaussures habillées', 6, ''),
+(9, 'Penderie', 'Vestons, costumes et robes élégantes', 5, ''),
+(10, 'Étagères', 'Hauts habillés et chemisiers', 5, ''),
+(11, 'Tiroirs bas', 'Pantalons à pinces et jupes', 5, ''),
+(12, 'Tiroir du haut', 'Bijoux fins et montres de luxe', 6, ''),
+(13, 'Tiroir d''en bas', 'Sacs à main et pochettes de marque', 6, ''),
+(14, 'Niveau Supérieur', 'Mocassins et derbies', 7, ''),
+(15, 'Niveau Inférieur', 'Escarpins et chaussures habillées', 7, ''),
 
 -- ===============================
--- LOCAL 3 : BUSINESS (Rangements 7, 8, 9)
+-- LOCAL 3 : BUSINESS (Rangements 8, 9, 10)
 -- ===============================
-(15, 'Penderie', 'Costumes complets, blazers et tailleurs', 7, ''),
-(16, 'Étagères', 'Chemises repassées', 7, ''),
-(17, 'Tiroirs bas', 'Pantalons de costume', 7, ''),
-(18, 'Tiroir du haut', 'Cravates, nœuds papillon et boutons de manchette', 8, ''),
-(19, 'Tiroir d''en bas', 'Porte-documents et ceintures en cuir', 8, ''),
-(20, 'Niveau Supérieur', 'Chaussures de ville (Oxford, Richelieu)', 9, ''),
-(21, 'Niveau Inférieur', 'Chaussures de secours ou de confort', 9, ''),
+(16, 'Penderie', 'Costumes complets, blazers et tailleurs', 8, ''),
+(17, 'Étagères', 'Chemises repassées', 8, ''),
+(18, 'Tiroirs bas', 'Pantalons de costume', 8, ''),
+(19, 'Tiroir du haut', 'Cravates, nœuds papillon et boutons de manchette', 9, ''),
+(20, 'Tiroir d''en bas', 'Porte-documents et ceintures en cuir', 9, ''),
+(21, 'Niveau Supérieur', 'Chaussures de ville (Oxford, Richelieu)', 10, ''),
+(22, 'Niveau Inférieur', 'Chaussures de secours ou de confort', 10, ''),
 
 -- ===============================
--- LOCAL 4 : BOHO (Rangements 10, 11, 12)
+-- LOCAL 4 : BOHO (Rangements 11, 12, 13)
 -- ===============================
-(22, 'Penderie', 'Robes longues, gilets à franges, kimonos', 10, ''),
-(23, 'Étagères', 'Hauts amples et tuniques', 10, ''),
-(24, 'Tiroirs bas', 'Pantalons fluides et jupes longues', 10, ''),
-(25, 'Tiroir du haut', 'Colliers longs, bracelets en perles et pierres', 11, ''),
-(26, 'Tiroir d''en bas', 'Chapeaux, foulards et sacs en macramé', 11, ''),
-(27, 'Niveau Supérieur', 'Sandales et espadrilles', 12, ''),
-(28, 'Niveau Inférieur', 'Bottes en daim', 12, ''),
+(23, 'Penderie', 'Robes longues, gilets à franges, kimonos', 11, ''),
+(24, 'Étagères', 'Hauts amples et tuniques', 11, ''),
+(25, 'Tiroirs bas', 'Pantalons fluides et jupes longues', 11, ''),
+(26, 'Tiroir du haut', 'Colliers longs, bracelets en perles et pierres', 12, ''),
+(27, 'Tiroir d''en bas', 'Chapeaux, foulards et sacs en macramé', 12, ''),
+(28, 'Niveau Supérieur', 'Sandales et espadrilles', 13, ''),
+(29, 'Niveau Inférieur', 'Bottes en daim', 13, ''),
 
 -- ===============================
--- LOCAL 5 : STREET WEAR (Rangements 13, 14, 15)
+-- LOCAL 5 : STREET WEAR (Rangements 14, 15, 16)
 -- ===============================
-(29, 'Penderie', 'Vestes oversize, doudounes et coupe-vents', 13, ''),
-(30, 'Étagères', 'Sweats à capuche, t-shirts graphiques', 13, ''),
-(31, 'Tiroirs bas', 'Pantalons, jeans, cargo, joggings', 13, ''),
-(32, 'Tiroir du haut', 'Casquettes, bobs et lunettes de soleil', 14, ''),
-(33, 'Tiroir d''en bas', 'Sacs banane, sacoches et sacs à dos', 14, ''),
-(34, 'Niveau Supérieur', 'Sneakers de collection', 15, ''),
-(35, 'Niveau Inférieur', 'Baskets de tous les jours', 15, ''),
+(30, 'Penderie', 'Vestes oversize, doudounes et coupe-vents', 14, ''),
+(31, 'Étagères', 'Sweats à capuche, t-shirts graphiques', 14, ''),
+(32, 'Tiroirs bas', 'Pantalons, jeans, cargo, joggings', 14, ''),
+(33, 'Tiroir du haut', 'Casquettes, bobs et lunettes de soleil', 15, ''),
+(34, 'Tiroir d''en bas', 'Sacs banane, sacoches et sacs à dos', 15, ''),
+(35, 'Niveau Supérieur', 'Sneakers de collection', 16, ''),
+(36, 'Niveau Inférieur', 'Baskets de tous les jours', 16, ''),
 
 -- ===============================
--- LOCAL 6 : EMO (Rangements 16, 17, 18)
+-- LOCAL 6 : EMO (Rangements 17, 18, 19)
 -- ===============================
-(36, 'Penderie', 'Vestes en cuir, manteaux sombres', 16, ''),
-(37, 'Étagères', 'T-shirts de groupes, hauts résille', 16, ''),
-(38, 'Tiroirs bas', 'Jeans skinny déchirés, pantalons à clous', 16, ''),
-(39, 'Tiroir du haut', 'Bracelets à clous, chaînes, bagues', 17, ''),
-(40, 'Tiroir d''en bas', 'Ceintures cloutées, mitaines', 17, ''),
-(41, 'Niveau Supérieur', 'Bottes à plateformes et creepers', 18, ''),
-(42, 'Niveau Inférieur', 'Converse et Vans usées', 18, ''),
+(37, 'Penderie', 'Vestes en cuir, manteaux sombres', 17, ''),
+(38, 'Étagères', 'T-shirts de groupes, hauts résille', 17, ''),
+(39, 'Tiroirs bas', 'Jeans skinny déchirés, pantalons à clous', 17, ''),
+(40, 'Tiroir du haut', 'Bracelets à clous, chaînes, bagues', 18, ''),
+(41, 'Tiroir d''en bas', 'Ceintures cloutées, mitaines', 18, ''),
+(42, 'Niveau Supérieur', 'Bottes à plateformes et creepers', 19, ''),
+(43, 'Niveau Inférieur', 'Converse et Vans usées', 19, ''),
 
 -- ===============================
--- LOCAL 7 : SORTIES (Rangements 19, 20, 21)
+-- LOCAL 7 : SORTIES (Rangements 20, 21, 22)
 -- ===============================
-(43, 'Penderie', 'Robes de cocktail, vestes brillantes', 19, ''),
-(44, 'Étagères', 'Hauts de soirée, tops à paillettes', 19, ''),
-(45, 'Tiroirs bas', 'Pantalons en simili cuir, jupes courtes', 19, ''),
-(46, 'Tiroir du haut', 'Parures complètes, boucles d''oreilles', 20, ''),
-(47, 'Tiroir d''en bas', 'Petites pochettes de soirée', 20, ''),
-(48, 'Niveau Supérieur', 'Talons hauts et stilettos', 21, ''),
-(49, 'Niveau Inférieur', 'Chaussures de danse', 21, ''),
+(44, 'Penderie', 'Robes de cocktail, vestes brillantes', 20, ''),
+(45, 'Étagères', 'Hauts de soirée, tops à paillettes', 20, ''),
+(46, 'Tiroirs bas', 'Pantalons en simili cuir, jupes courtes', 20, ''),
+(47, 'Tiroir du haut', 'Parures complètes, boucles d''oreilles', 21, ''),
+(48, 'Tiroir d''en bas', 'Petites pochettes de soirée', 21, ''),
+(49, 'Niveau Supérieur', 'Talons hauts et stilettos', 22, ''),
+(50, 'Niveau Inférieur', 'Chaussures de danse', 22, ''),
 
 -- ===============================
--- LOCAL 8 : VINTAGE (Rangements 22, 23, 24)
+-- LOCAL 8 : VINTAGE (Rangements 23, 24, 25)
 -- ===============================
-(50, 'Penderie', 'Manteaux rétro, vestes en velours côtelé', 22, ''),
-(51, 'Étagères', 'Chemisiers anciens, tricots', 22, ''),
-(52, 'Tiroirs bas', 'Pantalons patte d''éléphant', 22, ''),
-(53, 'Tiroir du haut', 'Broches, montres à gousset, colliers de perles', 23, ''),
-(54, 'Tiroir d''en bas', 'Sacs rétro en cuir, gants en dentelle', 23, ''),
-(55, 'Niveau Supérieur', 'Chaussures à boucles', 24, ''),
-(56, 'Niveau Inférieur', 'Bottes vintage', 24, ''),
+(51, 'Penderie', 'Manteaux rétro, vestes en velours côtelé', 23, ''),
+(52, 'Étagères', 'Chemisiers anciens, tricots', 23, ''),
+(53, 'Tiroirs bas', 'Pantalons patte d''éléphant', 23, ''),
+(54, 'Tiroir du haut', 'Broches, montres à gousset, colliers de perles', 24, ''),
+(55, 'Tiroir d''en bas', 'Sacs rétro en cuir, gants en dentelle', 24, ''),
+(56, 'Niveau Supérieur', 'Chaussures à boucles', 25, ''),
+(57, 'Niveau Inférieur', 'Bottes vintage', 25, ''),
 
 -- ===============================
--- LOCAL 9 : 2000s (Rangements 25, 26, 27)
+-- LOCAL 9 : 2000s (Rangements 26, 27, 28)
 -- ===============================
-(57, 'Penderie', 'Vestes en jean, survêtements en velours', 25, ''),
-(58, 'Étagères', 'Crop tops, t-shirts à strass', 25, ''),
-(59, 'Tiroirs bas', 'Jeans taille basse, mini-jupes plissées', 25, ''),
-(60, 'Tiroir du haut', 'Chokers, pinces papillon, lunettes colorées', 26, ''),
-(61, 'Tiroir d''en bas', 'Sacs baguette, ceintures chaînes', 26, ''),
-(62, 'Niveau Supérieur', 'Sneakers chunky, Bottes Ugg', 27, ''),
-(63, 'Niveau Inférieur', 'Chaussures compensées, talons', 27, ''),
+(58, 'Penderie', 'Vestes en jean, survêtements en velours', 26, ''),
+(59, 'Étagères', 'Crop tops, t-shirts à strass', 26, ''),
+(60, 'Tiroirs bas', 'Jeans taille basse, mini-jupes plissées', 26, ''),
+(61, 'Tiroir du haut', 'Chokers, pinces papillon, lunettes colorées', 27, ''),
+(62, 'Tiroir d''en bas', 'Sacs baguette, ceintures chaînes', 27, ''),
+(63, 'Niveau Supérieur', 'Sneakers chunky, Bottes Ugg', 28, ''),
+(64, 'Niveau Inférieur', 'Chaussures compensées, talons', 28, ''),
 
 -- ===============================
--- LOCAL 10 : AUTRE (Rangements 28, 29, 30)
+-- LOCAL 10 : AUTRE (Rangements 29, 30, 31)
 -- ===============================
-(64, 'Penderie', 'Vestes et manteaux divers', 28, ''),
-(65, 'Étagères', 'Hauts et pulls divers', 28, ''),
-(66, 'Tiroirs bas', 'Pantalons et shorts divers', 28, ''),
-(67, 'Tiroir du haut', 'Bijoux en vrac', 29, ''),
-(68, 'Tiroir d''en bas', 'Sacs et accessoires divers', 29, ''),
-(69, 'Niveau Supérieur', 'Chaussures avec talons divers', 30, ''),
-(70, 'Niveau Inférieur', 'Chaussures basses diverses', 30, '');
+(65, 'Penderie', 'Vestes et manteaux divers', 29, ''),
+(66, 'Étagères', 'Hauts et pulls divers', 29, ''),
+(67, 'Tiroirs bas', 'Pantalons et shorts divers', 29, ''),
+(68, 'Tiroir du haut', 'Bijoux en vrac', 30, ''),
+(69, 'Tiroir d''en bas', 'Sacs et accessoires divers', 30, ''),
+(70, 'Niveau Supérieur', 'Chaussures avec talons divers', 31, ''),
+(71, 'Niveau Inférieur', 'Chaussures basses diverses', 31, '');
 
 INSERT INTO categorie(idcategorie, nom, infoPlus) VALUES
 (1, 'Hauts', 'T-shirts, chemises, pulls, tops, débardeurs...'),
@@ -316,7 +320,7 @@ INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, 
 (4, 'feliciaKan@example.com', 'Kanud', "Felicia", "321 Super Rd", "fekan", "$2y$10$s3uvW27negmw1w/eHQ6HhO7JdX7yj3WB78Y/1TV8DJMvdOykRWD7i", 'user');
 
 INSERT INTO vetement(idvetement, nom, taille, type, couleur, etat, genre, marque, photo, idcategorie, idniveau, idproprietaire, description) VALUES
-(1, 'T-shirt Running Pro', 'M', 'Haut', 'Noir', 'Disponible', 'homme', 'Nike', 'assets/img/wardrobe/tshirt_nike.jpg', 1, 2, 1, 'T-shirt très respirant, idéal pour le jogging. Très bon état.'),
-(2, 'Sacoche en cuir', 'TU', 'Sac', 'Marron', 'En prêt', 'mixte', 'Fossil', 'assets/img/wardrobe/sacoche_fossil.jpg', 6, 5, 2, 'Petite sacoche pratique pour tous les jours.'),
-(3, 'Pyjama Ensemble', 'L', 'Ensemble', 'Noir', 'Au lavage', 'femme', 'Etam', 'assets/img/wardrobe/pyjama_etam.jpg', 9, 65, 3, 'Ensemble très chaud pour l''hiver.'),
-(4, 'Bijoux vancleef', 'TU', 'Bracelet', 'Doré', 'Disponible', 'femme', 'VanCleef', 'assets/img/wardrobe/vancleef.jpg', 7, 11, 4, 'Bijoux Vancleef tendance.');
+(1, 'T-shirt Running Pro', 'M', 'Haut', 'Noir', 'Disponible', 'homme', 'Nike', 'assets/img/wardrobe/tshirt_nike.jpg', 8, 3, 1, 'T-shirt très respirant, idéal pour le jogging. Très bon état.'),
+(2, 'Sacoche en cuir', 'TU', 'Sac', 'Marron', 'En prêt', 'mixte', 'Fossil', 'assets/img/wardrobe/sacoche_fossil.jpg', 6, 6, 2, 'Petite sacoche pratique pour tous les jours.'),
+(3, 'Pyjama Ensemble', 'L', 'Ensemble', 'Noir', 'Au lavage', 'femme', 'Etam', 'assets/img/wardrobe/pyjama_etam.jpg', 9, 4, 3, 'Ensemble classique tres beau. Ideal pour les soirée pyjama.'),
+(4, 'Bijoux vancleef', 'TU', 'Bracelet', 'Doré', 'Disponible', 'femme', 'VanCleef', 'assets/img/wardrobe/vancleef.jpg', 7, 12, 1, 'Bijoux Vancleef tendance.');
