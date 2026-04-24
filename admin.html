@@ -24,10 +24,13 @@
 
             <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active fw-bold" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">🏷️ Catégories</button>
+                    <button class="nav-link fw-bold active" id="sites-tab" data-bs-toggle="tab" data-bs-target="#sites" type="button" role="tab">🏠 Sites</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link fw-bold" id="locaux-tab" data-bs-toggle="tab" data-bs-target="#locaux" type="button" role="tab">🏠 Locaux</button>
+                    <button class="nav-link fw-bold" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">🏷️ Catégories</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="locaux-tab" data-bs-toggle="tab" data-bs-target="#locaux" type="button" role="tab"> 📍 Locaux</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold" id="rangements-tab" data-bs-toggle="tab" data-bs-target="#rangements" type="button" role="tab">🗄️ Rangements</button>
@@ -38,8 +41,26 @@
             </ul>
 
             <div class="tab-content" id="adminTabsContent">
+
+                <div class="tab-pane fade show active" id="sites" role="tabpanel">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-site">+ Nouveau Site</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Adresse</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-sites">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 
-                <div class="tab-pane fade show active" id="categories" role="tabpanel">
+                <div class="tab-pane fade" id="categories" role="tabpanel">
                     <div class="d-flex justify-content-end mb-3">
                         <button class="btn btn-success fw-bold" id="btn-ajouter-categorie">+ Nouvelle Catégorie</button>
                     </div>
@@ -114,6 +135,47 @@
             </div>
         </main>
 
+
+        <div class="modal fade" id="modalSite" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalSiteTitre">Site</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-site">
+                            <input type="hidden" id="site-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom *</label>
+                                <input type="text" class="form-control" id="site-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Adresse *</label>
+                                <input type="text" class="form-control" id="site-adresse" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">CP *</label>
+                                <input type="number" class="form-control" id="site-cp" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Localite *</label>
+                                <input type="text" class="form-control" id="site-localite" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Photo</label>
+                                <input type="image" class="form-control" id="site-photo">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-site">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="modalCategorie" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -160,7 +222,12 @@
                                 <label class="form-label fw-bold">Informations</label>
                                 <textarea class="form-control" id="local-info" rows="2"></textarea>
                             </div>
-                            <input type="hidden" id="local-idsite" value="1"> 
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Site *</label>
+                                <select class="form-select" id="local-idsite" required aria-placeholder="test">
+                                    <option value="">Choisir un site...</option>
+                                </select>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">

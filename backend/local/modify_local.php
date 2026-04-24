@@ -13,6 +13,7 @@ $conn = pdo_connectDB();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idLocal = $_POST['idLocal'] ?? null;
     $nom = trim($_POST['nom'] ?? '');
+    $idSite = trim($_POST['idSite'] ?? '');
     $infoLocal = trim($_POST['infoLocal'] ?? '');
 
     if (!$idLocal || empty($nom)) {
@@ -21,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("UPDATE local SET nom = :nom, infoLocal = :infoLocal WHERE idLocal = :idLocal");
-        $stmt->execute([':nom' => $nom, ':infoLocal' => $infoLocal, ':idLocal' => $idLocal]);
+        $stmt = $conn->prepare("UPDATE local SET nom = :nom, infoLocal = :infoLocal, idSite = :idSite WHERE idLocal = :idLocal");
+        $stmt->execute([':nom' => $nom, ':infoLocal' => $infoLocal, ':idLocal' => $idLocal, ':idSite' => $idSite]);
         
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
