@@ -15,6 +15,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 4. Écouteur de soumission
     document.getElementById('form-profil').addEventListener('submit', mettreAJourProfil);
+    
+    const btnSupprimer = document.getElementById('btn-supprimer-compte');
+    if (btnSupprimer) {
+        btnSupprimer.addEventListener('click', async () => {
+            // Première alerte
+            if (confirm("⚠️ ATTENTION ! Es-tu absolument sûr de vouloir supprimer ton compte ?")) {
+                
+                // Deuxième alerte (c'est une pratique standard pour éviter les clics par erreur)
+                if (confirm("Cette action est DÉFINITIVE et IRRÉVERSIBLE. Confirmer la suppression ?")) {
+                    
+                    // On appelle notre nouveau script PHP (Pas besoin d'envoyer d'ID, le PHP le sait !)
+                    const response = await fetch('backend/utilisateur/delete_mon_compte.php', {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        alert("Ton compte a bien été supprimé. Au revoir ! 👋");
+                        // On vide la mémoire du navigateur
+                        sessionStorage.removeItem('user');
+                        localStorage.clear(); // Optionnel : pour vider aussi les favoris
+                        
+                        // On le renvoie vers la page d'accueil ou de connexion
+                        window.location.href = 'index.html'; 
+                    } else {
+                        alert("Erreur : " + data.message);
+                    }
+                }
+            }
+        });
+    }
 });
 
 async function chargerInfosProfil() {

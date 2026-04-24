@@ -165,7 +165,7 @@
         btn.disabled = true;
         btn.textContent = 'Envoi en cours...';
 
-        fetch('backend/add/add_utilisateur.php', {
+        fetch('backend/utilisateur/add_utilisateur.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nom, prenom, email, adresse, login, mdp })
