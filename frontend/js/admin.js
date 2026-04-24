@@ -63,6 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     });
 
+    document.getElementById('utilisateurs-tab').addEventListener('shown.bs.tab', chargerUtilisateurs);
+
 });
 
 // ==========================================
@@ -627,5 +629,86 @@ async function supprimerNiveau(id) {
         const data = await response.json();
         if (data.status === 'success') chargerNiveaux();
         else alert("Erreur : " + data.message);
+    }
+}
+
+// ==========================================
+// CRUD : UTILISATEURS (ADMIN)
+// ==========================================
+async function chargerUtilisateurs() {
+    const tbody = document.getElementById('liste-utilisateurs');
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Chargement...</td></tr>';
+
+    try {
+        const response = await fetch('backend/utilisateur/get_utilisateurs_admin.php');
+        const data = await response.json();
+
+        if (data && Array.isArray(data)) {
+            tbody.innerHTML = '';
+            if(data.length === 0) return tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Aucun utilisateur.</td></tr>';
+
+            const userConnecte = JSON.parse(sessionStorage.getItem('user'));
+
+            data.forEach(u => {
+                // Empêcher l'admin de se bloquer/supprimer lui-même
+                const isMe = u.idutilisateur == userConnecte.idutilisateur;
+                
+                // Le selecteur de rôle
+                const roleSelect = `
+                    <select class="form-select form-select-sm border-0 bg-light" onchange="changerRole(${u.idutilisateur}, this.value)" ${isMe ? 'disabled' : ''}>
+                        <option value="user" ${u.role === 'user' ? 'selected' : ''}>User (Consulter & Emprunter)</option>
+                        <option value="owner" ${u.role === 'owner' ? 'selected' : ''}>Owner (Ajouter des objets)</option>
+                        <option value="admin" ${u.role === 'admin' ? 'selected text-danger fw-bold' : ''}>Admin (Contrôle Total)</option>
+                    </select>
+                `;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="align-middle fw-bold">${u.idutilisateur}</td>
+                    <td class="align-middle">${u.prenom} ${u.nom} ${isMe ? ' <span class="badge bg-primary">Moi</span>' : ''}</td>
+                    <td class="align-middle text-muted">${u.login}</td>
+                    <td class="align-middle" style="width: 250px;">${roleSelect}</td>
+                    <td class="text-end align-middle">
+                        <button class="btn btn-sm btn-outline-danger" onclick="supprimerUtilisateur(${u.idutilisateur})" ${isMe ? 'disabled' : ''}>🗑️ Banni</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erreur de chargement</td></tr>';
+    }
+}
+
+async function changerRole(id, nouveauRole) {
+    const response = await fetch('backend/utilisateur/modify_role.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idutilisateur: id, role: nouveauRole })
+    });
+    const data = await response.json();
+    
+    if (data.status === 'success') {
+        // Optionnel : tu pourrais afficher une petite notif "toast" ici
+    } else {
+        alert("Erreur : " + data.message);
+        chargerUtilisateurs(); // On recharge pour remettre l'ancien rôle dans le select si ça a raté
+    }
+}
+
+async function supprimerUtilisateur(id) {
+    if (confirm("Es-tu sûr de vouloir supprimer cet utilisateur ? Son compte sera détruit.")) {
+        const response = await fetch('backend/utilisateur/delete_utilisateur_admin.php', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idutilisateur: id })
+        });
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            chargerUtilisateurs();
+        } else {
+            alert("Erreur : " + data.message);
+        }
     }
 }

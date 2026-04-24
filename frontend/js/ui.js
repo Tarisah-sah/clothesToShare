@@ -118,13 +118,26 @@ function afficherCartesVetements(vetements) {
         const mese = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur);
         const mesf = listeComplete.filter(v => favoris.includes(v.idvetement.toString()) && v.idproprietaire != currentUser.idutilisateur);
 
-        conteneur.innerHTML = `
-            <h3 class="w-100 border-bottom pb-2">👕 Mes possessions</h3>
-            <div class="row g-4 w-100 mb-4">${mesh.length ? mesh.map(genererCarte).join('') : '<p class="text-muted">Aucun vêtement.</p></div>'}
+        let htmlDressing = '';
+
+        // UI : "Mes possessions" s'affiche UNIQUEMENT pour les admins et les owners
+        if (currentUser.role === 'admin' || currentUser.role === 'owner') {
+            htmlDressing += `
+                <h3 class="w-100 border-bottom pb-2">👕 Mes possessions</h3>
+                <div class="row g-4 w-100 mb-4">${mesh.length ? mesh.map(genererCarte).join('') : '<p class="text-muted">Aucun vêtement.</p>'}</div>
+            `;
+        }
+
+        // UI : "Mes emprunts" et "Mes favoris" s'affichent pour tout le monde
+        htmlDressing += `
             <h3 class="w-100 border-bottom pb-2 mt-4">🤝 Mes emprunts</h3>
-            <div class="row g-4 w-100 mb-4">${mese.length ? mese.map(genererCarte).join('') : '<p class="text-muted">Aucun emprunt.</p></div>'}
+            <div class="row g-4 w-100 mb-4">${mese.length ? mese.map(genererCarte).join('') : '<p class="text-muted">Aucun emprunt.</p>'}</div>
+            
             <h3 class="w-100 border-bottom pb-2 mt-4 text-danger">❤️ Mes Favoris</h3>
-            <div class="row g-4 w-100">${mesf.length ? mesf.map(genererCarte).join('') : '<p class="text-muted">Aucun favori.</p></div>'}`;
+            <div class="row g-4 w-100">${mesf.length ? mesf.map(genererCarte).join('') : '<p class="text-muted">Aucun favori.</p>'}</div>
+        `;
+
+        conteneur.innerHTML = htmlDressing;
     } else {
         if (!vetements || vetements.length === 0) {
             conteneur.innerHTML = '<div class="col-12"><p class="text-center text-muted">Aucun vêtement trouvé.</p></div>';

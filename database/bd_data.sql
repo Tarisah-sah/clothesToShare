@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS utilisateur (
 	adresse TEXT NOT NULL,
 	login VARCHAR(50) NOT NULL UNIQUE,
 	mdp TEXT NOT NULL,
-	role VARCHAR(10) DEFAULT 'pending', /* admin, user, pending */
+	role VARCHAR(10) DEFAULT 'pending', /* admin, user, owner, pending */
 	PRIMARY KEY(idutilisateur)
 ) engine=innodb;
 

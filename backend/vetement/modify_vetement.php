@@ -1,4 +1,14 @@
 <?php
+
+session_start();
+
+// SÉCURITÉ : On bloque immédiatement si la personne n'est pas connectée OU si elle n'a que le rôle "user"
+if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] === 'user') {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['status' => 'error', 'message' => 'Accès refusé. Ton rôle ne te permet pas de modifier la garde-robe.']);
+    exit;
+}
+
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 

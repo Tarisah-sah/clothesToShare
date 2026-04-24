@@ -34,9 +34,11 @@ async function chargerVetements(mode = 'accueil') {
     const titre = document.getElementById('titre-section-vetements');
     if (titre) titre.innerHTML = mode === 'dressing' ? 'Mon Dressing' : 'Accueil';
 
+    // --- GESTION DU BOUTON "+ AJOUTER" ---
     const btnAjout = document.getElementById('btn-afficher-ajout');
     if (btnAjout) {
-        if (user && mode === 'dressing') {
+        // SÉCURITÉ : Le bouton n'apparaît que pour les Owners et les Admins !
+        if (user && mode === 'dressing' && (user.role === 'owner' || user.role === 'admin')) {
             btnAjout.style.display = 'block';
         } else {
             btnAjout.style.display = 'none';

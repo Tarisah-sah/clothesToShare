@@ -38,6 +38,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold" id="niveaux-tab" data-bs-toggle="tab" data-bs-target="#niveaux" type="button" role="tab">📏 Niveaux</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="utilisateurs-tab" data-bs-toggle="tab" data-bs-target="#utilisateurs" type="button" role="tab">👥 Utilisateurs</button>
+                </li>
             </ul>
 
             <div class="tab-content" id="adminTabsContent">
@@ -132,6 +135,26 @@
                     </div>
                 </div>
 
+                <div class="tab-pane fade" id="utilisateurs" role="tabpanel">
+                    <div class="card shadow-sm border-0 mt-3">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Identité</th>
+                                        <th>Login</th>
+                                        <th>Rôle (Privilèges)</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="liste-utilisateurs">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
