@@ -6,8 +6,8 @@ $conn = pdo_connectDB();
 
 $mode = $_GET['mode'] ?? 'accueil';
 $userId = $_GET['userId'] ?? null;
+$idNiveau = $_GET['idNiveau'] ?? null; 
 
-// --- MODIFICATION : On ajoute les LEFT JOIN pour récupérer idRangement et idLocal ---
 $sqlBase = "SELECT v.*, p.idemprunteur, n.idRangement, r.idLocal 
             FROM vetement v 
             LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente')
@@ -15,7 +15,21 @@ $sqlBase = "SELECT v.*, p.idemprunteur, n.idRangement, r.idLocal
             LEFT JOIN rangement r ON n.idRangement = r.idRangement";
 
 try {
-    if ($mode === 'dressing' && $userId) {
+    if ($idNiveau) {
+        $sql = $sqlBase . " WHERE v.idniveau = :idNiveau";
+        $params = [':idNiveau' => $idNiveau];
+        
+        // MODIFICATION : On exclut les vêtements de l'utilisateur de l'Explorer
+        if ($userId) {
+            $sql .= " AND v.idproprietaire != :uid1 AND (p.idemprunteur IS NULL OR p.idemprunteur != :uid2)";
+            $params[':uid1'] = $userId;
+            $params[':uid2'] = $userId;
+        }
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($params);
+
+    } else if ($mode === 'dressing' && $userId) {
         $favoris = isset($_GET['favoris']) ? explode(',', $_GET['favoris']) : [];
         $sql = $sqlBase . " WHERE v.idproprietaire = :uid1 OR p.idemprunteur = :uid2";
         

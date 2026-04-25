@@ -28,8 +28,10 @@ async function chargerVetements(mode = 'accueil') {
         return;
     }
 
-    document.getElementById('nav-accueil').classList.toggle('active', mode === 'accueil');
-    document.getElementById('nav-dressing').classList.toggle('active', mode === 'dressing');
+    // ---> AJOUT : Gérer la classe active pour les 3 onglets <---
+    document.getElementById('nav-accueil')?.classList.toggle('active', mode === 'accueil');
+    document.getElementById('nav-dressing')?.classList.toggle('active', mode === 'dressing');
+    document.getElementById('nav-arborescence')?.classList.toggle('active', mode === 'explorer');
     
     const titre = document.getElementById('titre-section-vetements');
     if (titre) titre.innerHTML = mode === 'dressing' ? 'Mon Dressing' : 'Accueil';

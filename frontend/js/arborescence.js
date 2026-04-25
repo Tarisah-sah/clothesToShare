@@ -8,13 +8,19 @@ function initialiserArborescence() {
         navArborescence.addEventListener('click', (e) => {
             e.preventDefault();
             window.history.pushState({}, '', 'dressing.html?tab=explorer');
+            modeActuel = 'explorer';
+            
+            // ---> AJOUT : Gestion de l'état actif dans la Navbar <---
+            document.getElementById('nav-accueil')?.classList.remove('active');
+            document.getElementById('nav-dressing')?.classList.remove('active');
+            navArborescence.classList.add('active');
+            
             document.getElementById('section-dressing').style.display = 'none';
             document.getElementById('section-recherche').style.display = 'none';
             document.getElementById('section-formulaire').style.display = 'none';
             
             document.getElementById('section-arborescence').style.display = 'block';
             
-            // On charge la première étape : Les Locaux
             chargerBulles('locaux', null);
         });
     }
@@ -65,8 +71,21 @@ async function chargerBulles(type, parentId) {
     } else if (type === 'vetements') {
         // Ici on n'affiche plus des bulles, mais les cartes de vêtements normales
         titre.innerHTML = "👗 Vêtements trouvés";
-        const urlVetements = `vetement/getall_vetements.php?idNiveau=${parentId}`; 
+        
+        // Récupérer l'ID utilisateur pour filtrer
+        const userJson = sessionStorage.getItem('user');
+        const user = userJson ? JSON.parse(userJson) : null;
+        
+        let urlVetements = `vetement/getall_vetements.php?idNiveau=${parentId}&mode=explorer`;
+        if (user) {
+            urlVetements += `&userId=${user.idutilisateur}`;
+        }
+        
         const dataVetements = await fetchDonnees(urlVetements);
+        
+        // ---> AJOUT CORRECTIF : On met à jour la mémoire globale pour la modale ! <---
+        tousLesVetements = dataVetements; 
+        
         conteneur.innerHTML = ''; // On vide les bulles
         
         // Création du conteneur temporaire pour afficher les cartes
