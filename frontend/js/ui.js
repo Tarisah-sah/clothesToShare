@@ -129,9 +129,18 @@ function afficherCartesVetements(vetements) {
 
     if (modeActuel === 'dressing' && currentUser) {
         const listeComplete = vetements || [];
+        
+        // 1. Les vêtements dont je suis propriétaire
         const mesh = listeComplete.filter(v => v.idproprietaire == currentUser.idutilisateur);
-        const mese = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur);
+        
+        // 2. Les emprunts validés (En prêt ou Retour en attente)
+        const mese = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur && (v.etat === 'En prêt' || v.etat === 'Retour en attente'));
+        
+        // 3. Mes favoris
         const mesf = listeComplete.filter(v => favoris.includes(v.idvetement.toString()) && v.idproprietaire != currentUser.idutilisateur);
+        
+        // 4. Mes demandes en cours (uniquement l'état 'Demande en cours')
+        const mesd = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur && v.etat === 'Demande en cours');
 
         let htmlDressing = '';
 
@@ -143,9 +152,15 @@ function afficherCartesVetements(vetements) {
             `;
         }
 
-        // UI : "Mes emprunts" et "Mes favoris" s'affichent pour tout le monde
+        // UI : "Mes demandes en cours" (Placé avant les emprunts pour plus de logique temporelle)
         htmlDressing += `
-            <h3 class="w-100 border-bottom pb-2 mt-4">🤝 Mes emprunts</h3>
+            <h3 class="w-100 border-bottom pb-2 mt-4 text-warning">⏳ Mes demandes en attente</h3>
+            <div class="row g-4 w-100 mb-4">${mesd.length ? mesd.map(genererCarte).join('') : '<p class="text-muted">Aucune demande en cours.</p>'}</div>
+        `;
+
+        // UI : "Mes emprunts" et "Mes favoris"
+        htmlDressing += `
+            <h3 class="w-100 border-bottom pb-2 mt-4">🤝 Mes emprunts actifs</h3>
             <div class="row g-4 w-100 mb-4">${mese.length ? mese.map(genererCarte).join('') : '<p class="text-muted">Aucun emprunt.</p>'}</div>
             
             <h3 class="w-100 border-bottom pb-2 mt-4 text-danger">❤️ Mes Favoris</h3>

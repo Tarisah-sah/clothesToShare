@@ -27,11 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $conn->beginTransaction();
     try {
-        $vetementPretSQL = "UPDATE vetement SET etat = ? WHERE idvetement = ?";
+        $vetementPretSQL = "UPDATE vetement SET etat = ? WHERE idvetement = ? AND etat = 'Disponible'";
         $stmt = $conn->prepare($vetementPretSQL);
         $stmt->execute([$etat_vetement, $vetement_idvetement]);
 
-        // Construction dynamique de l'insertion
+        if ($stmt->rowCount() === 0) {
+            // Si rowCount() vaut 0, c'est que le vêtement n'était plus "Disponible".
+            $conn->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Trop tard ! Quelqu\'un d\'autre vient juste de demander ce vêtement.']);
+            exit;
+        }
+
+        // Construction dynamique de l'insertion (LA SUITE RESTE IDENTIQUE...)
         $colonnes = "idvetement, idemprunteur, statutpret";
         $valeurs = ":idvetement, :idemprunteur, :statutpret";
         $sqlExecuter = [
