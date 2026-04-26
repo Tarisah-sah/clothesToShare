@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await chargerComposant('composant-modals', 'frontend/components/modals.html');
     await chargerComposant('composant-recherche', 'frontend/components/recherche.html');
     await chargerComposant('composant-formulaire', 'frontend/components/formulaireAjout.html');
+    await chargerCategoriesSelect('search-categorie', 'Toutes les catégories');
 
     // 2. Vérification de connexion
     verifierSession();
@@ -35,7 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 5. Bouton "Ajouter un vêtement"
     document.getElementById('btn-afficher-ajout').addEventListener('click', async () => {
         reinitialiserFormulaire();
-        await chargerSelectLocaux(''); // NOUVEAU : Télécharge la liste des Locaux
+        await chargerCategoriesSelect('idcategorie_ajout', 'Choisir une catégorie...'); 
+        
+        await chargerSelectLocaux(''); // Télécharge la liste des Locaux
         basculerAffichageFormulaire(true);
     });
     

@@ -6,7 +6,7 @@ $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        $stmt = $conn->query("SELECT * FROM categorie ORDER BY nom ASC");
+        $stmt = $conn->query("SELECT * FROM categorie");
         $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($categories);
     } catch (Exception $e) {

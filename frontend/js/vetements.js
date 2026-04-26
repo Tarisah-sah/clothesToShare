@@ -238,6 +238,10 @@ async function preparerEdition(id) {
     document.getElementById('edit-couleur').value = vetement.couleur;
     document.getElementById('edit-genre').value = vetement.genre;
     document.getElementById('edit-type').value = vetement.type;
+    
+    // ---> AJOUT : On charge les catégories dynamiquement <---
+    await chargerCategoriesSelect('edit-idcategorie', 'Choisir une catégorie...');
+    
     document.getElementById('edit-idcategorie').value = vetement.idcategorie;
     document.getElementById('edit-etat').value = vetement.etat; 
     document.getElementById('edit-description').value = vetement.description;
@@ -534,6 +538,27 @@ function initialiserEcouteursVetements() {
             } else {
                 alert("Erreur lors du prêt : " + (resultat.message || "Erreur inconnue"));
             }
+        });
+    }
+}
+
+// ==========================================
+// CHARGEMENT DYNAMIQUE DES CATÉGORIES
+// ==========================================
+async function chargerCategoriesSelect(idSelect, texteParDefaut) {
+    const select = document.getElementById(idSelect);
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Chargement...</option>';
+    
+    // On appelle l'API des catégories
+    const data = await fetchDonnees('categorie/get_categories.php');
+    
+    select.innerHTML = `<option value="">${texteParDefaut}</option>`;
+    
+    if (data && Array.isArray(data)) {
+        data.forEach(c => {
+            select.innerHTML += `<option value="${c.idcategorie}">${c.nom}</option>`;
         });
     }
 }
