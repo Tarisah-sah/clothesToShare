@@ -8,12 +8,13 @@ $mode = $_GET['mode'] ?? 'accueil';
 $userId = $_GET['userId'] ?? null;
 $idNiveau = $_GET['idNiveau'] ?? null; 
 
-$sqlBase = "SELECT v.*, p.idemprunteur, n.idRangement, r.idLocal 
+$sqlBase = "SELECT v.*, p.idemprunteur, p.datefinprevue, p.datedebut, u.login as nom_emprunteur, n.idRangement, r.idLocal 
             FROM vetement v 
-            LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente')
+            LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente', 'En attente')
             LEFT JOIN niveau n ON v.idniveau = n.idNiveau
-            LEFT JOIN rangement r ON n.idRangement = r.idRangement";
-
+            LEFT JOIN rangement r ON n.idRangement = r.idRangement
+            LEFT JOIN utilisateur u ON p.idemprunteur = u.idutilisateur";
+            
 try {
     if ($idNiveau) {
         $sql = $sqlBase . " WHERE v.idniveau = :idNiveau";

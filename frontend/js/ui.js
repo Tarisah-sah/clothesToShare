@@ -74,6 +74,21 @@ function afficherCartesVetements(vetements) {
             `;
             if (vetement.etat === 'Disponible') {
                 actionsHTML += `<button class="btn btn-sm btn-outline-primary w-100" onclick="ouvrirModalPret(${vetement.idvetement}, '${vetement.nom.replace(/'/g, "\\'")}')">🤝 Prêter</button>`;
+            } else if (vetement.etat === 'Demande en cours') {
+                const nomEmprunteur = vetement.nom_emprunteur || 'Utilisateur inconnu';
+                const dateDebut = vetement.datedebut ? new Date(vetement.datedebut).toLocaleDateString('fr-FR') : 'Non précisé';
+                const dateFin = vetement.datefinprevue ? new Date(vetement.datefinprevue).toLocaleDateString('fr-FR') : 'Non précisé';
+
+                actionsHTML += `
+                    <div class="alert alert-info p-2 mt-2 mb-2 small text-center shadow-sm">
+                        Demandé par <strong>${nomEmprunteur}</strong><br>
+                        Du <strong>${dateDebut}</strong> au <strong>${dateFin}</strong>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-success w-50 fw-bold" onclick="repondreDemande(${vetement.idvetement}, 'accepter')">✅ Accepter</button>
+                        <button class="btn btn-sm btn-danger w-50 fw-bold" onclick="repondreDemande(${vetement.idvetement}, 'refuser')">❌ Refuser</button>
+                    </div>
+                `;
             } else if (vetement.etat === 'En prêt') {
                 actionsHTML += `<button class="btn btn-sm btn-outline-warning w-100" onclick="rendreVetement(${vetement.idvetement})">🔙 Forcer le retour</button>`;
             } else if (vetement.etat === 'Retour en attente') {

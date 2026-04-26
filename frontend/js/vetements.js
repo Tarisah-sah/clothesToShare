@@ -322,6 +322,7 @@ async function ouvrirModalDetails(id) {
 
     if (user && user.idutilisateur != vetement.idproprietaire && vetement.etat === 'Disponible') {
         zoneEmprunt.classList.remove('d-none');
+        document.getElementById('emprunt-date-debut').value = '';
         document.getElementById('emprunt-date-fin').value = ''; 
     } else {
         zoneEmprunt.classList.add('d-none');
@@ -485,9 +486,11 @@ function initialiserEcouteursVetements() {
     const btnEmprunt = document.getElementById('btn-confirmer-emprunt');
     if(btnEmprunt) {
         btnEmprunt.addEventListener('click', async () => {
+            const dateDebut = document.getElementById('emprunt-date-debut').value; // AJOUT
             const dateFin = document.getElementById('emprunt-date-fin').value;
-            if(!dateFin) {
-                alert("Merci d'indiquer à quelle date tu prévois de rendre le vêtement !");
+            
+            if(!dateDebut || !dateFin) {
+                alert("Merci d'indiquer les dates de début et de fin de ton emprunt !");
                 return;
             }
 
@@ -495,6 +498,7 @@ function initialiserEcouteursVetements() {
             const formData = new FormData();
             formData.append('idvetement', idVetementEnCoursDeDetail);
             formData.append('idutilisateur', user.idutilisateur); 
+            formData.append('datedebut', dateDebut); // AJOUT (envoi vers PHP)
             formData.append('datefinpret', dateFin);
 
             const resultat = await postDonnees('pret/pret_vetement.php', formData);
