@@ -25,7 +25,7 @@ window.toggleFavori = function(id, event) {
     if (!userJson) {
         alert("Tu dois être connecté pour ajouter des vêtements en favoris !");
         // Tu pourrais même le rediriger vers la page de connexion s'il clique sur OK :
-        // window.location.href = 'login.html';
+        window.location.href = 'login.html';
         return;
     }
     
@@ -98,8 +98,15 @@ function afficherCartesVetements(vetements) {
             }
         } 
         // ACTIONS EMPRUNTEUR
-        else if (currentUser && vetement.etat === 'En prêt' && vetement.idemprunteur == currentUser.idutilisateur) {
-            actionsHTML += `<button class="btn btn-sm btn-primary w-100" onclick="signalerRetour(${vetement.idvetement})">👋 Signaler comme rendu</button>`;
+        else if (currentUser && vetement.idemprunteur == currentUser.idutilisateur) {
+            // S'il est en cours de prêt, on affiche le bouton pour rendre
+            if (vetement.etat === 'En prêt') {
+                actionsHTML += `<button class="btn btn-sm btn-primary w-100 mt-2" onclick="signalerRetour(${vetement.idvetement})">👋 Signaler comme rendu</button>`;
+            
+            // S'il est en attente, on affiche le bouton pour annuler
+            } else if (vetement.etat === 'Demande en cours') {
+                actionsHTML += `<button class="btn btn-sm btn-outline-danger w-100 mt-2 fw-bold" onclick="annulerDemande(${vetement.idvetement})">❌ Annuler ma demande</button>`;
+            }
         }
 
         // --- LOGIQUE D'AFFICHAGE DU CŒUR ---

@@ -566,3 +566,27 @@ async function chargerCategoriesSelect(idSelect, texteParDefaut) {
         });
     }
 }
+
+// ==========================================
+// ANNULER UNE DEMANDE DE PRÊT (EMPRUNTEUR)
+// ==========================================
+async function annulerDemande(idVetement) {
+    if (!confirm("Veux-tu vraiment annuler ta demande d'emprunt ?")) return;
+
+    const userJson = sessionStorage.getItem('user');
+    if (!userJson) return;
+    
+    const user = JSON.parse(userJson);
+    const formData = new FormData();
+    formData.append('idvetement', idVetement);
+    formData.append('idutilisateur', user.idutilisateur);
+
+    const resultat = await postDonnees('pret/annuler_demande_pret.php', formData);
+    
+    if (resultat && resultat.status === 'success') {
+        alert("Ta demande a été annulée !");
+        chargerVetements(modeActuel); // On rafraîchit l'affichage
+    } else {
+        alert("Erreur : " + (resultat?.message || "Impossible d'annuler."));
+    }
+}
