@@ -129,3 +129,21 @@
     text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
     padding: 0 10px;
 }
+
+/* =========================================
+   Boutons de filtres couleurs personnalisés
+   ========================================= */
+
+/* Quand la case ROSE est cochée */
+input#c-rose:checked + label {
+    background-color: #e91e8c !important;
+    color: white !important;
+    border-color: #e91e8c !important;
+}
+
+/* Quand la case MARRON est cochée */
+input#c-marron:checked + label {
+    background-color: #795548 !important;
+    color: white !important;
+    border-color: #795548 !important;
+}

@@ -1,95 +1,114 @@
-<div class="card shadow-sm mb-4 border-0 bg-light" id="section-recherche">
-    <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-3 pb-2" 
+<div class="card shadow-sm mb-4 border-0" id="section-recherche" style="border-radius: 12px;">
+    
+    <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3 pb-2" 
         data-bs-toggle="collapse" data-bs-target="#contenuRecherche" style="cursor: pointer;">
-        <h5 class="card-title mb-0 text-secondary">Rechercher & Filtrer</h5>
-        <button class="btn btn-sm btn-outline-secondary border-0">▼ Afficher / Masquer</button>
+        <h5 class="card-title mb-0 fw-bold" style="color: #ad1457;">🔍 Rechercher & Filtrer</h5>
+        <button class="btn btn-sm btn-light rounded-circle text-muted">▼</button>
     </div>
     
-    <div class="collapse" id="contenuRecherche">
-        <div class="card-body pt-0">
-            <form id="form-recherche" class="row g-3 align-items-end">
-                <div class="col-12 col-md-4">
-                    <label for="search-texte" class="form-label fw-bold small">Mot-clé (Général)</label>
-                    <input type="text" class="form-control" id="search-texte" placeholder="Ex: Zara, L, Rouge...">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label for="search-categorie" class="form-label fw-bold small">Catégorie</label>
-                    <select class="form-select" id="search-categorie">
-                        <option value="">Chargement...</option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-4">
-                    <label for="search-etat" class="form-label fw-bold small">Statut</label>
-                    <select class="form-select" id="search-etat">
-                        <option value="">Tous</option>
-                        <option value="Disponible">Disponible</option>
-                        <option value="En prêt">En prêt</option>
-                        <option value="Au lavage">Au lavage</option>
-                    </select>
-                </div>
-
-                <div class="col-6 col-md-2">
-                    <label for="search-taille" class="form-label fw-bold small">Taille</label>
-                    <input type="text" class="form-control" id="search-taille" placeholder="Ex: M, 38">
-                </div>
-                <div class="col-6 col-md-2">
-                    <label for="search-genre" class="form-label fw-bold small">Genre</label>
-                    <select class="form-select" id="search-genre">
-                        <option value="">Tous</option>
-                        <option value="mixte">Mixte</option>
-                        <option value="homme">Homme</option>
-                        <option value="femme">Femme</option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <label for="search-type" class="form-label fw-bold small">Type</label>
-                    <input type="text" class="form-control" id="search-type" placeholder="Ex: Haut">
-                </div>
-                <div class="col-12 col-md-2">
-                    <label for="search-marque" class="form-label fw-bold small">Marque</label>
-                    <input type="text" class="form-control" id="search-marque" placeholder="Ex: Nike">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label fw-bold small mb-1">Couleurs</label>
-                    <div class="d-flex flex-wrap gap-2 border rounded p-2 bg-white" style="max-height: 80px; overflow-y: auto;">
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Noir" id="c-noir">
-                            <label class="form-check-label small" for="c-noir">Noir</label>
+    <div class="collapse show" id="contenuRecherche">
+        <div class="card-body pt-2">
+            <form id="form-recherche">
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-texte" placeholder="Ex: Zara, L, Rouge...">
+                            <label for="search-texte">Mot-clé (Général)</label>
                         </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Blanc" id="c-blanc">
-                            <label class="form-check-label small" for="c-blanc">Blanc</label>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" id="search-categorie">
+                                <option value="">Toutes les catégories</option>
+                            </select>
+                            <label for="search-categorie">Catégorie</label>
                         </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Rouge" id="c-rouge">
-                            <label class="form-check-label small" for="c-rouge">Rouge</label>
-                        </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Bleu" id="c-bleu">
-                            <label class="form-check-label small" for="c-bleu">Bleu</label>
-                        </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Rose" id="c-rose">
-                            <label class="form-check-label small" for="c-rose">Rose</label>
-                        </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Marron" id="c-marron">
-                            <label class="form-check-label small" for="c-marron">Marron</label>
-                        </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Vert" id="c-vert">
-                            <label class="form-check-label small" for="c-vert">Vert</label>
-                        </div>
-                        <div class="form-check form-check-inline me-2 mb-0">
-                            <input class="form-check-input couleur-checkbox" type="checkbox" value="Jaune" id="c-jaune">
-                            <label class="form-check-label small" for="c-jaune">Jaune</label>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" id="search-etat">
+                                <option value="">Tous</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="En prêt">En prêt</option>
+                                <option value="Au lavage">Au lavage</option>
+                            </select>
+                            <label for="search-etat">Statut</label>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 d-flex gap-2 justify-content-end mt-3">
-                    <button type="submit" class="btn btn-primary">Filtrer</button>
-                    <button type="button" class="btn btn-outline-secondary" id="btn-reset-recherche">✖ Réinitialiser</button>
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-marque" placeholder="Ex: Nike">
+                            <label for="search-marque">Marque</label>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-type" placeholder="Ex: Haut">
+                            <label for="search-type">Type</label>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-taille" placeholder="Ex: M, 38">
+                            <label for="search-taille">Taille</label>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <select class="form-select" id="search-genre">
+                                <option value="">Tous</option>
+                                <option value="mixte">Mixte</option>
+                                <option value="homme">Homme</option>
+                                <option value="femme">Femme</option>
+                            </select>
+                            <label for="search-genre">Genre</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center bg-light p-3 rounded mx-0 border">
+                    
+                    <div class="col-12 col-xl-8 mb-3 mb-xl-0">
+                        <label class="form-label small fw-bold text-muted mb-2 d-block">Couleurs</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-noir" value="Noir">
+                            <label class="btn btn-outline-dark btn-sm rounded-pill px-3" for="c-noir">Noir</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-blanc" value="Blanc">
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill px-3" for="c-blanc">Blanc</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-rouge" value="Rouge">
+                            <label class="btn btn-outline-danger btn-sm rounded-pill px-3" for="c-rouge">Rouge</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-bleu" value="Bleu">
+                            <label class="btn btn-outline-primary btn-sm rounded-pill px-3" for="c-bleu">Bleu</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-rose" value="Rose">
+                            <label class="btn btn-sm rounded-pill px-3" for="c-rose" style="color: #e91e8c; border: 1px solid #f48fb1;">Rose</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-marron" value="Marron">
+                            <label class="btn btn-sm rounded-pill px-3" for="c-marron" style="color: #795548; border: 1px solid #795548;">Marron</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-vert" value="Vert">
+                            <label class="btn btn-outline-success btn-sm rounded-pill px-3" for="c-vert">Vert</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-jaune" value="Jaune">
+                            <label class="btn btn-outline-warning btn-sm rounded-pill px-3" for="c-jaune">Jaune</label>
+
+                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-autre" value="Autre">
+                            <label class="btn btn-sm rounded-pill px-3" for="c-autre" style="border-style: dashed;">Autre</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-xl-4 d-flex gap-2 justify-content-xl-end mt-2 mt-xl-0 border-start-xl ps-xl-4">
+                        <button type="button" class="btn btn-light border" id="btn-reset-recherche">✖ Réinitialiser</button>
+                        <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm" style="background-color: #ad1457; border-color: #ad1457;">Filtrer</button>
+                    </div>
+                    
                 </div>
             </form>
         </div>

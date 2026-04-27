@@ -144,3 +144,44 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalPret" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">🤝 Prêter un vêtement</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="pret-id-vetement">
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-primary">Vêtement</label>
+                    <input type="text" class="form-control bg-light" id="pret-nom-vetement" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-primary">À qui souhaites-tu le prêter ? *</label>
+                    <select class="form-select border-primary" id="pret-emprunteur" required>
+                        <option value="">Sélectionner un utilisateur...</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold text-primary">Du (Début) *</label>
+                        <input type="date" class="form-control border-primary" id="pret-date-debut" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold text-primary">Au (Fin) *</label>
+                        <input type="date" class="form-control border-primary" id="pret-date-fin" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary fw-bold" id="btn-valider-pret">Valider le prêt</button>
+            </div>
+        </div>
+    </div>
+</div>
