@@ -171,6 +171,10 @@ function ouvrirModalAjoutSite() {
     document.getElementById('form-site').reset();
     document.getElementById('site-id').value = "";
     document.getElementById('modalSiteTitre').textContent = "Ajouter une site";
+
+    const inputPhoto = document.getElementById('site-photo');
+    if (inputPhoto) inputPhoto.value = "";
+
     const preview = document.getElementById('site-photo-preview');
     if (preview) {
         preview.src = '';
@@ -184,6 +188,11 @@ function ouvrirModalEditionSite(id) {
     const site = sitesData.find(s => s.idSite == id);
     if (!site) return;
     document.getElementById('site-id').value = site.idSite;
+
+    // On force le champ fichier à se vider
+    const inputPhoto = document.getElementById('site-photo');
+    if (inputPhoto) inputPhoto.value = "";
+
     const preview = document.getElementById('site-photo-preview');
     if (site.photo) {
         preview.src = site.photo;
@@ -365,6 +374,10 @@ async function ouvrirModalAjoutLocal() {
     document.getElementById('modalLocalTitre').textContent = "Ajouter un local";
 
     const selectSite = document.getElementById('local-idsite');
+
+    const inputPhoto = document.getElementById('local-photo');
+    if (inputPhoto) inputPhoto.value = "";
+
     const preview = document.getElementById('local-photo-preview');
     if (preview) {
         preview.src = '';
@@ -406,6 +419,9 @@ async function ouvrirModalEditionLocal(id) {
         const isSelected = s.idSite == local.idSite ? 'selected' : '';
         selectSite.innerHTML += `<option value="${s.idSite}" ${isSelected}>${s.nom}</option>`;
     });
+
+    const inputPhoto = document.getElementById('local-photo');
+    if (inputPhoto) inputPhoto.value = "";
 
     const preview = document.getElementById('local-photo-preview');
     if (local.photo) {
@@ -512,6 +528,10 @@ function ouvrirModalAjoutRangement() {
     document.getElementById('modalRangementTitre').textContent = "Ajouter un rangement";
     
     const selectLocal = document.getElementById('rangement-idlocal');
+
+    const inputPhoto = document.getElementById('rangement-photo');
+    if (inputPhoto) inputPhoto.value = "";
+
     const preview = document.getElementById('rangement-photo-preview');
     if (preview) {
         preview.src = '';
@@ -534,6 +554,9 @@ async function ouvrirModalEditionRangement(id) {
     document.getElementById('rangement-id').value = rangement.idRangement;
     document.getElementById('rangement-nom').value = rangement.nom;
     document.getElementById('rangement-info').value = rangement.infoRangement;
+
+    const inputPhoto = document.getElementById('rangement-photo');
+    if (inputPhoto) inputPhoto.value = "";
 
     const preview = document.getElementById('rangement-photo-preview');
     if (rangement.photo) {
@@ -666,6 +689,10 @@ async function ouvrirModalAjoutNiveau() {
     document.getElementById('modalNiveauTitre').textContent = "Ajouter un niveau (Étagère)";
     
     const selectRang = document.getElementById('niveau-idrangement');
+
+    const inputPhoto = document.getElementById('niveau-photo');
+    if (inputPhoto) inputPhoto.value = "";
+
     const preview = document.getElementById('niveau-photo-preview');
     if (preview) {
         preview.src = '';
@@ -704,6 +731,10 @@ async function ouvrirModalEditionNiveau(id) {
     document.getElementById('niveau-id').value = niveau.idNiveau;
     document.getElementById('niveau-nom').value = niveau.nom;
     document.getElementById('niveau-info').value = niveau.infoNiveau;
+
+    const inputPhoto = document.getElementById('niveau-photo');
+    if (inputPhoto) inputPhoto.value = "";
+
     const preview = document.getElementById('niveau-photo-preview');
     if (niveau.photo) {
         preview.src = niveau.photo;
