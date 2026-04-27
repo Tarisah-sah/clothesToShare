@@ -16,12 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $idRangement = $_POST['idRangement'] ?? null;
 
     // 1. On prépare la requête de base (SANS la photo)
-    $sql = "UPDATE niveau SET nom = ?, infoNiveau = ?, idRangement = ?";
+    $sql = "UPDATE niveau SET nom = :nom, infoNiveau = :infoNiveau, idRangement = :idRangement";
     $params = [
-        $nom, 
-        $infoNiveau, 
-        $idRangement, 
-        $idNiveau
+        ':nom' => $nom, 
+        ':infoNiveau' => $infoNiveau, 
+        ':idRangement' => $idRangement
     ];
 
     // 2. Si une NOUVELLE photo est envoyée
@@ -55,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     // 3. On finalise et exécute la requête
     $sql .= " WHERE idNiveau = :id";
+    $params[':id'] = $idNiveau;
 
     try {
         $stmt = $conn->prepare($sql);

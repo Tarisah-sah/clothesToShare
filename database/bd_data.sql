@@ -220,7 +220,7 @@ INSERT INTO niveau(idNiveau, nom, infoNiveau, idRangement, photo) VALUES
 (18, 'Tiroirs bas', 'Pantalons de costume', 8, ''),
 (19, 'Tiroir du haut', 'Cravates, nœuds papillon et boutons de manchette', 9, ''),
 (20, 'Tiroir d''en bas', 'Porte-documents et ceintures en cuir', 9, ''),
-(21, 'Niveau Supérieur', 'Chaussures de ville (Oxford, Richelieu)', 10, ''),
+(21, 'Niveau Supérieur', 'Chaussures de ville', 10, ''),
 (22, 'Niveau Inférieur', 'Chaussures de secours ou de confort', 10, ''),
 
 -- ===============================
