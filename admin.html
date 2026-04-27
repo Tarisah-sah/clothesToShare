@@ -145,10 +145,10 @@
                         <div class="card-body p-0">
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
-                                    <tr><th>ID</th><th>Nom</th><th>Rangement</th><th>Informations</th><th class="text-end">Actions</th></tr>
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Rangement</th><th>Informations</th><th class="text-end">Actions</th></tr>
                                 </thead>
                                 <tbody id="liste-niveaux">
-                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                    <tr><td colspan="6" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -212,8 +212,9 @@
                                 <input type="text" class="form-control" id="site-localite" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Photo</label>
-                                <input type="image" class="form-control" id="site-photo">
+                                <label class="form-label fw-bold">Photo du site</label>
+                                <input type="file" class="form-control" id="site-photo" accept="image/*" capture="environment">
+                                <img id="site-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
                             </div>
                         </form>
                     </div>
@@ -268,6 +269,11 @@
                                 <input type="text" class="form-control" id="local-nom" required>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du local</label>
+                                <input type="file" class="form-control" id="local-photo" accept="image/*" capture="environment">
+                                <img id="local-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label fw-bold">Informations</label>
                                 <textarea class="form-control" id="local-info" rows="2"></textarea>
                             </div>
@@ -302,6 +308,11 @@
                                 <input type="text" class="form-control" id="rangement-nom" required>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du rangement</label>
+                                <input type="file" class="form-control" id="rangement-photo" accept="image/*" capture="environment">
+                                <img id="rangement-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label fw-bold">Local auquel il appartient *</label>
                                 <select class="form-select" id="rangement-idlocal" required>
                                     <option value="">Choisir un local...</option>
@@ -334,6 +345,11 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Nom du niveau (Étagère) *</label>
                                 <input type="text" class="form-control" id="niveau-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du niveau</label>
+                                <input type="file" class="form-control" id="niveau-photo" accept="image/*" capture="environment">
+                                <img id="niveau-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Rangement auquel il appartient *</label>

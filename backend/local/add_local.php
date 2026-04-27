@@ -20,9 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    $chemin_db = null;
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+        $nomFichier = uniqid('local_') . '.' . $extension;
+        $chemin_db = 'assets/img/local/' . $nomFichier;
+        $chemin_physique = '../../' . $chemin_db;
+
+        if (!move_uploaded_file($_FILES['photo']['tmp_name'], $chemin_physique)) {
+            echo json_encode(['status' => 'error', 'message' => 'Impossible de sauvegarder l\'image.']);
+            exit;
+        }
+    }
+
     try {
-        $stmt = $conn->prepare("INSERT INTO local (nom, infoLocal, idSite) VALUES (:nom, :infoLocal, :idSite)");
-        $stmt->execute([':nom' => $nom, ':infoLocal' => $infoLocal, ':idSite' => $idSite]);
+        $stmt = $conn->prepare("INSERT INTO local (nom, infoLocal, idSite, photo) VALUES (:nom, :infoLocal, :idSite, :photo)");
+        $stmt->execute([':nom' => $nom, ':infoLocal' => $infoLocal, ':idSite' => $idSite, ':photo' => $chemin_db]);
         
         echo json_encode(['status' => 'success', 'id' => $conn->lastInsertId()]);
     } catch (Exception $e) {

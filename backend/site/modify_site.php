@@ -37,10 +37,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    $sql = "UPDATE site SET nom = :nom, adresse = :adresse, code_postal = :code_postal, localite = :localite";
+    $params = [
+        ':nom' => $nom, 
+        ':adresse' => $adresse, 
+        ':code_postal' => $code_postal, 
+        ':localite' => $localite,
+        ':id' => $id
+    ]
+    
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        // A. On va d'abord chercher l'ancienne photo pour pouvoir la supprimer plus tard
+        $stmtOld = $conn->prepare("SELECT photo FROM site WHERE idSite = :id");
+        $stmtOld->execute([':id' => $idSite]);
+        $oldData = $stmtOld->fetch();
+
+        // B. On sauvegarde la nouvelle image
+        $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+        $nomFichier = uniqid('site_') . '.' . $extension;
+        $chemin_db = 'assets/img/site/' . $nomFichier;
+        $chemin_physique = '../../' . $chemin_db;
+
+        if (move_uploaded_file($_FILES['photo']['tmp_name'], $chemin_physique)) {
+            // C. On ajoute la modification de la photo à la requête SQL
+            $sql .= ", photo = :photo";
+            $params[':photo'] = $chemin_db;
+
+            // D. On supprime physiquement l'ancienne image du serveur !
+            if ($oldData && !empty($oldData['photo']) && file_exists('../../' . $oldData['photo'])) {
+                unlink('../../' . $oldData['photo']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Impossible de sauvegarder l\'image.']);
+            exit;
+        }
+    }
+
+    // 3. On finalise et exécute la requête
+    $sql .= " WHERE idSite = :id";
+
     try {
-        $stmt = $conn->prepare("UPDATE site SET nom = :nom, adresse = :adresse, code_postal = :code_postal, localite = :localite WHERE idSite = :id");
-        $stmt->execute([':nom' => $nom, ':adresse' => $adresse, ':code_postal' => $code_postal, ':localite' => $localite, ':id' => $id]);
-        
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($params);
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

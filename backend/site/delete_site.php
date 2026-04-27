@@ -10,6 +10,13 @@ if (!$id || $id == 1) exit;
 
 try {
     $conn = pdo_connectDB();
+
+    // ---> AJOUT 1 : On récupère l'image du site AVANT de le détruire
+    $stmtPhoto = $conn->prepare("SELECT photo FROM site WHERE idSite = ?");
+    $stmtPhoto->execute([$id]);
+    $site = $stmtPhoto->fetch(PDO::FETCH_ASSOC);
+    
+
     // 1. Sauver les vêtements
     $conn->prepare("UPDATE vetement v JOIN niveau n ON v.idniveau = n.idNiveau JOIN rangement r ON n.idRangement = r.idRangement JOIN local l ON r.idLocal = l.idLocal SET v.idniveau = 1 WHERE l.idSite = ?")->execute([$id]);
     // 2. Détruire les niveaux
@@ -21,6 +28,14 @@ try {
     // 5. Détruire le site
     $conn->prepare("DELETE FROM site WHERE idSite = ?")->execute([$id]);
     
+    // ---> AJOUT 2 : On supprime le vrai fichier image du disque dur !
+    if ($site && !empty($site['photo'])) {
+        $cheminPhysique = '../../' . $site['photo'];
+        if (file_exists($cheminPhysique)) {
+            unlink($cheminPhysique); 
+        }
+    }
+
     echo json_encode(['status' => 'success']);
 } catch (Exception $e) { echo json_encode(['status' => 'error', 'message' => $e->getMessage()]); }
 ?>
