@@ -74,10 +74,12 @@
                             </select>
                         </div>
                     </div> 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nouvelle Photo (Optionnel)</label>
-                        <input type="file" class="form-control" id="edit-photo" accept="image/*">
-                        <small class="text-muted">Laisse ce champ vide pour conserver l'image actuelle.</small>
+                    <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">📸 Photo du vêtement</label>
+                        <input type="file" class="form-control" id="edit-photo" accept="image/*" capture="environment">
+                        <div id="edit-preview" class="mt-2 d-none">
+                            <img src="" class="img-thumbnail" style="height: 100px;">
+                        </div>
                     </div>
 
                     <div class="mb-4">

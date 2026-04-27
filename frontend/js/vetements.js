@@ -75,36 +75,52 @@ async function chargerVetements(mode = 'accueil') {
 async function ajouterVetement(event) {
     event.preventDefault();
 
+    // 1. On crée notre "enveloppe" FormData
     const formData = new FormData();
-    const photoFile = document.getElementById('photo').files[0];
 
+    // 2. On ajoute tous les textes dedans (syntaxe spéciale pour ton PHP)
     formData.append('vetement_new[nom]', document.getElementById('nom').value);
-    formData.append('vetement_new[marque]', document.getElementById('marque').value);
     formData.append('vetement_new[taille]', document.getElementById('taille').value);
-    formData.append('vetement_new[couleur]', document.getElementById('couleur').value);
-    formData.append('vetement_new[genre]', document.getElementById('genre').value);
-    formData.append('vetement_new[etat]', document.getElementById('etat').value);
-    formData.append('vetement_new[description]', document.getElementById('description').value);
+    formData.append('vetement_new[marque]', document.getElementById('marque').value);
     formData.append('vetement_new[type]', document.getElementById('type').value);
-    formData.append('vetement_new[idcategorie]', document.getElementById('idcategorie').value);
+    formData.append('vetement_new[genre]', document.getElementById('genre').value);
+    formData.append('vetement_new[couleur]', document.getElementById('couleur').value);
+    formData.append('vetement_new[description]', document.getElementById('description').value);
+    formData.append('vetement_new[etat]', document.getElementById('etat').value);
+    formData.append('vetement_new[idcategorie]', document.getElementById('idcategorie_ajout').value);
     formData.append('vetement_new[idniveau]', document.getElementById('idniveau').value);
-    
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    formData.append('vetement_new[idproprietaire]', user.idutilisateur);
-    
-    formData.append('vetement_new[idemprunteur]', document.getElementById('idemprunteur').value);
-    formData.append('vetement_new[datefinprevue]', document.getElementById('datefinprevue').value);
-    if (photoFile) formData.append('photo', photoFile);
 
-    const resultat = await postDonnees('vetement/add_vetement.php', formData);
-    
-    if (resultat && resultat.status === 'success') {
-        alert("Vêtement ajouté avec succès !");
-        document.getElementById('form-vetement').reset();
-        basculerAffichageFormulaire(false);
-        chargerVetements(modeActuel);
-    } else {
-        alert("Erreur lors de l'ajout : " + (resultat.message || "Erreur inconnue"));
+    // Si on l'ajoute directement "En prêt", on envoie aussi ces infos :
+    if (document.getElementById('etat').value === 'En prêt') {
+        formData.append('vetement_new[idemprunteur]', document.getElementById('idemprunteur').value);
+        formData.append('vetement_new[datefinprevue]', document.getElementById('datefinprevue').value);
+    }
+
+    // 3. LA NOUVEAUTÉ : On glisse la photo dans l'enveloppe !
+    const inputPhoto = document.getElementById('photo');
+    if (inputPhoto.files && inputPhoto.files.length > 0) {
+        formData.append('photo', inputPhoto.files[0]); // files[0] est le fichier binaire
+    }
+
+    // 4. On envoie tout au serveur avec fetch
+    try {
+        const response = await fetch('backend/vetement/add_vetement.php', {
+            method: 'POST',
+            body: formData // PAS DE Content-Type ! Le navigateur le gère tout seul pour les fichiers
+        });
+
+        const resultat = await response.json();
+
+        if (resultat.status === 'success') {
+            alert("Vêtement ajouté avec succès !");
+            document.getElementById('form-vetement').reset();
+            basculerAffichageFormulaire(false);
+            chargerVetements(modeActuel);
+        } else {
+            alert("Erreur : " + resultat.message);
+        }
+    } catch (erreur) {
+        console.error("Erreur d'envoi :", erreur);
     }
 }
 
@@ -214,7 +230,20 @@ function reinitialiserFormulaire() {
     document.getElementById('form-titre').textContent = "Ajouter un vêtement";
     document.querySelector('#form-vetement button[type="submit"]').textContent = "Enregistrer";
     document.getElementById('photo').required = true;
-    document.getElementById('aide-photo').classList.add('d-none');
+    
+    // CORRECTION : On vérifie si l'ancien texte d'aide existe toujours avant de le masquer
+    const aidePhoto = document.getElementById('aide-photo');
+    if (aidePhoto) {
+        aidePhoto.classList.add('d-none');
+    }
+
+    // NOUVEAUTÉ : On masque l'aperçu de la nouvelle image et on vide la source
+    const previewAjout = document.getElementById('preview-ajout');
+    if (previewAjout) {
+        previewAjout.classList.add('d-none');
+        const img = previewAjout.querySelector('img');
+        if (img) img.src = '';
+    }
 
     // Réinitialisation de la cascade
     document.getElementById('idrangement').innerHTML = '<option value="">Choisir un local d\'abord...</option>';

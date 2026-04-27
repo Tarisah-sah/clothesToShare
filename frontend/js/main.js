@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 5. Bouton "Ajouter un vêtement"
     document.getElementById('btn-afficher-ajout').addEventListener('click', async () => {
         reinitialiserFormulaire();
-        await chargerCategoriesSelect('idcategorie_ajout', 'Choisir une catégorie...'); 
+        await chargerCategoriesSelect('idcategorie_ajout', 'Choisir une catégorie...');
         
         await chargerSelectLocaux(''); // Télécharge la liste des Locaux
         basculerAffichageFormulaire(true);
