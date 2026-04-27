@@ -65,6 +65,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('utilisateurs-tab').addEventListener('shown.bs.tab', chargerUtilisateurs);
 
+// ==========================================
+    // MOTEUR DE RECHERCHE DYNAMIQUE (AMÉLIORÉ)
+    // ==========================================
+    function configurerRecherche(idInput, idTbody) {
+        const input = document.getElementById(idInput);
+        if (input) {
+            input.addEventListener('input', function() {
+                const terme = this.value.toLowerCase().trim();
+                const tbody = document.getElementById(idTbody);
+                if (!tbody) return;
+                
+                const lignes = tbody.querySelectorAll('tr');
+
+                lignes.forEach(ligne => {
+                    // On ignore les lignes de statut (comme "Chargement...")
+                    if (ligne.children.length === 1) return;
+
+                    let texteLigne = "";
+                    
+                    // On parcourt chaque cellule (td) de la ligne une par une
+                    Array.from(ligne.cells).forEach(cell => {
+                        const select = cell.querySelector('select');
+                        if (select) {
+                            // S'il y a un menu déroulant, on lit SEULEMENT l'option sélectionnée
+                            texteLigne += select.options[select.selectedIndex].text.toLowerCase() + " ";
+                        } else {
+                            // Sinon, on lit le texte normal de la cellule
+                            texteLigne += cell.textContent.toLowerCase() + " ";
+                        }
+                    });
+
+                    // On vérifie si notre texte reconstruit contient la recherche
+                    if (texteLigne.includes(terme)) {
+                        ligne.style.display = ''; // Affiche la ligne
+                    } else {
+                        ligne.style.display = 'none'; // Masque la ligne
+                    }
+                });
+            });
+        }
+    }
+
+    // Activation de la recherche pour chaque onglet
+    configurerRecherche('search-sites', 'liste-sites');
+    configurerRecherche('search-categories', 'liste-categories');
+    configurerRecherche('search-locaux', 'liste-locaux');
+    configurerRecherche('search-rangements', 'liste-rangements');
+    configurerRecherche('search-niveaux', 'liste-niveaux');
+    configurerRecherche('search-utilisateurs', 'liste-utilisateurs');
+
 });
 
 // ==========================================
