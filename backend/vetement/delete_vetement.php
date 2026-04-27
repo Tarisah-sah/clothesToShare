@@ -11,8 +11,10 @@ if (!isset($_SESSION['idutilisateur'])) {
 
 $conn = pdo_connectDB();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idVetement = $_POST['idvetement'] ?? null;
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || $_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $data = json_decode(file_get_contents("php://input"), true);
+    $idVetement = $data['idvetement'] ?? ($_POST['idvetement'] ?? null);
 
     if ($idVetement) {
         try {
@@ -21,16 +23,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtInfo->execute([':id' => $idVetement]);
             $vetement = $stmtInfo->fetch(PDO::FETCH_ASSOC);
 
-            // 2. On supprime le vêtement de la base de données
+            // 2. On supprime tout l'historique des prêts de ce vêtement
+            $stmtDeletePret = $conn->prepare("DELETE FROM pret WHERE idvetement = :id");
+            $stmtDeletePret->execute([':id' => $idVetement]);
+
+            // 3. Maintenant on peut supprimer le vêtement de la base de données en toute sécurité
             $stmtDelete = $conn->prepare("DELETE FROM vetement WHERE idvetement = :id");
             
             if ($stmtDelete->execute([':id' => $idVetement])) {
                 
-                // 3. LA NOUVEAUTÉ : On efface le vrai fichier image du serveur s'il existe
+                // 4. On efface le vrai fichier image du serveur s'il existe
                 if ($vetement && !empty($vetement['photo'])) {
                     $cheminPhysique = '../../' . $vetement['photo'];
                     if (file_exists($cheminPhysique)) {
-                        unlink($cheminPhysique); // unlink = fonction PHP pour effacer un fichier
+                        unlink($cheminPhysique); 
                     }
                 }
                 
@@ -44,6 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['status' => 'error', 'message' => 'ID du vêtement manquant.']);
     }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
 }
+
 $conn = null;
 ?>

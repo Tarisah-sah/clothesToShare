@@ -20,8 +20,11 @@ $params = [];
 
 // 2. Application dynamique de TOUS les filtres
 if (!empty($_GET['motcle'])) {
-    $sql .= " AND (v.nom LIKE :txt OR v.marque LIKE :txt OR v.description LIKE :txt)";
-    $params[':txt'] = "%" . $_GET['motcle'] . "%";
+    $sql .= " AND (v.nom LIKE :txt1 OR v.marque LIKE :txt2 OR v.description LIKE :txt3)";
+    $motcle = "%" . $_GET['motcle'] . "%";
+    $params[':txt1'] = $motcle;
+    $params[':txt2'] = $motcle;
+    $params[':txt3'] = $motcle;
 }
 if (!empty($_GET['categorie'])) {
     $sql .= " AND v.idcategorie = :cat";
