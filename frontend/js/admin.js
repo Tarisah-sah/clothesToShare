@@ -157,8 +157,8 @@ async function chargerSites() {
                 <td class="align-middle text-muted small">${site.adresse || '-'}, ${site.code_postal || '-'} ${site.localite || '-'}</td>
                 <td class="text-end align-middle">
                     <td class="text-end align-middle">
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionSite(${site.idSite})">✏️ Éditer</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerSite(${site.idSite})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionSite(${site.idSite})">Éditer</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerSite(${site.idSite})">Supprimer</button>
                 </td>
                 </td>
             `;
