@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const data = await response.json();
                     
                     if (data.status === 'success') {
-                        alert("Ton compte a bien été supprimé. Au revoir ! 👋");
+                        alert("Ton compte a bien été supprimé. Au revoir !");
                         // On vide la mémoire du navigateur
                         sessionStorage.removeItem('user');
                         localStorage.clear(); // Optionnel : pour vider aussi les favoris

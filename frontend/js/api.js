@@ -7,7 +7,7 @@ async function fetchDonnees(url) {
         if (!response.ok) throw new Error('Erreur HTTP ' + response.status);
         return await response.json();
     } catch (error) {
-        console.error('❌ Erreur fetch :', error);
+        console.error('Erreur fetch :', error);
         return null;
     }
 }
@@ -28,13 +28,13 @@ async function postDonnees(url, formData) {
             return JSON.parse(textReponse);
         } catch (jsonError) {
             // Si ça échoue, on affiche la VRAIE erreur PHP dans la console
-            console.error("❌ PHP n'a pas renvoyé du JSON ! Voici ce qu'il a dit :");
+            console.error("PHP n'a pas renvoyé du JSON ! Voici ce qu'il a dit :");
             console.error(textReponse);
             return { status: 'error', message: "Erreur serveur : Regardez la console pour lire l'erreur PHP." };
         }
 
     } catch (error) {
-        console.error('❌ Erreur de réseau :', error);
+        console.error('Erreur de réseau :', error);
         return { status: 'error', message: error.message };
     }
 }

@@ -23,7 +23,7 @@ function verifierSession() {
         document.getElementById('profil-nom').textContent = user.prenom + ' ' + user.nom;
         
         // Affichage du rôle
-        document.getElementById('profil-role').textContent = user.role === 'admin' ? '⭐ Administrateur' : 'Utilisateur';
+        document.getElementById('profil-role').textContent = user.role === 'admin' ? 'Administrateur' : 'Utilisateur';
 
         // Si l'utilisateur est admin, on active les outils de gestion
         if (user.role === 'admin') {
@@ -103,8 +103,8 @@ function chargerDemandes() {
                         <span class="d-block">${u.adresse}</span>
                     </div>
                     <div class="d-flex gap-2">
-                        <button class="btn-accepter" onclick="validerDemande(${u.idutilisateur}, 'accepter')">✔ Accepter</button>
-                        <button class="btn-refuser"  onclick="validerDemande(${u.idutilisateur}, 'refuser')">✖ Refuser</button>
+                        <button class="btn-accepter" onclick="validerDemande(${u.idutilisateur}, 'accepter')">Accepter</button>
+                        <button class="btn-refuser"  onclick="validerDemande(${u.idutilisateur}, 'refuser')">Refuser</button>
                     </div>
                 `;
                 liste.appendChild(div);
@@ -133,7 +133,7 @@ async function validerDemande(id, action) {
         
         // 2. On lit la réponse en TEXTE brut d'abord, pour voir ce que PHP raconte
         const text = await response.text(); 
-        console.log("🔍 Réponse brute du serveur :", text);
+        console.log("Réponse brute du serveur :", text);
 
         // 3. On essaie de la transformer en JSON
         const data = JSON.parse(text); 
@@ -141,7 +141,7 @@ async function validerDemande(id, action) {
         if (data.status === 'success') {
             const carte = document.getElementById('demande-' + id);
             if (carte) {
-                const actionLabel = action === 'accepter' ? '✔ Accepté' : '✖ Refusé';
+                const actionLabel = action === 'accepter' ? 'Accepté' : 'Refusé';
                 const couleur = action === 'accepter' ? '#0a5c36' : '#ad1457';
                 
                 carte.innerHTML = `
@@ -167,7 +167,7 @@ async function validerDemande(id, action) {
 
     } catch (error) {
         // Si ça crashe ici, c'est que la réponse brute n'était pas du JSON
-        console.error("❌ Erreur JS interceptée :", error);
+        console.error("Erreur JS interceptée :", error);
         alert("Regarde la console (F12), le serveur a renvoyé une erreur fatale.");
     }
 }

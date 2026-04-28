@@ -241,7 +241,7 @@ async function sauvegarderSite() {
 
 async function supprimerSite(id) {
     if (id == 1) { alert("Tu ne peux pas supprimer le Site n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce site définitivement ?\n\n⚠️ En supprimant celui-ci, les locaux, rangements et niveaux qui y sont seront également supprimés.\n👕 Les habits, eux, seront redirigés vers le site 'Garde tout' (ID 1).")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce site définitivement ?\n\n⚠️ En supprimant celui-ci, les locaux, rangements et niveaux qui y sont seront également supprimés.\nLes habits, eux, seront redirigés vers le site 'Reserve' (ID 1).")) {
         const response = await fetch('backend/site/delete_site.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idSite: id })
@@ -274,8 +274,8 @@ async function chargerCategories() {
                 <td class="align-middle">${cat.nom}</td>
                 <td class="align-middle text-muted small">${cat.infoPlus || '-'}</td>
                 <td class="text-end align-middle">
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionCategorie(${cat.idcategorie})">✏️ Éditer</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerCategorie(${cat.idcategorie})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionCategorie(${cat.idcategorie})">Éditer</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerCategorie(${cat.idcategorie})">Supprimer</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -358,8 +358,8 @@ async function chargerLocaux() {
                 <td class="align-middle text-muted small">${loc.infoLocal || '-'}</td>
                 <td class="text-end align-middle">
                     <td class="text-end align-middle">
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionLocal(${loc.idLocal})">✏️ Éditer</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerLocal(${loc.idLocal})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionLocal(${loc.idLocal})">Éditer</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerLocal(${loc.idLocal})">Supprimer</button>
                 </td>
                 </td>
             `;
@@ -474,7 +474,7 @@ async function sauvegarderLocal() {
 
 async function supprimerLocal(id) {
     if (id == 1) { alert("Tu ne peux pas supprimer le Local n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce local définitivement ?\n\n⚠️ En supprimant celui-ci, les rangements et niveaux qui y sont seront également supprimés.\n👕 Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce local définitivement ?\n\n⚠️ En supprimant celui-ci, les rangements et niveaux qui y sont seront également supprimés.\nLes habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
         const response = await fetch('backend/local/delete_local.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idLocal: id })
@@ -513,8 +513,8 @@ async function chargerRangements() {
                 <td class="align-middle">${rg.nom}</td>
                 <td class="align-middle text-muted"> Local: ${nomLocal}</td>
                 <td class="text-end align-middle">
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionRangement(${rg.idRangement})">✏️ Éditer</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerRangement(${rg.idRangement})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionRangement(${rg.idRangement})">Éditer</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerRangement(${rg.idRangement})">Supprimer</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -620,7 +620,7 @@ async function sauvegarderRangement() {
 
 async function supprimerRangement(id) {
     if (id == 1) { alert("Tu ne peux pas supprimer le Rangement n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?\n\n⚠️ En supprimant celui-ci, les niveaux (étagères) qui y sont seront également supprimés.\n👕 Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?\n\n⚠️ En supprimant celui-ci, les niveaux (étagères) qui y sont seront également supprimés.\nLes habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
         const response = await fetch('backend/rangement/delete_rangement.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idRangement: id })
@@ -674,8 +674,8 @@ async function chargerNiveaux() {
                 <td class="align-middle text-muted">${nomRangement} (Local : ${nomLocal})</td>
                 <td class="align-middle text-muted small">${niv.infoNiveau || '-'}</td>
                 <td class="text-end align-middle">
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionNiveau(${niv.idNiveau})">✏️ Éditer</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerNiveau(${niv.idNiveau})">🗑️ Sup.</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionNiveau(${niv.idNiveau})">Éditer</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="supprimerNiveau(${niv.idNiveau})">Supprimer</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -798,7 +798,7 @@ async function sauvegarderNiveau() {
 
 async function supprimerNiveau(id) {
     if (id == 1) { alert("Tu ne peux pas supprimer le Niveau n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce niveau (étagère) définitivement ?\n\n👕 Les habits qui s'y trouvent seront redirigés vers le 'Garde tout' (ID 1).")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce niveau (étagère) définitivement ?\n\n Les habits qui s'y trouvent seront redirigés vers la 'Reserve' (ID 1).")) {
         const response = await fetch('backend/niveau/delete_niveau.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idNiveau: id })
@@ -846,7 +846,7 @@ async function chargerUtilisateurs() {
                     <td class="align-middle text-muted">${u.login}</td>
                     <td class="align-middle" style="width: 250px;">${roleSelect}</td>
                     <td class="text-end align-middle">
-                        <button class="btn btn-sm btn-outline-danger" onclick="supprimerUtilisateur(${u.idutilisateur})" ${isMe ? 'disabled' : ''}>🗑️ Banni</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="supprimerUtilisateur(${u.idutilisateur})" ${isMe ? 'disabled' : ''}> Banni</button>
                     </td>
                 `;
                 tbody.appendChild(tr);

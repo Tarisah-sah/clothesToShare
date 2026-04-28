@@ -173,7 +173,7 @@
         .then(async r => {
             // On lit la réponse "brute" du serveur pour voir ce que PHP dit vraiment
             const texteBrut = await r.text();
-            console.log("🔍 Réponse exacte du serveur PHP :", texteBrut);
+            console.log("Réponse exacte du serveur PHP :", texteBrut);
             
             // On essaie de transformer le texte en JSON
             return JSON.parse(texteBrut);

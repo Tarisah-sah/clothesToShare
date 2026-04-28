@@ -60,17 +60,17 @@ async function chargerBulles(type, parentId) {
     
     // Selon le type, on appelle le bon fichier PHP
     if (type === 'locaux') {
-        titre.innerHTML = "📍 Choisis un Local";
+        titre.innerHTML = "Choisis un Local";
         url = 'local/get_locaux.php'; 
     } else if (type === 'rangements') {
-        titre.innerHTML = "🗄️ Choisis un Rangement";
+        titre.innerHTML = "Choisis un Rangement";
         url = `rangement/get_rangements.php?idLocal=${parentId}`;
     } else if (type === 'niveaux') {
-        titre.innerHTML = "📏 Choisis un Niveau";
+        titre.innerHTML = "Choisis un Niveau";
         url = `niveau/get_niveaux.php?idRangement=${parentId}`;
     } else if (type === 'vetements') {
         // Ici on n'affiche plus des bulles, mais les cartes de vêtements normales
-        titre.innerHTML = "👗 Vêtements trouvés";
+        titre.innerHTML = "Vêtements trouvés";
         
         // Récupérer l'ID utilisateur pour filtrer
         const userJson = sessionStorage.getItem('user');
