@@ -308,16 +308,35 @@ async function ouvrirModalDetails(id) {
     document.getElementById('detail-type').textContent = vetement.type;
     document.getElementById('detail-description').textContent = vetement.description || 'Aucune description fournie.';
     
-    document.getElementById('detail-proprio').textContent = 'Chargement...';
+    // Animation de chargement le temps d'aller chercher le nom du propriétaire
+    document.getElementById('detail-proprio').innerHTML = '<span class="spinner-border spinner-border-sm text-secondary me-2" role="status"></span> <span class="text-muted small">Recherche...</span>';
+    
     const utilisateurs = await fetchDonnees('utilisateur/get_all_utilisateurs.php');
     if (utilisateurs) {
         const proprio = utilisateurs.find(u => u.idutilisateur == vetement.idproprietaire);
-        document.getElementById('detail-proprio').textContent = proprio ? proprio.login : 'Utilisateur introuvable';
+        if (proprio) {
+            // Création de la bulle d'Avatar dynamique
+            const initiales = (proprio.prenom[0] + proprio.nom[0]).toUpperCase();
+            document.getElementById('detail-proprio').innerHTML = `
+                <div class="avatar shadow-sm" style="width: 28px; height: 28px; font-size: 11px; display: flex; align-items: center; justify-content: center; background-color: #e91e8c; color: white; border-radius: 50%;">
+                    ${initiales}
+                </div> 
+                <span class="fw-bold" style="color: #ad1457;">@${proprio.login}</span>
+            `;
+        } else {
+            document.getElementById('detail-proprio').innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-circle me-1"></i> Introuvable</span>';
+        }
     }
     
+    // Ajout dynamique d'une icône sur le badge d'état
     const badgeEtat = document.getElementById('detail-etat');
-    badgeEtat.textContent = vetement.etat;
-    badgeEtat.className = 'badge mb-3 fs-6 ' + 
+    let iconEtat = '';
+    if (vetement.etat === 'Disponible') iconEtat = '<i class="bi bi-check-circle-fill me-1"></i>';
+    else if (vetement.etat === 'En prêt') iconEtat = '<i class="bi bi-box-arrow-right me-1"></i>';
+    else iconEtat = '<i class="bi bi-info-circle-fill me-1"></i>';
+
+    badgeEtat.innerHTML = iconEtat + vetement.etat;
+    badgeEtat.className = 'badge mb-3 fs-6 shadow-sm ' + 
         (vetement.etat === 'Disponible' ? 'bg-success' : 
         (vetement.etat === 'En prêt' ? 'bg-warning text-dark' : 'bg-info text-dark'));
 
@@ -375,7 +394,7 @@ async function signalerRetour(idVetement) {
 }
 
 // ==========================================
-// CASCADES : LOCAL > RANGEMENT > NIVEAU
+// CASCADES : SITES > LOCAL > RANGEMENT > NIVEAU
 // ==========================================
 
 async function chargerSelectLocaux(prefix) {
