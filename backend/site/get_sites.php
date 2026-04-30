@@ -6,7 +6,7 @@ $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        $stmt = $conn->query("SELECT * FROM site ORDER BY nom ASC");
+        $stmt = $conn->query("SELECT * FROM site ORDER BY (idSite = 1) ASC");
         $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($sites);
     } catch (Exception $e) {

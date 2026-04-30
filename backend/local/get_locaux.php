@@ -6,12 +6,21 @@ $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        $stmt = $conn->prepare("SELECT * FROM local");
-        $stmt->execute();
-        $locaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Si on cherche les locaux d'un site spécifique (pour l'arborescence)
+        if (isset($_GET['idSite']) && !empty($_GET['idSite'])) {
+            $stmt = $conn->prepare("SELECT * FROM local WHERE idSite = ? ORDER BY (nom = 'Autre' OR idLocal = 1) ASC, nom ASC");
+            $stmt->execute([$_GET['idSite']]);
+        } 
+        // Sinon, on renvoie TOUS les locaux (pour le panel Admin)
+        else {
+            $stmt = $conn->query("SELECT * FROM local ORDER BY idSite ASC, (nom = 'Autre' OR idLocal = 1) ASC");
+        }
         
+        $locaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($locaux);
+        
     } catch (Exception $e) {
+        // Masquage de l'erreur brute
         echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la récupération des locaux.']);
     }
 }
