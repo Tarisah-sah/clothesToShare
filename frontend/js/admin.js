@@ -934,15 +934,17 @@ async function changerRole(id, nouveauRole) {
     const data = await response.json();
     
     if (data.status === 'success') {
-        // Optionnel : tu pourrais afficher une petite notif "toast" ici
+        afficherNotification("Le rôle de l'utilisateur a été mis à jour.", "success");
     } else {
-        alert("Erreur : " + data.message);
-        chargerUtilisateurs(); // On recharge pour remettre l'ancien rôle dans le select si ça a raté
+        afficherNotification("Erreur : " + data.message, "danger");
+        chargerUtilisateurs(); // On recharge pour remettre l'ancien rôle visible dans le select
     }
 }
 
 async function supprimerUtilisateur(id) {
-    if (confirm("Es-tu sûr de vouloir supprimer cet utilisateur ? Son compte sera détruit.")) {
+    const messageAvertissement = "Es-tu sûr de vouloir supprimer cet utilisateur ?<br><br><small class='text-muted'>⚠️ Son compte et ses données de connexion seront définitivement détruits.</small>";
+
+    if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/utilisateur/delete_utilisateur_admin.php', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
@@ -951,9 +953,10 @@ async function supprimerUtilisateur(id) {
         const data = await response.json();
         
         if (data.status === 'success') {
+            afficherNotification("Utilisateur banni et supprimé avec succès.", "success");
             chargerUtilisateurs();
         } else {
-            alert("Erreur : " + data.message);
+            afficherNotification("Erreur : " + data.message, "danger");
         }
     }
 }

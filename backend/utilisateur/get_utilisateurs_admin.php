@@ -15,6 +15,7 @@ try {
     $stmt = $conn->query("SELECT idutilisateur, nom, prenom, login, role FROM utilisateur ORDER BY role ASC, nom ASC");
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la récupération des utilisateurs.']);
 }
+$conn = null;
 ?>

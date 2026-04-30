@@ -29,6 +29,7 @@ try {
     $stmt->execute([$role, $id]);
     echo json_encode(['status' => 'success']);
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la modification du rôle.']);
 }
+$conn = null;
 ?>
