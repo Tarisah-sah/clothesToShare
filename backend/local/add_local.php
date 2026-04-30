@@ -13,7 +13,7 @@ $conn = pdo_connectDB();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom'] ?? '');
     $infoLocal = trim($_POST['infoLocal'] ?? '');
-    $idSite = $_POST['idSite'] ?? 1; // Par défaut 1 si tu n'as qu'un seul site pour l'instant
+    $idSite = $_POST['idSite'] ?? 1;
 
     if (empty($nom)) {
         echo json_encode(['status' => 'error', 'message' => 'Le nom du local est obligatoire.']);
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         echo json_encode(['status' => 'success', 'id' => $conn->lastInsertId()]);
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la création du local.']);
     }
 }
 $conn = null;
