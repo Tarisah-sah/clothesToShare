@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         echo json_encode(['status' => 'success', 'id' => $conn->lastInsertId()]);
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la création du rangement.']);
     }
 }
 $conn = null;

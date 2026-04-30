@@ -636,37 +636,50 @@ async function sauvegarderRangement() {
     formData.append('infoRangement', document.getElementById('rangement-info').value.trim());
     formData.append('idLocal', document.getElementById('rangement-idlocal').value);
 
-    // EXEMPLE POUR LE SITE (À adapter pour local, rangement, niveau avec le bon ID)
     const photoInput = document.getElementById('rangement-photo');
     if (photoInput.files.length > 0) {
         formData.append('photo', photoInput.files[0]);
     }
 
     let url = 'rangement/add_rangement.php';
+    let messageSucces = "Rangement ajouté avec succès !";
     if (id !== "") {
         url = 'rangement/modify_rangement.php';
         formData.append('idRangement', id);
+        messageSucces = "Rangement modifié avec succès !";
     }
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('modalRangement')).hide();
+        afficherNotification(messageSucces, "success");
         chargerRangements(); 
     } else { 
-        alert("Erreur : " + (resultat.message || "inconnue")); 
+        afficherNotification("Erreur : " + (resultat.message || "inconnue"), "danger"); 
     }
 }
 
 async function supprimerRangement(id) {
-    if (id == 1) { alert("Tu ne peux pas supprimer le Rangement n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?\n\n⚠️ En supprimant celui-ci, les niveaux (étagères) qui y sont seront également supprimés.\nLes habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
+    if (id == 1) { 
+        afficherNotification("Tu ne peux pas supprimer le Rangement n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        return; 
+    }
+    
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?<br><br><small class='text-muted'>⚠️ En supprimant celui-ci, les niveaux (étagères) qui y sont seront également supprimés.<br>Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).</small>";
+    
+    if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/rangement/delete_rangement.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idRangement: id })
         });
         const data = await response.json();
-        if (data.status === 'success') chargerRangements();
-        else alert("Erreur : " + data.message);
+        
+        if (data.status === 'success') {
+            afficherNotification("Rangement supprimé avec succès.", "success");
+            chargerRangements();
+        } else { 
+            afficherNotification("Erreur : " + data.message, "danger"); 
+        }
     }
 }
 
