@@ -41,7 +41,7 @@ function verifierSession() {
         document.getElementById('btn-deconnexion').addEventListener('click', function (e) {
             e.preventDefault();
             sessionStorage.removeItem('user');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
         // Écouteur pour ouvrir le panneau admin des demandes

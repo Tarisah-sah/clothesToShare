@@ -243,3 +243,23 @@ input#c-marron:checked + label {
 .section-animee {
     animation: apparitionDouce 0.4s ease-out forwards;
 }
+
+
+.hero-section {
+            background: linear-gradient(135deg, #f58bb9 0%, #d81b60 100%);
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 40px 40px; /* Arrondi moderne en bas */
+            box-shadow: 0 10px 30px rgba(173, 20, 87, 0.2);
+        }
+        .feature-icon {
+            font-size: 3.5rem;
+            color: #e91e8c; /* Rose du thème */
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+        /* Petite animation de l'icône quand on survole la carte */
+        .card:hover .feature-icon {
+            transform: scale(1.1) translateY(-5px); 
+        }

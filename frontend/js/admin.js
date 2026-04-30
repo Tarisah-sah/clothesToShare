@@ -74,9 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-ajouter-categorie').addEventListener('click', ouvrirModalAjoutCategorie);
     document.getElementById('btn-sauvegarder-cat').addEventListener('click', sauvegarderCategorie);
 
-    document.getElementById('btn-deconnexion-admin').addEventListener('click', () => {
+    document.getElementById('btn-deconnexion-admin').addEventListener('click', function (e) {
+        e.preventDefault();
         sessionStorage.removeItem('user');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     });
 
     document.getElementById('utilisateurs-tab').addEventListener('shown.bs.tab', chargerUtilisateurs);

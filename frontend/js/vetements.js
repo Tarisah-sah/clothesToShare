@@ -176,31 +176,34 @@ async function ouvrirModalPret(idVetement, nomVetement) {
     modal.show();
 }
 
-async function rendreVetement(idVetement) {
-    const commentaire = await demanderTexte("Un petit commentaire sur l'état du vêtement rendu ? (facultatif)");
-    if (commentaire !== null) {
-        const formData = new FormData();
-        formData.append('idvetement', idVetement);
-        formData.append('commentaire', commentaire);
-
-        const resultat = await postDonnees('vetement/rend_vetement.php', formData);
-        if (resultat && resultat.status === 'success') {
-            chargerVetements(); 
-        } else {
-            afficherNotification("Erreur lors du retour : " + resultat.message, "danger");
+async function rendreVetement(id) {
+    if (await demanderConfirmation("Confirmer le retour de ce vêtement ? Il passera 'Au lavage'.")) {
+        const formData = new URLSearchParams();
+        formData.append('idvetement', id);
+        
+        const response = await fetch('backend/pret/valider_retour.php', {
+            method: 'POST', body: formData
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            afficherNotification("Retour validé ! Le vêtement est au lavage.", "success");
+            chargerVetements(modeActuel);
         }
     }
 }
 
-async function vetementLave(idVetement) {
-    if (await demanderConfirmation("Ce vêtement est propre et de nouveau disponible dans ton dressing ?")) {
-        const formData = new FormData();
-        formData.append('idvetement', idVetement);
+async function vetementLave(id) {
+    const formData = new URLSearchParams();
+    formData.append('idvetement', id);
+    formData.append('action', 'laver');
 
-        const resultat = await postDonnees('vetement/lave_vetement.php', formData);
-        if (resultat && resultat.status === 'success') {
-            chargerVetements(); 
-        }
+    const response = await fetch('backend/vetement/modifier_etat.php', {
+        method: 'POST', body: formData
+    });
+    const data = await response.json();
+    if (data.status === 'success') {
+        afficherNotification("Vêtement lavé et de nouveau disponible !", "success");
+        chargerVetements(modeActuel);
     }
 }
 
@@ -270,20 +273,18 @@ async function preparerEdition(id) {
 
 // AJOUT DE ASYNC ICI
 async function supprimerVetement(id) {
-    if(await demanderConfirmation("Es-tu sûr de vouloir supprimer définitivement ce vêtement ?")) {
-        fetch('backend/vetement/delete_vetement.php', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+    if (await demanderConfirmation("Es-tu sûr de vouloir supprimer ce vêtement définitivement ?")) {
+        const response = await fetch('backend/vetement/delete_vetement.php', {
+            method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idvetement: id })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if(data.status === 'success') {
-                chargerVetements(modeActuel); 
-            } else {
-                afficherNotification("Erreur : " + data.message, "danger");
-            }
         });
+        const data = await response.json();
+        if (data.status === 'success') {
+            afficherNotification("Vêtement supprimé !", "success");
+            chargerVetements(modeActuel); // <-- C'est ça qui te maintient dans ton dressing !
+        } else {
+            afficherNotification("Erreur : " + data.message, "danger");
+        }
     }
 }
 
@@ -356,40 +357,34 @@ async function ouvrirModalDetails(id) {
     modal.show();
 }
 
-async function repondreDemande(idVetement, action) {
-    let confirmation = true;
-    if (action === 'refuser') {
-        confirmation = await demanderConfirmation("Es-tu sûr de vouloir refuser cette demande de prêt ?");
-    }
+async function repondreDemande(id, action) {
+    const formData = new URLSearchParams();
+    formData.append('idvetement', id);
+    formData.append('action', action);
 
-    if (confirmation) {
-        const formData = new FormData();
-        formData.append('idvetement', idVetement);
-        formData.append('action', action);
-
-        const resultat = await postDonnees('pret/repondre_demande_pret.php', formData);
-        
-        if (resultat && resultat.status === 'success') {
-            afficherNotification(action === 'accepter' ? "Demande acceptée ! Le vêtement est en prêt." : "Demande refusée.", action === 'accepter' ? 'success' : 'info');
-            chargerVetements(modeActuel); 
-        } else {
-            afficherNotification("Erreur lors du traitement de la demande : " + (resultat.message || "inconnue"), "danger");
-        }
+    const response = await fetch('backend/pret/repondre_demande_pret.php', {
+        method: 'POST', body: formData
+    });
+    const data = await response.json();
+    if (data.status === 'success') {
+        afficherNotification("Demande traitée avec succès.", "success");
+        chargerVetements(modeActuel);
+    } else {
+        afficherNotification("Erreur : " + data.message, "danger");
     }
 }
 
-async function signalerRetour(idVetement) {
-    if(await demanderConfirmation("Confirmer que tu as bien rendu ce vêtement à son propriétaire ?")) {
-        const formData = new FormData();
-        formData.append('idvetement', idVetement);
-        
-        const resultat = await postDonnees('pret/demande_retour.php', formData);
-        if (resultat && resultat.status === 'success') {
-            afficherNotification("Le propriétaire a été notifié ! En attente de sa confirmation.", "success");
-            chargerVetements(modeActuel); 
-        } else {
-            afficherNotification("Erreur lors de la notification : " + (resultat.message || "inconnue"), "danger");
-        }
+async function signalerRetour(id) {
+    const formData = new URLSearchParams();
+    formData.append('idvetement', id);
+
+    const response = await fetch('backend/pret/demande_retour.php', {
+        method: 'POST', body: formData
+    });
+    const data = await response.json();
+    if (data.status === 'success') {
+        afficherNotification("Propriétaire notifié de ton retour !", "info");
+        chargerVetements(modeActuel);
     }
 }
 
@@ -589,23 +584,20 @@ async function chargerCategoriesSelect(idSelect, texteParDefaut) {
 // ==========================================
 // ANNULER UNE DEMANDE DE PRÊT (EMPRUNTEUR)
 // ==========================================
-async function annulerDemande(idVetement) {
-    if (!await demanderConfirmation("Veux-tu vraiment annuler ta demande d'emprunt ?")) return;
-
+async function annulerDemande(id) {
     const userJson = sessionStorage.getItem('user');
-    if (!userJson) return;
+    const user = userJson ? JSON.parse(userJson) : null;
     
-    const user = JSON.parse(userJson);
-    const formData = new FormData();
-    formData.append('idvetement', idVetement);
+    const formData = new URLSearchParams();
+    formData.append('idvetement', id);
     formData.append('idutilisateur', user.idutilisateur);
 
-    const resultat = await postDonnees('pret/annuler_demande_pret.php', formData);
-    
-    if (resultat && resultat.status === 'success') {
-        afficherNotification("Ta demande a été annulée !", "success");
-        chargerVetements(modeActuel); 
-    } else {
-        afficherNotification("Erreur : " + (resultat?.message || "Impossible d'annuler."), "danger");
+    const response = await fetch('backend/pret/annuler_demande_pret.php', {
+        method: 'POST', body: formData
+    });
+    const data = await response.json();
+    if (data.status === 'success') {
+        afficherNotification("Demande annulée.", "info");
+        chargerVetements(modeActuel);
     }
 }
