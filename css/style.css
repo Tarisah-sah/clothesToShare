@@ -1,87 +1,104 @@
 /* ==========================================
-   ANIMATIONS DES CARTES VÊTEMENTS
-========================================== */
+   1. THÈME GLOBAL ET UTILITAIRES
+   ========================================== */
 
-/* 1. Configuration de base de la carte */
-#liste-vetements .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden; /* Très important : empêche l'image de déborder quand elle va zoomer */
-    border-radius: 12px; /* Coins un peu plus arrondis pour la douceur */
+/* Le fond dégradé fixe pour TOUTES les pages */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fce4ec 0%, #fdf6f9 60%, #f8bbd0 100%);
+    background-attachment: fixed;
+    color: #333;
 }
 
-/* 2. Ce qui se passe quand on passe la souris sur la carte */
-#liste-vetements .card:hover {
-    transform: translateY(-6px); /* Fait "flotter" la carte vers le haut */
-    box-shadow: 0 12px 24px rgba(233, 30, 140, 0.15) !important; /* Ajoute une belle ombre teintée de rose */
+/* Couleur unifiée pour la barre de navigation */
+.navbar-theme {
+    background-color: #ad1457 !important;
+    box-shadow: 0 2px 10px rgba(173, 20, 87, 0.3);
 }
 
-/* 3. Configuration de l'image dans la carte */
-#liste-vetements .card .card-img-top {
-    transition: transform 0.4s ease; /* Animation fluide pour le zoom */
-}
+/* Couleurs des textes et liens (Centralisées) */
+.titre-app  { color: #ad1457 !important; }
+.sous-titre { color: #c2185b !important; }
+.text-theme { color: #e91e8c !important; }
+.lien-rose  { color: #e91e8c; font-weight: 500; text-decoration: none; }
+.lien-rose:hover { text-decoration: underline; }
 
-/* 4. L'image zoome quand on survole la carte entière */
-#liste-vetements .card:hover .card-img-top {
-    transform: scale(1.08); /* Agrandit l'image de 8% */
-}
+/* ==========================================
+   2. FORMULAIRES (Login & Inscription)
+   ========================================== */
 
-
-.avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: #e91e8c;
-    color: white;
-    font-weight: 500;
-    font-size: 14px;
+/* Centrage vertical de la page de connexion/inscription */
+.page-centree {
     display: flex;
     align-items: center;
-    justify-content: center;
+    padding: 2rem 0;
 }
-#panneau-admin { display: none; }
-.carte-demande {
+
+/* Style des cartes contenant les formulaires */
+.carte-formulaire {
     background: #fff0f5;
+    border-radius: 20px;
     border: 1px solid #f48fb1;
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    padding: 2rem;
 }
-.carte-demande .info-user { flex: 1; }
-.carte-demande .info-user strong { display: block; color: #ad1457; }
-.carte-demande .info-user span  { font-size: 13px; color: #c2185b; }
-.btn-accepter {
+
+/* Style des champs de saisie */
+.champ-rose {
+    border: 1.5px solid #f48fb1;
+    border-radius: 12px;
+    color: #ad1457;
+}
+.champ-rose:focus {
+    border-color: #e91e8c;
+    box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.15);
+    outline: none;
+}
+
+/* Boutons d'action principaux */
+.btn-rose {
     background: #e91e8c;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     color: white;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
+    font-weight: 500;
 }
-.btn-accepter:hover { background: #c2185b; }
-.btn-refuser {
-    background: white;
-    border: 1px solid #f48fb1;
-    border-radius: 10px;
-    color: #ad1457;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
+.btn-rose:hover { background: #c2185b; color: white; }
+.btn-rose:disabled { background: #f48fb1; cursor: not-allowed; }
+
+/* ==========================================
+   3. CARTES VÊTEMENTS & ANIMATIONS
+   ========================================== */
+
+/* Design global des cartes (Vêtements, Admin, etc.) */
+.card {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(233, 30, 140, 0.08) !important;
+    border: none !important;
+    overflow: hidden;
 }
-.btn-refuser:hover { background: #fce4ec; }
-.badge-pending {
-    background: #fce4ec;
-    color: #ad1457;
-    border: 1px solid #f48fb1;
-    border-radius: 20px;
-    font-size: 12px;
-    padding: 2px 10px;
+
+/* Animations spécifiques au dressing */
+#liste-vetements .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; 
+    border-radius: 12px; 
 }
-/* Style des bulles d'arborescence */
+#liste-vetements .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(233, 30, 140, 0.15) !important;
+}
+#liste-vetements .card .card-img-top {
+    transition: transform 0.4s ease;
+}
+#liste-vetements .card:hover .card-img-top {
+    transform: scale(1.08);
+}
+
+/* ==========================================
+   4. ARBORESCENCE (Bulles d'exploration)
+   ========================================== */
+
 .bulle {
     width: 160px;
     height: 160px;
@@ -99,8 +116,6 @@
     border: 3px solid white;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
-
-/* Le filtre sombre sur l'image */
 .bulle::before {
     content: '';
     position: absolute;
@@ -108,17 +123,13 @@
     background: rgba(0, 0, 0, 0.4);
     transition: background 0.3s ease;
 }
-
 .bulle:hover {
     transform: scale(1.08);
-    box-shadow: 0 8px 20px rgba(233, 30, 140, 0.4); /* Ombre rose au survol */
+    box-shadow: 0 8px 20px rgba(233, 30, 140, 0.4); 
 }
-
 .bulle:hover::before {
-    background: rgba(0, 0, 0, 0.2); /* S'éclaircit au survol */
+    background: rgba(0, 0, 0, 0.2);
 }
-
-/* Le texte au centre de la bulle */
 .bulle-texte {
     position: relative;
     z-index: 1;
@@ -130,51 +141,105 @@
     padding: 0 10px;
 }
 
-/* =========================================
-   Boutons de filtres couleurs personnalisés
-   ========================================= */
+/* ==========================================
+   5. COMPOSANTS SPÉCIFIQUES & FILTRES
+   ========================================== */
 
-/* Quand la case ROSE est cochée */
+/* Bulle de profil */
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e91e8c;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Filtres de recherche personnalisés (Couleurs) */
 input#c-rose:checked + label {
     background-color: #e91e8c !important;
     color: white !important;
     border-color: #e91e8c !important;
 }
-
-/* Quand la case MARRON est cochée */
 input#c-marron:checked + label {
     background-color: #795548 !important;
     color: white !important;
     border-color: #795548 !important;
 }
 
-/* Styles Communs aux formulaires Rose */
-.carte-formulaire {
+/* ==========================================
+   6. ESPACE ADMIN & DEMANDES D'INSCRIPTION
+   ========================================== */
+
+#panneau-admin { display: none; }
+
+.carte-demande {
     background: #fff0f5;
-    border-radius: 20px;
     border: 1px solid #f48fb1;
-    padding: 2rem;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
-.champ-rose {
-    border: 1.5px solid #f48fb1;
-    border-radius: 12px;
-    color: #ad1457;
-}
-.champ-rose:focus {
-    border-color: #e91e8c;
-    box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.15);
-    outline: none;
-}
-.btn-rose {
+.carte-demande .info-user { flex: 1; }
+.carte-demande .info-user strong { display: block; color: #ad1457; }
+.carte-demande .info-user span  { font-size: 13px; color: #c2185b; }
+
+.btn-accepter {
     background: #e91e8c;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     color: white;
-    font-weight: 500;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
 }
-.btn-rose:hover { background: #c2185b; color: white; }
-.btn-rose:disabled { background: #f48fb1; cursor: not-allowed; }
-.titre-app  { color: #ad1457; }
-.sous-titre { color: #c2185b; }
-.lien-rose  { color: #e91e8c; font-weight: 500; text-decoration: none; }
-.lien-rose:hover { text-decoration: underline; }
+.btn-accepter:hover { background: #c2185b; }
+
+.btn-refuser {
+    background: white;
+    border: 1px solid #f48fb1;
+    border-radius: 10px;
+    color: #ad1457;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.btn-refuser:hover { background: #fce4ec; }
+
+.badge-pending {
+    background: #fce4ec;
+    color: #ad1457;
+    border: 1px solid #f48fb1;
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 2px 10px;
+}
+
+/* ==========================================
+   7. ANIMATIONS DE TRANSITION (FLUIDITÉ DE L'APP)
+   ========================================== */
+
+/* Création de l'animation douce */
+@keyframes apparitionDouce {
+    from {
+        opacity: 0;
+        transform: translateY(15px); /* Part légèrement d'en bas */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Remonte à sa place normale */
+    }
+}
+
+/* Classe à appliquer sur nos conteneurs */
+.section-animee {
+    animation: apparitionDouce 0.4s ease-out forwards;
+}
