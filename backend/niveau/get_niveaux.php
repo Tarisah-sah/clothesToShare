@@ -6,13 +6,10 @@ $conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        // Si on cherche les niveaux d'un rangement spécifique (pour la cascade)
         if (isset($_GET['idRangement']) && !empty($_GET['idRangement'])) {
             $stmt = $conn->prepare("SELECT * FROM niveau WHERE idRangement = ?");
             $stmt->execute([$_GET['idRangement']]);
-        } 
-        // Sinon, on renvoie TOUS les niveaux (pour le panel Admin)
-        else {
+        } else {
             $stmt = $conn->query("SELECT * FROM niveau ORDER BY idRangement ASC, nom ASC");
         }
         
@@ -20,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode($niveaux);
         
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la récupération des niveaux.']);
     }
 } else {
     echo json_encode([]);

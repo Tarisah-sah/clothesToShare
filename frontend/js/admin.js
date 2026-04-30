@@ -836,28 +836,44 @@ async function sauvegarderNiveau() {
     }
 
     let url = 'niveau/add_niveau.php';
+    let messageSucces = "Niveau ajouté avec succès !";
     if (id !== "") {
         url = 'niveau/modify_niveau.php';
         formData.append('idNiveau', id);
+        messageSucces = "Niveau modifié avec succès !";
     }
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('modalNiveau')).hide();
+        afficherNotification(messageSucces, "success");
         chargerNiveaux(); 
-    } else { alert("Erreur : " + (resultat.message || "inconnue")); }
+    } else { 
+        afficherNotification("Erreur : " + (resultat.message || "inconnue"), "danger"); 
+    }
 }
 
 async function supprimerNiveau(id) {
-    if (id == 1) { alert("Tu ne peux pas supprimer le Niveau n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce niveau (étagère) définitivement ?\n\n Les habits qui s'y trouvent seront redirigés vers la 'Reserve' (ID 1).")) {
+    if (id == 1) { 
+        afficherNotification("Tu ne peux pas supprimer le Niveau n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        return; 
+    }
+    
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce niveau (étagère) définitivement ?<br><br><small class='text-muted'>⚠️ Les habits qui s'y trouvent seront redirigés vers la 'Reserve' (ID 1).</small>";
+    
+    if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/niveau/delete_niveau.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idNiveau: id })
         });
         const data = await response.json();
-        if (data.status === 'success') chargerNiveaux();
-        else alert("Erreur : " + data.message);
+        
+        if (data.status === 'success') {
+            afficherNotification("Niveau supprimé avec succès.", "success");
+            chargerNiveaux();
+        } else { 
+            afficherNotification("Erreur : " + data.message, "danger"); 
+        }
     }
 }
 
