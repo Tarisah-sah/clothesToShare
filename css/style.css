@@ -147,3 +147,34 @@ input#c-marron:checked + label {
     color: white !important;
     border-color: #795548 !important;
 }
+
+/* Styles Communs aux formulaires Rose */
+.carte-formulaire {
+    background: #fff0f5;
+    border-radius: 20px;
+    border: 1px solid #f48fb1;
+    padding: 2rem;
+}
+.champ-rose {
+    border: 1.5px solid #f48fb1;
+    border-radius: 12px;
+    color: #ad1457;
+}
+.champ-rose:focus {
+    border-color: #e91e8c;
+    box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.15);
+    outline: none;
+}
+.btn-rose {
+    background: #e91e8c;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+}
+.btn-rose:hover { background: #c2185b; color: white; }
+.btn-rose:disabled { background: #f48fb1; cursor: not-allowed; }
+.titre-app  { color: #ad1457; }
+.sous-titre { color: #c2185b; }
+.lien-rose  { color: #e91e8c; font-weight: 500; text-decoration: none; }
+.lien-rose:hover { text-decoration: underline; }

@@ -121,53 +121,32 @@ function chargerDemandes() {
  * @param {string} action - 'accepter' ou 'refuser'.
  */
 async function validerDemande(id, action) {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-
     try {
-        // 1. Assure-toi que le fichier s'appelle bien valider_inscription.php !
         const response = await fetch('backend/valider_inscription.php', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idutilisateur: id, action: action })
         });
         
-        // 2. On lit la réponse en TEXTE brut d'abord, pour voir ce que PHP raconte
-        const text = await response.text(); 
-        console.log("Réponse brute du serveur :", text);
-
-        // 3. On essaie de la transformer en JSON
-        const data = JSON.parse(text); 
+        const data = await response.json(); 
         
         if (data.status === 'success') {
             const carte = document.getElementById('demande-' + id);
             if (carte) {
                 const actionLabel = action === 'accepter' ? 'Accepté' : 'Refusé';
-                const couleur = action === 'accepter' ? '#0a5c36' : '#ad1457';
-                
-                carte.innerHTML = `
-                    <div class="info-user">
-                        <span style="color:${couleur}; font-weight:500;">${actionLabel} par ${user.prenom} ${user.nom}</span>
-                    </div>
-                `;
-
+                carte.innerHTML = `<div class="info-user">
+                    <span class="text-success">${actionLabel}</span>
+                </div>`;
                 setTimeout(() => {
                     carte.remove();
-                    const liste = document.getElementById('liste-demandes');
-                    if (!liste.children.length) {
-                        liste.innerHTML = '<p class="text-muted fst-italic">Aucune demande en attente.</p>';
-                        document.getElementById('badge-nb-demandes').style.display = 'none';
-                    } else {
-                        actualiserBadgeDemandes();
-                    }
+                    actualiserBadgeDemandes();
                 }, 2000);
             }
         } else {
-            alert("Erreur signalée par PHP : " + data.message);
+            // Utiliser une div d'erreur dans ton HTML au lieu de alert()
+            console.error("Erreur serveur :", data.message);
         }
-
     } catch (error) {
-        // Si ça crashe ici, c'est que la réponse brute n'était pas du JSON
-        console.error("Erreur JS interceptée :", error);
-        alert("Regarde la console (F12), le serveur a renvoyé une erreur fatale.");
+        console.error("Échec de la requête.");
     }
 }

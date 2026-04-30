@@ -16,8 +16,9 @@ function pdo_connectDB() {
     try {
         return new PDO($dsn, $user, $pass, $options);
     } catch (\PDOException $e) {
+        // Sécurité : On ne renvoie pas $e->getMessage() qui contient des infos sensibles
         header('Content-Type: application/json');
-        echo json_encode(["error" => "Erreur MySQL détaillée : " . $e->getMessage()]);
+        echo json_encode(["status" => "error", "message" => "Impossible de se connecter à la base de données."]);
         exit;
     }
 }

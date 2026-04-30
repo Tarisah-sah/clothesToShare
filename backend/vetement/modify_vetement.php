@@ -1,8 +1,6 @@
 <?php
-
 session_start();
 
-// SÉCURITÉ : On bloque immédiatement si la personne n'est pas connectée OU si elle n'a que le rôle "user"
 if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] === 'user') {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé. Ton rôle ne te permet pas de modifier la garde-robe.']);
@@ -12,32 +10,40 @@ if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] === 'user') {
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 
-$conn=pdo_connectDB();
+$conn = pdo_connectDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->beginTransaction();
     try {
-        // 1. Récupérer l'ancienne photo par défaut
+        // 1. Récupérer l'ancienne photo
         $stmtPhoto = $conn->prepare("SELECT photo FROM vetement WHERE idvetement = ?");
         $stmtPhoto->execute([$_POST['idvetement']]);
         $vetement_photo = $stmtPhoto->fetchColumn();
 
-        // 2. Si une nouvelle photo est uploadée, on l'utilise
-        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
-            $nomFichier = preg_replace('/[^a-zA-Z0-9.\-_]/', '', basename($_FILES['photo']['name']));
-            $vetement_photo = 'assets/img/wardrobe/' . $nomFichier;
-            move_uploaded_file($_FILES['photo']['tmp_name'], '../../' . $vetement_photo);
+        // 2. Si une NOUVELLE photo est uploadée
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+            $nomFichier = uniqid('v_') . '.' . $extension;
+            $cheminFichierDB = 'assets/img/wardrobe/' . $nomFichier;
+            $cheminFichierPhysique = '../../' . $cheminFichierDB;
+
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $cheminFichierPhysique)) {
+                // Si l'upload réussit, on met à jour la variable avec le nouveau chemin
+                $vetement_photo = $cheminFichierDB;
+            } else {
+                 throw new Exception("Erreur lors de la sauvegarde de la nouvelle image.");
+            }
         }
 
-        // 3. Mise à jour de la base
+        // 3. Mise à jour de la base (SÉCURITÉ : On ne permet PAS de modifier le propriétaire ici)
         $vetementModifSQL = "UPDATE vetement SET 
             nom = :nom, taille = :taille, type = :type, description = :description, couleur = :couleur, 
             etat = :etat, genre = :genre, marque = :marque, photo = :photo, idcategorie = :idcategorie, 
-            idniveau = :idniveau, idproprietaire = :idproprietaire 
-            WHERE idvetement = :idvetement";
+            idniveau = :idniveau
+            WHERE idvetement = :idvetement AND idproprietaire = :idproprietaire_session";
             
         $stmt = $conn->prepare($vetementModifSQL);
-        $stmt->execute([
+        $result = $stmt->execute([
             ':nom' => $_POST['nom'],
             ':taille' => $_POST['taille'],
             ':type' => $_POST['type'],
@@ -48,17 +54,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':marque' => $_POST['marque'],
             ':photo' => $vetement_photo,
             ':idcategorie' => $_POST['idcategorie'],
-            ':idniveau' => $_POST['idniveau'], // Pourrait être dynamique plus tard
-            ':idproprietaire' => $_POST['idproprietaire'],
-            ':idvetement' => $_POST['idvetement']
+            ':idniveau' => $_POST['idniveau'],
+            ':idvetement' => $_POST['idvetement'],
+            ':idproprietaire_session' => $_SESSION['idutilisateur'] // Sécurité : On s'assure qu'il modifie SON vêtement
         ]);
+
+        if ($stmt->rowCount() === 0) {
+             throw new Exception("Aucune modification effectuée. Ce vêtement ne t'appartient pas ou n'existe pas.");
+        }
         
         $conn->commit();
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
         $conn->rollBack();
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        // Masquage de l'erreur brute en production
+        $messageErreur = strpos($e->getMessage(), 'SQLSTATE') !== false ? "Erreur base de données lors de la modification." : $e->getMessage();
+        echo json_encode(['status' => 'error', 'message' => $messageErreur]);
     }
 }
-$conn=null;
+$conn = null;
 ?>
