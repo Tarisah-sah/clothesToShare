@@ -1,5 +1,3 @@
-// frontend/js/vetements.js
-
 function initialiserMenuVetements() {
     document.getElementById('nav-accueil').addEventListener('click', (e) => {
         e.preventDefault();
@@ -23,12 +21,11 @@ async function chargerVetements(mode = 'accueil') {
     const user = userJson ? JSON.parse(userJson) : null;
 
     if (mode === 'dressing' && !user) {
-        alert("Tu dois être connecté pour voir ton dressing privé !");
-        window.location.href = 'login.html';
+        afficherNotification("Tu dois être connecté pour voir ton dressing privé !", "warning");
+        setTimeout(() => { window.location.href = 'login.html'; }, 2000);
         return;
     }
 
-    // ---> AJOUT : Gérer la classe active pour les 3 onglets <---
     document.getElementById('nav-accueil')?.classList.toggle('active', mode === 'accueil');
     document.getElementById('nav-dressing')?.classList.toggle('active', mode === 'dressing');
     document.getElementById('nav-arborescence')?.classList.toggle('active', mode === 'explorer');
@@ -36,10 +33,8 @@ async function chargerVetements(mode = 'accueil') {
     const titre = document.getElementById('titre-section-vetements');
     if (titre) titre.innerHTML = mode === 'dressing' ? 'Mon Dressing' : 'Accueil';
 
-    // --- GESTION DU BOUTON "+ AJOUTER" ---
     const btnAjout = document.getElementById('btn-afficher-ajout');
     if (btnAjout) {
-        // SÉCURITÉ : Le bouton n'apparaît que pour les Owners et les Admins !
         if (user && mode === 'dressing' && (user.role === 'owner' || user.role === 'admin')) {
             btnAjout.style.display = 'block';
         } else {
@@ -75,10 +70,7 @@ async function chargerVetements(mode = 'accueil') {
 async function ajouterVetement(event) {
     event.preventDefault();
 
-    // 1. On crée notre "enveloppe" FormData
     const formData = new FormData();
-
-    // 2. On ajoute tous les textes dedans (syntaxe spéciale pour ton PHP)
     formData.append('vetement_new[nom]', document.getElementById('nom').value);
     formData.append('vetement_new[taille]', document.getElementById('taille').value);
     formData.append('vetement_new[marque]', document.getElementById('marque').value);
@@ -90,37 +82,25 @@ async function ajouterVetement(event) {
     formData.append('vetement_new[idcategorie]', document.getElementById('idcategorie_ajout').value);
     formData.append('vetement_new[idniveau]', document.getElementById('idniveau').value);
 
-    // Si on l'ajoute directement "En prêt", on envoie aussi ces infos :
     if (document.getElementById('etat').value === 'En prêt') {
         formData.append('vetement_new[idemprunteur]', document.getElementById('idemprunteur').value);
         formData.append('vetement_new[datefinprevue]', document.getElementById('datefinprevue').value);
     }
 
-    // 3. LA NOUVEAUTÉ : On glisse la photo dans l'enveloppe !
     const inputPhoto = document.getElementById('photo');
     if (inputPhoto.files && inputPhoto.files.length > 0) {
-        formData.append('photo', inputPhoto.files[0]); // files[0] est le fichier binaire
+        formData.append('photo', inputPhoto.files[0]); 
     }
 
-    // 4. On envoie tout au serveur avec fetch
-    try {
-        const response = await fetch('backend/vetement/add_vetement.php', {
-            method: 'POST',
-            body: formData // PAS DE Content-Type ! Le navigateur le gère tout seul pour les fichiers
-        });
+    const resultat = await postDonnees('vetement/add_vetement.php', formData);
 
-        const resultat = await response.json();
-
-        if (resultat.status === 'success') {
-            alert("Vêtement ajouté avec succès !");
-            document.getElementById('form-vetement').reset();
-            basculerAffichageFormulaire(false);
-            chargerVetements(modeActuel);
-        } else {
-            alert("Erreur : " + resultat.message);
-        }
-    } catch (erreur) {
-        console.error("Erreur d'envoi :", erreur);
+    if (resultat && resultat.status === 'success') {
+        afficherNotification("Vêtement ajouté avec succès !", "success");
+        document.getElementById('form-vetement').reset();
+        basculerAffichageFormulaire(false);
+        chargerVetements(modeActuel);
+    } else {
+        afficherNotification("Erreur : " + (resultat?.message || "Échec de l'ajout"), "danger");
     }
 }
 
@@ -164,7 +144,7 @@ async function filtrerVetements(event) {
             afficherCartesVetements(data);
         }
     } else {
-        alert("Erreur lors de la recherche.");
+        afficherNotification("Erreur lors de la recherche.", "danger");
     }
 }
 
@@ -197,7 +177,7 @@ async function ouvrirModalPret(idVetement, nomVetement) {
 }
 
 async function rendreVetement(idVetement) {
-    const commentaire = prompt("Un petit commentaire sur l'état du vêtement rendu ? (facultatif)");
+    const commentaire = await demanderTexte("Un petit commentaire sur l'état du vêtement rendu ? (facultatif)");
     if (commentaire !== null) {
         const formData = new FormData();
         formData.append('idvetement', idVetement);
@@ -207,13 +187,13 @@ async function rendreVetement(idVetement) {
         if (resultat && resultat.status === 'success') {
             chargerVetements(); 
         } else {
-            alert("Erreur lors du retour : " + resultat.message);
+            afficherNotification("Erreur lors du retour : " + resultat.message, "danger");
         }
     }
 }
 
 async function vetementLave(idVetement) {
-    if (confirm("Ce vêtement est propre et de nouveau disponible dans ton dressing ?")) {
+    if (await demanderConfirmation("Ce vêtement est propre et de nouveau disponible dans ton dressing ?")) {
         const formData = new FormData();
         formData.append('idvetement', idVetement);
 
@@ -231,13 +211,11 @@ function reinitialiserFormulaire() {
     document.querySelector('#form-vetement button[type="submit"]').textContent = "Enregistrer";
     document.getElementById('photo').required = true;
     
-    // CORRECTION : On vérifie si l'ancien texte d'aide existe toujours avant de le masquer
     const aidePhoto = document.getElementById('aide-photo');
     if (aidePhoto) {
         aidePhoto.classList.add('d-none');
     }
 
-    // NOUVEAUTÉ : On masque l'aperçu de la nouvelle image et on vide la source
     const previewAjout = document.getElementById('preview-ajout');
     if (previewAjout) {
         previewAjout.classList.add('d-none');
@@ -245,7 +223,6 @@ function reinitialiserFormulaire() {
         if (img) img.src = '';
     }
 
-    // Réinitialisation de la cascade
     document.getElementById('idrangement').innerHTML = '<option value="">Choisir un local d\'abord...</option>';
     document.getElementById('idrangement').disabled = true;
     document.getElementById('idniveau').innerHTML = '<option value="">Choisir un rangement d\'abord...</option>';
@@ -268,7 +245,6 @@ async function preparerEdition(id) {
     document.getElementById('edit-genre').value = vetement.genre;
     document.getElementById('edit-type').value = vetement.type;
     
-    // ---> AJOUT : On charge les catégories dynamiquement <---
     await chargerCategoriesSelect('edit-idcategorie', 'Choisir une catégorie...');
     
     document.getElementById('edit-idcategorie').value = vetement.idcategorie;
@@ -276,7 +252,6 @@ async function preparerEdition(id) {
     document.getElementById('edit-description').value = vetement.description;
     document.getElementById('edit-photo').value = "";
 
-    // NOUVEAU : Préremplir la cascade !
     document.getElementById('edit-idniveau').innerHTML = '<option value="">Chargement...</option>';
     document.getElementById('edit-idniveau').disabled = true;
 
@@ -293,8 +268,9 @@ async function preparerEdition(id) {
     modal.show();
 }
 
-function supprimerVetement(id) {
-    if(confirm("Es-tu sûr de vouloir supprimer définitivement ce vêtement ?")) {
+// AJOUT DE ASYNC ICI
+async function supprimerVetement(id) {
+    if(await demanderConfirmation("Es-tu sûr de vouloir supprimer définitivement ce vêtement ?")) {
         fetch('backend/vetement/delete_vetement.php', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
@@ -305,7 +281,7 @@ function supprimerVetement(id) {
             if(data.status === 'success') {
                 chargerVetements(modeActuel); 
             } else {
-                alert("Erreur : " + data.message);
+                afficherNotification("Erreur : " + data.message, "danger");
             }
         });
     }
@@ -364,7 +340,7 @@ async function ouvrirModalDetails(id) {
 async function repondreDemande(idVetement, action) {
     let confirmation = true;
     if (action === 'refuser') {
-        confirmation = confirm("Es-tu sûr de vouloir refuser cette demande de prêt ?");
+        confirmation = await demanderConfirmation("Es-tu sûr de vouloir refuser cette demande de prêt ?");
     }
 
     if (confirmation) {
@@ -375,25 +351,25 @@ async function repondreDemande(idVetement, action) {
         const resultat = await postDonnees('pret/repondre_demande_pret.php', formData);
         
         if (resultat && resultat.status === 'success') {
-            alert(action === 'accepter' ? "Demande acceptée ! Le vêtement est en prêt." : "Demande refusée.");
+            afficherNotification(action === 'accepter' ? "Demande acceptée ! Le vêtement est en prêt." : "Demande refusée.", action === 'accepter' ? 'success' : 'info');
             chargerVetements(modeActuel); 
         } else {
-            alert("Erreur lors du traitement de la demande : " + (resultat.message || "inconnue"));
+            afficherNotification("Erreur lors du traitement de la demande : " + (resultat.message || "inconnue"), "danger");
         }
     }
 }
 
 async function signalerRetour(idVetement) {
-    if(confirm("Confirmer que tu as bien rendu ce vêtement à son propriétaire ?")) {
+    if(await demanderConfirmation("Confirmer que tu as bien rendu ce vêtement à son propriétaire ?")) {
         const formData = new FormData();
         formData.append('idvetement', idVetement);
         
         const resultat = await postDonnees('pret/demande_retour.php', formData);
         if (resultat && resultat.status === 'success') {
-            alert("Le propriétaire a été notifié ! En attente de sa confirmation.");
+            afficherNotification("Le propriétaire a été notifié ! En attente de sa confirmation.", "success");
             chargerVetements(modeActuel); 
         } else {
-            alert("Erreur lors de la notification : " + (resultat.message || "inconnue"));
+            afficherNotification("Erreur lors de la notification : " + (resultat.message || "inconnue"), "danger");
         }
     }
 }
@@ -445,7 +421,6 @@ async function chargerSelectNiveaux(prefix, idRangement) {
     selectNiv.disabled = false;
 }
 
-// Relie les actions "on change" aux selects
 function attacherEventCascades(prefix) {
     const local = document.getElementById(prefix + 'idlocal');
     const rangement = document.getElementById(prefix + 'idrangement');
@@ -465,7 +440,6 @@ function attacherEventCascades(prefix) {
 // ==========================================
 function initialiserEcouteursVetements() {
 
-    // 1. Bouton "Mettre à jour" (Modale Modification)
     const btnSauvegarderModif = document.getElementById('btn-sauvegarder-modif');
     if (btnSauvegarderModif) {
         btnSauvegarderModif.addEventListener('click', async () => {
@@ -503,23 +477,22 @@ function initialiserEcouteursVetements() {
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 modalInstance.hide();
                 
-                alert("Vêtement mis à jour avec succès !");
+                afficherNotification("Vêtement mis à jour avec succès !", "success");
                 chargerVetements(modeActuel); 
             } else {
-                alert("Erreur lors de la modification : " + (resultat.message || "Erreur inconnue"));
+                afficherNotification("Erreur lors de la modification : " + (resultat.message || "Erreur inconnue"), "danger");
             }
         });
     }
 
-    // 2. Bouton "Confirmer" (Modale Emprunt Utilisateur)
     const btnEmprunt = document.getElementById('btn-confirmer-emprunt');
     if(btnEmprunt) {
         btnEmprunt.addEventListener('click', async () => {
-            const dateDebut = document.getElementById('emprunt-date-debut').value; // AJOUT
+            const dateDebut = document.getElementById('emprunt-date-debut').value; 
             const dateFin = document.getElementById('emprunt-date-fin').value;
             
             if(!dateDebut || !dateFin) {
-                alert("Merci d'indiquer les dates de début et de fin de ton emprunt !");
+                afficherNotification("Merci d'indiquer les dates de début et de fin de ton emprunt !", "warning");
                 return;
             }
 
@@ -527,7 +500,7 @@ function initialiserEcouteursVetements() {
             const formData = new FormData();
             formData.append('idvetement', idVetementEnCoursDeDetail);
             formData.append('idutilisateur', user.idutilisateur); 
-            formData.append('datedebut', dateDebut); // AJOUT (envoi vers PHP)
+            formData.append('datedebut', dateDebut); 
             formData.append('datefinpret', dateFin);
 
             const resultat = await postDonnees('pret/pret_vetement.php', formData);
@@ -537,15 +510,14 @@ function initialiserEcouteursVetements() {
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 modalInstance.hide();
                 
-                alert("Emprunt confirmé ! Le vêtement est maintenant dans ton dressing.");
+                afficherNotification("Emprunt confirmé ! Le vêtement est maintenant dans ton dressing.", "success");
                 chargerVetements(modeActuel); 
             } else {
-                alert("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"));
+                afficherNotification("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"), "danger");
             }
         });
     }
 
-    // 3. Bouton "Valider" (Modale Prêt Propriétaire)
     const btnValiderPret = document.getElementById('btn-valider-pret');
     if (btnValiderPret) {
         btnValiderPret.addEventListener('click', async () => {
@@ -555,7 +527,7 @@ function initialiserEcouteursVetements() {
             formData.append('datefinpret', document.getElementById('pret-date-fin').value);
 
             if (!document.getElementById('pret-emprunteur').value || !document.getElementById('pret-date-fin').value) {
-                alert("Merci de sélectionner un emprunteur et une date de fin.");
+                afficherNotification("Merci de sélectionner un emprunteur et une date de fin.", "warning");
                 return;
             }
 
@@ -566,10 +538,10 @@ function initialiserEcouteursVetements() {
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 modalInstance.hide();
                 
-                alert('Vêtement prêté avec succès !');
+                afficherNotification('Vêtement prêté avec succès !', 'success');
                 chargerVetements(); 
             } else {
-                alert("Erreur lors du prêt : " + (resultat.message || "Erreur inconnue"));
+                afficherNotification("Erreur lors du prêt : " + (resultat.message || "Erreur inconnue"), "danger");
             }
         });
     }
@@ -584,7 +556,6 @@ async function chargerCategoriesSelect(idSelect, texteParDefaut) {
 
     select.innerHTML = '<option value="">Chargement...</option>';
     
-    // On appelle l'API des catégories
     const data = await fetchDonnees('categorie/get_categories.php');
     
     select.innerHTML = `<option value="">${texteParDefaut}</option>`;
@@ -600,7 +571,7 @@ async function chargerCategoriesSelect(idSelect, texteParDefaut) {
 // ANNULER UNE DEMANDE DE PRÊT (EMPRUNTEUR)
 // ==========================================
 async function annulerDemande(idVetement) {
-    if (!confirm("Veux-tu vraiment annuler ta demande d'emprunt ?")) return;
+    if (!await demanderConfirmation("Veux-tu vraiment annuler ta demande d'emprunt ?")) return;
 
     const userJson = sessionStorage.getItem('user');
     if (!userJson) return;
@@ -613,9 +584,9 @@ async function annulerDemande(idVetement) {
     const resultat = await postDonnees('pret/annuler_demande_pret.php', formData);
     
     if (resultat && resultat.status === 'success') {
-        alert("Ta demande a été annulée !");
-        chargerVetements(modeActuel); // On rafraîchit l'affichage
+        afficherNotification("Ta demande a été annulée !", "success");
+        chargerVetements(modeActuel); 
     } else {
-        alert("Erreur : " + (resultat?.message || "Impossible d'annuler."));
+        afficherNotification("Erreur : " + (resultat?.message || "Impossible d'annuler."), "danger");
     }
 }

@@ -3,10 +3,7 @@
 // ==========================================
 async function chargerComposant(idConteneur, urlFichier) {
     try {
-        // L'astuce magique : On rajoute une suite de chiffres aléatoires à la fin du nom du fichier.
-        // Comme le nom change à chaque milliseconde, le navigateur est obligé de télécharger le nouveau fichier !
         const urlAntiCache = urlFichier + '?v=' + new Date().getTime();
-        
         const reponse = await fetch(urlAntiCache);
         if (!reponse.ok) throw new Error('Composant introuvable : ' + urlFichier);
         
@@ -18,14 +15,12 @@ async function chargerComposant(idConteneur, urlFichier) {
 }
 
 window.toggleFavori = function(id, event) {
-    event.stopPropagation(); // Empêche d'ouvrir la modale de détails en même temps
+    event.stopPropagation();
     
-    // VÉRIFICATION : L'utilisateur est-il connecté ?
     const userJson = sessionStorage.getItem('user');
     if (!userJson) {
-        alert("Tu dois être connecté pour ajouter des vêtements en favoris !");
-        // Tu pourrais même le rediriger vers la page de connexion s'il clique sur OK :
-        window.location.href = 'login.html';
+        afficherNotification("Tu dois être connecté pour ajouter des vêtements en favoris !", "warning");
+        setTimeout(() => { window.location.href = 'login.html'; }, 2000);
         return;
     }
     
@@ -34,13 +29,13 @@ window.toggleFavori = function(id, event) {
     const idStr = id.toString();
     
     if (favoris.includes(idStr)) {
-        favoris = favoris.filter(f => f !== idStr); // Retire des favoris
+        favoris = favoris.filter(f => f !== idStr);
     } else {
-        favoris.push(idStr); // Ajoute aux favoris
+        favoris.push(idStr);
     }
     
     localStorage.setItem('favoris_' + user.idutilisateur, JSON.stringify(favoris));
-    chargerVetements(modeActuel); // Rafraîchit l'affichage en direct
+    chargerVetements(modeActuel); 
 };
 
 function afficherCartesVetements(vetements) {
@@ -64,7 +59,6 @@ function afficherCartesVetements(vetements) {
 
         let actionsHTML = '';
         
-        // ACTIONS PROPRIÉTAIRE
         if (currentUser && currentUser.idutilisateur == vetement.idproprietaire) {
             actionsHTML += `
                 <div class="d-flex gap-2 mb-2">
@@ -97,23 +91,17 @@ function afficherCartesVetements(vetements) {
                 actionsHTML += `<button class="btn btn-sm btn-outline-info w-100" onclick="vetementLave(${vetement.idvetement})">Laver & Ranger</button>`;
             }
         } 
-        // ACTIONS EMPRUNTEUR
         else if (currentUser && vetement.idemprunteur == currentUser.idutilisateur) {
-            // S'il est en cours de prêt, on affiche le bouton pour rendre
             if (vetement.etat === 'En prêt') {
                 actionsHTML += `<button class="btn btn-sm btn-primary w-100 mt-2" onclick="signalerRetour(${vetement.idvetement})">Signaler comme rendu</button>`;
-            
-            // S'il est en attente, on affiche le bouton pour annuler
             } else if (vetement.etat === 'Demande en cours') {
                 actionsHTML += `<button class="btn btn-sm btn-outline-danger w-100 mt-2 fw-bold" onclick="annulerDemande(${vetement.idvetement})">Annuler ma demande</button>`;
             }
         }
 
-        // --- LOGIQUE D'AFFICHAGE DU CŒUR ---
         let estFavori = currentUser ? favoris.includes(vetement.idvetement.toString()) : false;
         let btnFavoriHTML = '';
         
-        // On génère le cœur SI l'utilisateur n'est pas connecté, OU s'il l'est mais n'est PAS le propriétaire
         if (!currentUser || currentUser.idutilisateur != vetement.idproprietaire) {
             btnFavoriHTML = `<button class="btn btn-link text-decoration-none p-0 ms-2 fs-5" onclick="toggleFavori(${vetement.idvetement}, event)">${estFavori ? '❤️' : '🤍'}</button>`;
         }
@@ -136,22 +124,13 @@ function afficherCartesVetements(vetements) {
 
     if (modeActuel === 'dressing' && currentUser) {
         const listeComplete = vetements || [];
-        
-        // 1. Les vêtements dont je suis propriétaire
         const mesh = listeComplete.filter(v => v.idproprietaire == currentUser.idutilisateur);
-        
-        // 2. Les emprunts validés (En prêt ou Retour en attente)
         const mese = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur && (v.etat === 'En prêt' || v.etat === 'Retour en attente'));
-        
-        // 3. Mes favoris
         const mesf = listeComplete.filter(v => favoris.includes(v.idvetement.toString()) && v.idproprietaire != currentUser.idutilisateur);
-        
-        // 4. Mes demandes en cours (uniquement l'état 'Demande en cours')
         const mesd = listeComplete.filter(v => v.idemprunteur == currentUser.idutilisateur && v.etat === 'Demande en cours');
 
         let htmlDressing = '';
 
-        // UI : "Mes possessions" s'affiche UNIQUEMENT pour les admins et les owners
         if (currentUser.role === 'admin' || currentUser.role === 'owner') {
             htmlDressing += `
                 <h3 class="w-100 border-bottom pb-2">Mes possessions</h3>
@@ -159,13 +138,11 @@ function afficherCartesVetements(vetements) {
             `;
         }
 
-        // UI : "Mes demandes en cours" (Placé avant les emprunts pour plus de logique temporelle)
         htmlDressing += `
             <h3 class="w-100 border-bottom pb-2 mt-4 text-warning">Mes demandes en attente</h3>
             <div class="row g-4 w-100 mb-4">${mesd.length ? mesd.map(genererCarte).join('') : '<p class="text-muted">Aucune demande en cours.</p>'}</div>
         `;
 
-        // UI : "Mes emprunts" et "Mes favoris"
         htmlDressing += `
             <h3 class="w-100 border-bottom pb-2 mt-4">Mes emprunts actifs</h3>
             <div class="row g-4 w-100 mb-4">${mese.length ? mese.map(genererCarte).join('') : '<p class="text-muted">Aucun emprunt.</p>'}</div>
@@ -189,4 +166,131 @@ function basculerAffichageFormulaire(afficher) {
     document.getElementById('section-recherche').style.display = afficher ? 'none' : 'block';
     document.getElementById('section-formulaire').style.display = afficher ? 'block' : 'none';
     document.getElementById('section-arborescence').style.display = 'none';
+}
+
+// ==========================================
+// BOÎTE À OUTILS UX (Toasts & Modales)
+// ==========================================
+
+function afficherNotification(message, type = 'success') {
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        toastContainer.style.zIndex = '1055';
+        document.body.appendChild(toastContainer);
+    }
+
+    const couleurs = {
+        'success': 'bg-success text-white',
+        'danger': 'bg-danger text-white',
+        'warning': 'bg-warning text-dark',
+        'info': 'bg-info text-dark'
+    };
+    const cssClass = couleurs[type] || couleurs['info'];
+
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast align-items-center border-0 ${cssClass}`;
+    toastEl.setAttribute('role', 'alert');
+    toastEl.setAttribute('aria-live', 'assertive');
+    toastEl.setAttribute('aria-atomic', 'true');
+    
+    toastEl.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body fw-bold">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    `;
+
+    toastContainer.appendChild(toastEl);
+    const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+    toast.show();
+
+    toastEl.addEventListener('hidden.bs.toast', () => {
+        toastEl.remove();
+    });
+}
+
+function demanderConfirmation(message) {
+    return new Promise((resolve) => {
+        const modalId = 'modal-confirm-' + Date.now();
+        const html = `
+            <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content border-0 shadow">
+                        <div class="modal-body text-center p-4">
+                            <h5 class="mb-4" style="color: #ad1457;">${message}</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <button type="button" class="btn btn-outline-secondary w-50" id="btn-non-${modalId}">Annuler</button>
+                                <button type="button" class="btn w-50 text-white fw-bold" style="background-color: #e91e8c;" id="btn-oui-${modalId}">Oui</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+        const modalEl = document.getElementById(modalId);
+        const modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
+
+        const btnOui = document.getElementById(`btn-oui-${modalId}`);
+        const btnNon = document.getElementById(`btn-non-${modalId}`);
+
+        const nettoyer = () => {
+            modal.hide();
+            modalEl.addEventListener('hidden.bs.modal', () => modalEl.remove());
+        };
+
+        btnOui.addEventListener('click', () => { nettoyer(); resolve(true); });
+        btnNon.addEventListener('click', () => { nettoyer(); resolve(false); });
+
+        modal.show();
+    });
+}
+
+function demanderTexte(message) {
+    return new Promise((resolve) => {
+        const modalId = 'modal-prompt-' + Date.now();
+        const html = `
+            <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow">
+                        <div class="modal-header bg-light border-0">
+                            <h6 class="modal-title text-secondary fw-bold">${message}</h6>
+                            <button type="button" class="btn-close" id="btn-close-${modalId}"></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea class="form-control border-primary" id="input-${modalId}" rows="3" placeholder="Écris ici..."></textarea>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-outline-secondary" id="btn-annuler-${modalId}">Annuler</button>
+                            <button type="button" class="btn btn-primary fw-bold" id="btn-valider-${modalId}">Valider</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+        const modalEl = document.getElementById(modalId);
+        const modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
+
+        const btnValider = document.getElementById(`btn-valider-${modalId}`);
+        const btnAnnuler = document.getElementById(`btn-annuler-${modalId}`);
+        const btnClose = document.getElementById(`btn-close-${modalId}`);
+        const inputEl = document.getElementById(`input-${modalId}`);
+
+        const nettoyer = () => {
+            modal.hide();
+            modalEl.addEventListener('hidden.bs.modal', () => modalEl.remove());
+        };
+
+        btnValider.addEventListener('click', () => { nettoyer(); resolve(inputEl.value.trim()); });
+        btnAnnuler.addEventListener('click', () => { nettoyer(); resolve(null); });
+        btnClose.addEventListener('click', () => { nettoyer(); resolve(null); });
+
+        modal.show();
+    });
 }
