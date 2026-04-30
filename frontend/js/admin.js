@@ -302,6 +302,10 @@ function ouvrirModalEditionCategorie(id) {
     modal.show();
 }
 
+// ==========================================
+// CRUD : CATÉGORIES
+// ==========================================
+
 async function sauvegarderCategorie() {
     const form = document.getElementById('form-categorie');
     if (!form.checkValidity()) { form.reportValidity(); return; }
@@ -312,27 +316,36 @@ async function sauvegarderCategorie() {
     formData.append('infoPlus', document.getElementById('cat-info').value.trim());
 
     let url = 'categorie/add_categorie.php';
+    let messageSucces = "Catégorie ajoutée avec succès !";
     if (id !== "") {
         url = 'categorie/modify_categorie.php';
         formData.append('idcategorie', id);
+        messageSucces = "Catégorie modifiée avec succès !";
     }
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCategorie')).hide();
+        afficherNotification(messageSucces, "success");
         chargerCategories(); 
-    } else { alert("Erreur : " + (resultat.message || "inconnue")); }
+    } else { 
+        afficherNotification("Erreur : " + (resultat.message || "inconnue"), "danger"); 
+    }
 }
 
 async function supprimerCategorie(id) {
-    if (confirm("Es-tu sûr de vouloir supprimer cette catégorie ?")) {
+    if (await demanderConfirmation("Es-tu sûr de vouloir supprimer cette catégorie ?")) {
         const response = await fetch('backend/categorie/delete_categorie.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idcategorie: id })
         });
         const data = await response.json();
-        if (data.status === 'success') chargerCategories();
-        else alert("Erreur : " + data.message);
+        if (data.status === 'success') {
+            afficherNotification("Catégorie supprimée.", "success");
+            chargerCategories();
+        } else {
+            afficherNotification("Erreur : " + data.message, "danger");
+        }
     }
 }
 

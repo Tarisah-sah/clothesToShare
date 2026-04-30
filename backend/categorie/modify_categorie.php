@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la modification de la catégorie.']);
     }
 }
 $conn = null;

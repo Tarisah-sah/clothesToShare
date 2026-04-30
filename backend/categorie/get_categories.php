@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($categories);
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la récupération des catégories.']);
     }
 }
 $conn = null;

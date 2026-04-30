@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la suppression de la catégorie.']);
     }
 }
 $conn = null;
