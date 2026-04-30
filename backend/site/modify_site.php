@@ -44,12 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':code_postal' => $code_postal, 
         ':localite' => $localite,
         ':id' => $id
-    ]
+    ];
     
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         // A. On va d'abord chercher l'ancienne photo pour pouvoir la supprimer plus tard
         $stmtOld = $conn->prepare("SELECT photo FROM site WHERE idSite = :id");
-        $stmtOld->execute([':id' => $idSite]);
+        $stmtOld->execute([':id' => $id]);
         $oldData = $stmtOld->fetch();
 
         // B. On sauvegarde la nouvelle image
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute($params);
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la modification du site.']);
     }
 }
 $conn = null;

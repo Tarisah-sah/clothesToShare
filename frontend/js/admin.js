@@ -227,28 +227,45 @@ async function sauvegarderSite() {
     }
 
     let url = 'site/add_site.php';
+    let messageSucces = "Site ajouté avec succès !";
     if (id !== "") {
         url = 'site/modify_site.php';
         formData.append('idSite', id);
+        messageSucces = "Site modifié avec succès !";
     }
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSite')).hide();
+        afficherNotification(messageSucces, "success");
         chargerSites(); 
-    } else { alert("Erreur : " + (resultat.message || "inconnue")); }
+    } else { 
+        afficherNotification("Erreur : " + (resultat.message || "inconnue"), "danger"); 
+    }
 }
 
 async function supprimerSite(id) {
-    if (id == 1) { alert("Tu ne peux pas supprimer le Site n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce site définitivement ?\n\n⚠️ En supprimant celui-ci, les locaux, rangements et niveaux qui y sont seront également supprimés.\nLes habits, eux, seront redirigés vers le site 'Reserve' (ID 1).")) {
+    if (id == 1) { 
+        afficherNotification("Tu ne peux pas supprimer le Site n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        return; 
+    }
+    
+    // Utilisation de demanderConfirmation avec du HTML pour aérer le texte
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce site définitivement ?<br><br><small class='text-muted'>⚠️ En supprimant celui-ci, les locaux, rangements et niveaux qui y sont seront également supprimés.<br>Les habits, eux, seront redirigés vers le site 'Reserve' (ID 1).</small>";
+    
+    if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/site/delete_site.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idSite: id })
         });
         const data = await response.json();
-        if (data.status === 'success') chargerSites();
-        else alert("Erreur : " + data.message);
+        
+        if (data.status === 'success') {
+            afficherNotification("Site supprimé avec succès.", "success");
+            chargerSites();
+        } else { 
+            afficherNotification("Erreur : " + data.message, "danger"); 
+        }
     }
 }
 
@@ -301,10 +318,6 @@ function ouvrirModalEditionCategorie(id) {
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCategorie'));
     modal.show();
 }
-
-// ==========================================
-// CRUD : CATÉGORIES
-// ==========================================
 
 async function sauvegarderCategorie() {
     const form = document.getElementById('form-categorie');
@@ -462,39 +475,52 @@ async function sauvegarderLocal() {
     const formData = new FormData();
     formData.append('nom', document.getElementById('local-nom').value.trim());
     formData.append('infoLocal', document.getElementById('local-info').value.trim());
-    formData.append('idSite', document.getElementById('local-idsite').value); // Normalement "1"
+    formData.append('idSite', document.getElementById('local-idsite').value); 
 
     const photoInput = document.getElementById('local-photo');
     if (photoInput.files.length > 0) {
         formData.append('photo', photoInput.files[0]);
     }
 
-    // Si on a un ID, c'est une modification, sinon c'est un ajout
     let url = 'local/add_local.php';
+    let messageSucces = "Local ajouté avec succès !";
     if (id !== "") {
         url = 'local/modify_local.php';
         formData.append('idLocal', id);
+        messageSucces = "Local modifié avec succès !";
     }
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('modalLocal')).hide();
-        chargerLocaux(); // On met à jour le tableau
+        afficherNotification(messageSucces, "success");
+        chargerLocaux(); 
     } else { 
-        alert("Erreur : " + (resultat.message || "inconnue")); 
+        afficherNotification("Erreur : " + (resultat.message || "inconnue"), "danger"); 
     }
 }
 
 async function supprimerLocal(id) {
-    if (id == 1) { alert("Tu ne peux pas supprimer le Local n°1 car il sert de 'Reserve Secours' !"); return; }
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce local définitivement ?\n\n⚠️ En supprimant celui-ci, les rangements et niveaux qui y sont seront également supprimés.\nLes habits, eux, seront redirigés vers le 'Garde tout' (ID 1).")) {
+    if (id == 1) { 
+        afficherNotification("Tu ne peux pas supprimer le Local n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        return; 
+    }
+    
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce local définitivement ?<br><br><small class='text-muted'>⚠️ En supprimant celui-ci, les rangements et niveaux qui y sont seront également supprimés.<br>Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).</small>";
+    
+    if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/local/delete_local.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idLocal: id })
         });
         const data = await response.json();
-        if (data.status === 'success') chargerLocaux();
-        else alert("Erreur : " + data.message);
+        
+        if (data.status === 'success') {
+            afficherNotification("Local supprimé avec succès.", "success");
+            chargerLocaux();
+        } else { 
+            afficherNotification("Erreur : " + data.message, "danger"); 
+        }
     }
 }
 
