@@ -1,10 +1,10 @@
 <?php
 function pdo_connectDB() {
-    $host    = "clothet53.mysql.db";
-    $db   = 'clothet53';
-    $user = 'clothet53';
-    $pass = 'TMProjet20266202';
-    $charset = 'utf8mb4';
+    $host    = "localhost";
+    $db      = "clothet53";
+    $user    = "root";
+    $pass    = ""; 
+    $charset = "utf8mb4";
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
     $options = [
