@@ -526,7 +526,7 @@ function initialiserEcouteursVetements() {
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 modalInstance.hide();
                 
-                afficherNotification("Emprunt confirmé ! Le vêtement est maintenant dans ton dressing.", "success");
+                afficherNotification("Demande d'emprunt en attente !", "success");
                 chargerVetements(modeActuel); 
             } else {
                 afficherNotification("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"), "danger");

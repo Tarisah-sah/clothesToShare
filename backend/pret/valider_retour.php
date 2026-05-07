@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtVet = $conn->prepare("UPDATE vetement SET etat = 'Au lavage' WHERE idvetement = ?");
         $stmtVet->execute([$idvetement]);
 
-        // On clôture le prêt actif
-        $stmtPret = $conn->prepare("UPDATE pret SET statutpret = 'Terminé', datefinreelle = NOW() WHERE idvetement = ? AND statutpret IN ('En prêt', 'Retour en attente')");
+        // On supprime le prêt actif
+        $stmtPret = $conn->prepare("DELETE FROM pret WHERE idvetement = ? AND statutpret IN ('En prêt', 'Retour en attente')");
         $stmtPret->execute([$idvetement]);
 
         $conn->commit();
