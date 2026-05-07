@@ -1,14 +1,15 @@
-// Variables globales pour stocker les données afin de populer les selects rapidement
+/* Variables globales agissant comme cache local pour limiter les requêtes API redondantes lors de l'ouverture des modales */
 let categoriesData = [];
 let locauxData = [];
 let rangementsData = [];
 let niveauxData = [];
+let sitesData = [];
 
-// Générateur d'aperçu d'image automatique pour toutes les modales
+// Prévisualise automatiquement des images lors d'un upload.
 document.addEventListener('change', (e) => {
     if (e.target.type === 'file' && e.target.files[0]) {
         const reader = new FileReader();
-        const previewImg = document.getElementById(e.target.id + '-preview'); // Ex: 'site-photo' devient 'site-photo-preview'
+        const previewImg = document.getElementById(e.target.id + '-preview');
         
         if (previewImg) {
             reader.onload = (event) => {
@@ -21,7 +22,7 @@ document.addEventListener('change', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. VÉRIFICATION DE SÉCURITÉ FRONTEND
+    
     const userJson = sessionStorage.getItem('user');
     if (!userJson) {
         window.location.href = 'login.html';
@@ -35,42 +36,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // 2. INITIALISATION
+    /* Chargement initial des données */
     chargerCategories();
     chargerSites();
     chargerLocaux();
     chargerRangements();
     chargerNiveaux();
 
-    // ==========================================
-    // GESTION DES ONGLETS BOOTSTRAP
-    // ==========================================
-
+    /* Rafraîchissement des données lors de la navigation entre les onglets Admin */
     document.getElementById('sites-tab').addEventListener('shown.bs.tab', chargerSites);
     document.getElementById('locaux-tab').addEventListener('shown.bs.tab', chargerLocaux);
     document.getElementById('rangements-tab').addEventListener('shown.bs.tab', chargerRangements);
     document.getElementById('niveaux-tab').addEventListener('shown.bs.tab', chargerNiveaux);
     document.getElementById('categories-tab').addEventListener('shown.bs.tab', chargerCategories);
+    document.getElementById('utilisateurs-tab').addEventListener('shown.bs.tab', chargerUtilisateurs);
     
-    // 3. ÉCOUTEURS D'ÉVÉNEMENTS
-
-    // Écouteurs pour les Sites
+    /* Ecouteurs d'événements pour les actions principales (Modales & Sauvegardes) */
     document.getElementById('btn-ajouter-site').addEventListener('click', ouvrirModalAjoutSite);
     document.getElementById('btn-sauvegarder-site').addEventListener('click', sauvegarderSite);
 
-    // Écouteurs pour les Locaux
     document.getElementById('btn-ajouter-local').addEventListener('click', ouvrirModalAjoutLocal);
     document.getElementById('btn-sauvegarder-local').addEventListener('click', sauvegarderLocal);
     
-    // Écouteurs pour les Rangements
     document.getElementById('btn-ajouter-rangement').addEventListener('click', ouvrirModalAjoutRangement);
     document.getElementById('btn-sauvegarder-rangement').addEventListener('click', sauvegarderRangement);
     
-    // Nouveaux écouteurs pour les Niveaux
     document.getElementById('btn-ajouter-niveau').addEventListener('click', ouvrirModalAjoutNiveau);
     document.getElementById('btn-sauvegarder-niveau').addEventListener('click', sauvegarderNiveau);
 
-    // Écouteurs pour les Catégories
     document.getElementById('btn-ajouter-categorie').addEventListener('click', ouvrirModalAjoutCategorie);
     document.getElementById('btn-sauvegarder-cat').addEventListener('click', sauvegarderCategorie);
 
@@ -80,11 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'index.html';
     });
 
-    document.getElementById('utilisateurs-tab').addEventListener('shown.bs.tab', chargerUtilisateurs);
-
-// ==========================================
-    // MOTEUR DE RECHERCHE DYNAMIQUE (AMÉLIORÉ)
-    // ==========================================
+    // Moteur de recherche
     function configurerRecherche(idInput, idTbody) {
         const input = document.getElementById(idInput);
         if (input) {
@@ -96,47 +85,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lignes = tbody.querySelectorAll('tr');
 
                 lignes.forEach(ligne => {
-                    // On ignore les lignes de statut (comme "Chargement...")
                     if (ligne.children.length === 1) return;
 
                     let texteLigne = "";
                     
-                    // On parcourt chaque cellule (td) de la ligne une par une
                     Array.from(ligne.cells).forEach(cell => {
                         const select = cell.querySelector('select');
                         if (select) {
-                            // S'il y a un menu déroulant, on lit SEULEMENT l'option sélectionnée
                             texteLigne += select.options[select.selectedIndex].text.toLowerCase() + " ";
                         } else {
-                            // Sinon, on lit le texte normal de la cellule
                             texteLigne += cell.textContent.toLowerCase() + " ";
                         }
                     });
 
-                    // On vérifie si notre texte reconstruit contient la recherche
-                    if (texteLigne.includes(terme)) {
-                        ligne.style.display = ''; // Affiche la ligne
-                    } else {
-                        ligne.style.display = 'none'; // Masque la ligne
-                    }
+                    ligne.style.display = texteLigne.includes(terme) ? '' : 'none';
                 });
             });
         }
     }
 
-    // Activation de la recherche pour chaque onglet
     configurerRecherche('search-sites', 'liste-sites');
     configurerRecherche('search-categories', 'liste-categories');
     configurerRecherche('search-locaux', 'liste-locaux');
     configurerRecherche('search-rangements', 'liste-rangements');
     configurerRecherche('search-niveaux', 'liste-niveaux');
     configurerRecherche('search-utilisateurs', 'liste-utilisateurs');
-
 });
 
-// ==========================================
-// CRUD : SITES
-// ==========================================
+/* ==========================================
+   GESTION DES SITES
+   ========================================== */
+
+// Récupère et injecte la liste des sites dans le tableau
+
 async function chargerSites() {
     const tbody = document.getElementById('liste-sites');
     tbody.innerHTML = '<tr><td colspan="5" class="text-center">Chargement...</td></tr>';
@@ -146,7 +127,7 @@ async function chargerSites() {
         sitesData = data;
         tbody.innerHTML = '';
         if(data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Aucun site trouvée.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Aucun site trouvé.</td></tr>';
             return;
         }
         data.forEach(site => {
@@ -157,10 +138,8 @@ async function chargerSites() {
                 <td class="align-middle">${site.nom}</td>
                 <td class="align-middle text-muted small">${site.adresse || '-'}, ${site.code_postal || '-'} ${site.localite || '-'}</td>
                 <td class="text-end align-middle">
-                    <td class="text-end align-middle">
                     <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionSite(${site.idSite})">Éditer</button>
                     <button class="btn btn-sm btn-outline-danger" onclick="supprimerSite(${site.idSite})">Supprimer</button>
-                </td>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -181,16 +160,16 @@ function ouvrirModalAjoutSite() {
         preview.src = '';
         preview.classList.add('d-none');
     }
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSite'));
-    modal.show();
+    
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSite')).show();
 }
 
 function ouvrirModalEditionSite(id) {
     const site = sitesData.find(s => s.idSite == id);
     if (!site) return;
+    
     document.getElementById('site-id').value = site.idSite;
 
-    // On force le champ fichier à se vider
     const inputPhoto = document.getElementById('site-photo');
     if (inputPhoto) inputPhoto.value = "";
 
@@ -202,15 +181,17 @@ function ouvrirModalEditionSite(id) {
         preview.src = '';
         preview.classList.add('d-none');
     }
+    
     document.getElementById('site-nom').value = site.nom;
     document.getElementById('site-adresse').value = site.adresse;
     document.getElementById('site-cp').value = site.code_postal;
     document.getElementById('site-localite').value = site.localite;
     document.getElementById('modalSiteTitre').textContent = "Modifier le site";
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSite'));
-    modal.show();
+    
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSite')).show();
 }
 
+// Gère dynamiquement la création ou la mise à jour d'un site
 async function sauvegarderSite() {
     const form = document.getElementById('form-site');
     if (!form.checkValidity()) { form.reportValidity(); return; }
@@ -227,13 +208,10 @@ async function sauvegarderSite() {
         formData.append('photo', photoInput.files[0]);
     }
 
-    let url = 'site/add_site.php';
-    let messageSucces = "Site ajouté avec succès !";
-    if (id !== "") {
-        url = 'site/modify_site.php';
-        formData.append('idSite', id);
-        messageSucces = "Site modifié avec succès !";
-    }
+    let url = id !== "" ? 'site/modify_site.php' : 'site/add_site.php';
+    let messageSucces = id !== "" ? "Site modifié avec succès !" : "Site ajouté avec succès !";
+    
+    if (id !== "") formData.append('idSite', id);
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
@@ -246,13 +224,13 @@ async function sauvegarderSite() {
 }
 
 async function supprimerSite(id) {
+    // Protection du site racine
     if (id == 1) { 
-        afficherNotification("Tu ne peux pas supprimer le Site n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        afficherNotification("Opération interdite : Le Site n°1 sert de structure de secours.", "warning"); 
         return; 
     }
     
-    // Utilisation de demanderConfirmation avec du HTML pour aérer le texte
-    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce site définitivement ?<br><br><small class='text-muted'>⚠️ En supprimant celui-ci, les locaux, rangements et niveaux qui y sont seront également supprimés.<br>Les habits, eux, seront redirigés vers le site 'Reserve' (ID 1).</small>";
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce site définitivement ?<br><br><small class='text-muted'>⚠️ La suppression de ce site entraînera une réaffectation en cascade (locaux, rangements, niveaux) vers le site racine.</small>";
     
     if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/site/delete_site.php', {
@@ -270,9 +248,10 @@ async function supprimerSite(id) {
     }
 }
 
-// ==========================================
-// CRUD : CATÉGORIES
-// ==========================================
+/* ==========================================
+   GESTION DES CATÉGORIES
+   ========================================== */
+
 async function chargerCategories() {
     const tbody = document.getElementById('liste-categories');
     tbody.innerHTML = '<tr><td colspan="4" class="text-center">Chargement...</td></tr>';
@@ -305,19 +284,19 @@ function ouvrirModalAjoutCategorie() {
     document.getElementById('form-categorie').reset();
     document.getElementById('cat-id').value = "";
     document.getElementById('modalCategorieTitre').textContent = "Ajouter une catégorie";
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCategorie'));
-    modal.show();
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCategorie')).show();
 }
 
 function ouvrirModalEditionCategorie(id) {
     const categorie = categoriesData.find(c => c.idcategorie == id);
     if (!categorie) return;
+    
     document.getElementById('cat-id').value = categorie.idcategorie;
     document.getElementById('cat-nom').value = categorie.nom;
     document.getElementById('cat-info').value = categorie.infoPlus;
     document.getElementById('modalCategorieTitre').textContent = "Modifier la catégorie";
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCategorie'));
-    modal.show();
+    
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCategorie')).show();
 }
 
 async function sauvegarderCategorie() {
@@ -329,13 +308,10 @@ async function sauvegarderCategorie() {
     formData.append('nom', document.getElementById('cat-nom').value.trim());
     formData.append('infoPlus', document.getElementById('cat-info').value.trim());
 
-    let url = 'categorie/add_categorie.php';
-    let messageSucces = "Catégorie ajoutée avec succès !";
-    if (id !== "") {
-        url = 'categorie/modify_categorie.php';
-        formData.append('idcategorie', id);
-        messageSucces = "Catégorie modifiée avec succès !";
-    }
+    let url = id !== "" ? 'categorie/modify_categorie.php' : 'categorie/add_categorie.php';
+    let messageSucces = id !== "" ? "Catégorie modifiée avec succès !" : "Catégorie ajoutée avec succès !";
+    
+    if (id !== "") formData.append('idcategorie', id);
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
@@ -348,12 +324,13 @@ async function sauvegarderCategorie() {
 }
 
 async function supprimerCategorie(id) {
-    if (await demanderConfirmation("Es-tu sûr de vouloir supprimer cette catégorie ?")) {
+    if (await demanderConfirmation("Confirmez-vous la suppression de cette catégorie ? Elle doit être vide de tout vêtement.")) {
         const response = await fetch('backend/categorie/delete_categorie.php', {
             method: 'DELETE', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idcategorie: id })
         });
         const data = await response.json();
+        
         if (data.status === 'success') {
             afficherNotification("Catégorie supprimée.", "success");
             chargerCategories();
@@ -363,9 +340,10 @@ async function supprimerCategorie(id) {
     }
 }
 
-// ==========================================
-// CRUD : LOCAUX 
-// ==========================================
+/* ==========================================
+   GESTION DES LOCAUX
+   ========================================== */
+
 async function chargerLocaux() {
     const tbody = document.getElementById('liste-locaux');
     tbody.innerHTML = '<tr><td colspan="5" class="text-center">Chargement...</td></tr>';
@@ -384,10 +362,8 @@ async function chargerLocaux() {
                 <td class="align-middle">${loc.nom}</td>
                 <td class="align-middle text-muted small">${loc.infoLocal || '-'}</td>
                 <td class="text-end align-middle">
-                    <td class="text-end align-middle">
                     <button class="btn btn-sm btn-outline-primary me-2" onclick="ouvrirModalEditionLocal(${loc.idLocal})">Éditer</button>
                     <button class="btn btn-sm btn-outline-danger" onclick="supprimerLocal(${loc.idLocal})">Supprimer</button>
-                </td>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -395,13 +371,13 @@ async function chargerLocaux() {
     }
 }
 
+// Prépare la modale pour l'ajout en s'assurant que la liste des sites est bien préchargée.
 async function ouvrirModalAjoutLocal() {
     document.getElementById('form-local').reset();
-    document.getElementById('local-id').value = ""; // Vide l'ID = mode Ajout
+    document.getElementById('local-id').value = ""; 
     document.getElementById('modalLocalTitre').textContent = "Ajouter un local";
 
     const selectSite = document.getElementById('local-idsite');
-
     const inputPhoto = document.getElementById('local-photo');
     if (inputPhoto) inputPhoto.value = "";
 
@@ -411,10 +387,8 @@ async function ouvrirModalAjoutLocal() {
         preview.classList.add('d-none');
     }
     
-    // On vide la liste complètement avant de la remplir !
     selectSite.innerHTML = '<option value="">Choisir un site...</option>';
 
-    // Sécurité : au cas où les sites n'ont pas encore été téléchargés
     if (sitesData.length === 0) {
         const sData = await fetchDonnees('site/get_sites.php');
         if (sData) sitesData = sData;
@@ -432,8 +406,6 @@ async function ouvrirModalEditionLocal(id) {
     if (!local) return;
 
     const selectSite = document.getElementById('local-idsite');
-    
-    // On vide la liste ici aussi !
     selectSite.innerHTML = '<option value="">Choisir un site...</option>';
 
     if (sitesData.length === 0) {
@@ -442,7 +414,6 @@ async function ouvrirModalEditionLocal(id) {
     }
 
     sitesData.forEach(s => {
-        // Sélectionner le site actuel
         const isSelected = s.idSite == local.idSite ? 'selected' : '';
         selectSite.innerHTML += `<option value="${s.idSite}" ${isSelected}>${s.nom}</option>`;
     });
@@ -459,12 +430,11 @@ async function ouvrirModalEditionLocal(id) {
         preview.classList.add('d-none');
     }
 
-    // Pré-remplir le formulaire avec les données du local
     document.getElementById('local-id').value = local.idLocal;
     document.getElementById('local-nom').value = local.nom;
     document.getElementById('local-info').value = local.infoLocal;
-    
     document.getElementById('modalLocalTitre').textContent = "Modifier le local";
+    
     bootstrap.Modal.getOrCreateInstance(document.getElementById('modalLocal')).show();
 }
 
@@ -483,13 +453,10 @@ async function sauvegarderLocal() {
         formData.append('photo', photoInput.files[0]);
     }
 
-    let url = 'local/add_local.php';
-    let messageSucces = "Local ajouté avec succès !";
-    if (id !== "") {
-        url = 'local/modify_local.php';
-        formData.append('idLocal', id);
-        messageSucces = "Local modifié avec succès !";
-    }
+    let url = id !== "" ? 'local/modify_local.php' : 'local/add_local.php';
+    let messageSucces = id !== "" ? "Local modifié avec succès !" : "Local ajouté avec succès !";
+    
+    if (id !== "") formData.append('idLocal', id);
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
@@ -502,12 +469,13 @@ async function sauvegarderLocal() {
 }
 
 async function supprimerLocal(id) {
+    // Protection du local réserve
     if (id == 1) { 
-        afficherNotification("Tu ne peux pas supprimer le Local n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        afficherNotification("Opération interdite : Le Local n°1 sert de structure de secours.", "warning"); 
         return; 
     }
     
-    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce local définitivement ?<br><br><small class='text-muted'>⚠️ En supprimant celui-ci, les rangements et niveaux qui y sont seront également supprimés.<br>Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).</small>";
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce local définitivement ?<br><br><small class='text-muted'>⚠️ La suppression engendrera le reclassement des rangements et niveaux vers le local racine.</small>";
     
     if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/local/delete_local.php', {
@@ -525,9 +493,11 @@ async function supprimerLocal(id) {
     }
 }
 
-// ==========================================
-// CRUD : RANGEMENTS
-// ==========================================
+/* ==========================================
+   GESTION DES RANGEMENTS
+   ========================================== */
+
+// Charge la liste des rangements. Nécessite une jointure avec locauxData pour afficher le local parent.
 async function chargerRangements() {
     const tbody = document.getElementById('liste-rangements');
     tbody.innerHTML = '<tr><td colspan="5" class="text-center">Chargement...</td></tr>';
@@ -539,7 +509,7 @@ async function chargerRangements() {
 
     const data = await fetchDonnees('rangement/get_rangements.php'); 
     if (data && Array.isArray(data)) {
-        rangementsData = data; // On stocke pour plus tard
+        rangementsData = data;
         tbody.innerHTML = '';
         if(data.length === 0) return tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Aucun rangement trouvé.</td></tr>';
 
@@ -568,7 +538,6 @@ function ouvrirModalAjoutRangement() {
     document.getElementById('modalRangementTitre').textContent = "Ajouter un rangement";
     
     const selectLocal = document.getElementById('rangement-idlocal');
-
     const inputPhoto = document.getElementById('rangement-photo');
     if (inputPhoto) inputPhoto.value = "";
 
@@ -590,7 +559,6 @@ async function ouvrirModalEditionRangement(id) {
     const rangement = rangementsData.find(r => r.idRangement == id);
     if (!rangement) return;
 
-    // Pré-remplir le formulaire
     document.getElementById('rangement-id').value = rangement.idRangement;
     document.getElementById('rangement-nom').value = rangement.nom;
     document.getElementById('rangement-info').value = rangement.infoRangement;
@@ -607,18 +575,15 @@ async function ouvrirModalEditionRangement(id) {
         preview.classList.add('d-none');
     }
     
-    // Remplir dynamiquement la liste déroulante des locaux
     const selectLocal = document.getElementById('rangement-idlocal');
     selectLocal.innerHTML = '<option value="">Choisir un local...</option>';
 
-    // S'assurer que les locaux sont chargés
     if (locauxData.length === 0) {
         const data = await fetchDonnees('local/get_locaux.php');
         if (data) locauxData = data;
     }
 
     locauxData.forEach(loc => {
-        // Sélectionner le local actuel
         const isSelected = loc.idLocal == rangement.idLocal ? 'selected' : '';
         selectLocal.innerHTML += `<option value="${loc.idLocal}" ${isSelected}>${loc.nom}</option>`;
     });
@@ -642,13 +607,10 @@ async function sauvegarderRangement() {
         formData.append('photo', photoInput.files[0]);
     }
 
-    let url = 'rangement/add_rangement.php';
-    let messageSucces = "Rangement ajouté avec succès !";
-    if (id !== "") {
-        url = 'rangement/modify_rangement.php';
-        formData.append('idRangement', id);
-        messageSucces = "Rangement modifié avec succès !";
-    }
+    let url = id !== "" ? 'rangement/modify_rangement.php' : 'rangement/add_rangement.php';
+    let messageSucces = id !== "" ? "Rangement modifié avec succès !" : "Rangement ajouté avec succès !";
+    
+    if (id !== "") formData.append('idRangement', id);
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
@@ -662,11 +624,11 @@ async function sauvegarderRangement() {
 
 async function supprimerRangement(id) {
     if (id == 1) { 
-        afficherNotification("Tu ne peux pas supprimer le Rangement n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        afficherNotification("Opération interdite : Le Rangement n°1 sert de structure de secours.", "warning"); 
         return; 
     }
     
-    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?<br><br><small class='text-muted'>⚠️ En supprimant celui-ci, les niveaux (étagères) qui y sont seront également supprimés.<br>Les habits, eux, seront redirigés vers le 'Garde tout' (ID 1).</small>";
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce rangement définitivement ?<br><br><small class='text-muted'>⚠️ La suppression engendrera le reclassement des niveaux rattachés vers le rangement racine.</small>";
     
     if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/rangement/delete_rangement.php', {
@@ -684,10 +646,11 @@ async function supprimerRangement(id) {
     }
 }
 
+/* ==========================================
+   GESTION DES NIVEAUX
+   ========================================== */
 
-// ==========================================
-// CRUD : NIVEAUX
-// ==========================================
+// Charge les niveaux
 async function chargerNiveaux() {
     const tbody = document.getElementById('liste-niveaux');
     tbody.innerHTML = '<tr><td colspan="6" class="text-center">Chargement...</td></tr>';
@@ -713,10 +676,9 @@ async function chargerNiveaux() {
         }
 
         data.forEach(niv => {
-
             const rangementTrouve = rangementsData.find(r => r.idRangement == niv.idRangement);
             const nomRangement = rangementTrouve ? rangementTrouve.nom : "Inconnu";
-            const localTrouve = locauxData.find(l => l.idLocal == rangementTrouve.idLocal);
+            const localTrouve = locauxData.find(l => l.idLocal == (rangementTrouve ? rangementTrouve.idLocal : -1));
             const nomLocal = localTrouve ? localTrouve.nom : "Inconnu";
 
             const tr = document.createElement('tr');
@@ -742,7 +704,6 @@ async function ouvrirModalAjoutNiveau() {
     document.getElementById('modalNiveauTitre').textContent = "Ajouter un niveau (Étagère)";
     
     const selectRang = document.getElementById('niveau-idrangement');
-
     const inputPhoto = document.getElementById('niveau-photo');
     if (inputPhoto) inputPhoto.value = "";
 
@@ -754,7 +715,6 @@ async function ouvrirModalAjoutNiveau() {
 
     selectRang.innerHTML = '<option value="">Chargement...</option>';
     
-    // Si l'admin n'a pas encore cliqué sur l'onglet "Rangements", la variable globale est vide. On la télécharge !
     if (rangementsData.length === 0) {
         const rData = await fetchDonnees('rangement/get_rangements.php');
         if(rData) rangementsData = rData;
@@ -767,10 +727,8 @@ async function ouvrirModalAjoutNiveau() {
 
     selectRang.innerHTML = '<option value="">Choisir un rangement...</option>';
     rangementsData.forEach(rg => {
-        // On cherche le local correspondant directement dans la mémoire Javascript (C'est instantané)
         const localTrouve = locauxData.find(l => l.idLocal == rg.idLocal);
         const nomLocal = localTrouve ? localTrouve.nom : "Inconnu";
-        
         selectRang.innerHTML += `<option value="${rg.idRangement}">${rg.nom} (Local : ${nomLocal})</option>`;
     });
 
@@ -797,7 +755,6 @@ async function ouvrirModalEditionNiveau(id) {
         preview.classList.add('d-none');
     }
     
-    // Charger le select des rangements
     const selectRang = document.getElementById('niveau-idrangement');
 
     if (rangementsData.length === 0) {
@@ -814,7 +771,8 @@ async function ouvrirModalEditionNiveau(id) {
     rangementsData.forEach(rg => {
         const localTrouve = locauxData.find(l => l.idLocal == rg.idLocal);
         const nomLocal = localTrouve ? localTrouve.nom : "Inconnu";
-        selectRang.innerHTML += `<option value="${rg.idRangement}" ${rg.idRangement == niveau.idRangement ? 'selected' : ''}>${rg.nom} (Local : ${nomLocal})</option>`;
+        const isSelected = rg.idRangement == niveau.idRangement ? 'selected' : '';
+        selectRang.innerHTML += `<option value="${rg.idRangement}" ${isSelected}>${rg.nom} (Local : ${nomLocal})</option>`;
     });
 
     document.getElementById('modalNiveauTitre').textContent = "Modifier le niveau";
@@ -836,13 +794,10 @@ async function sauvegarderNiveau() {
         formData.append('photo', photoInput.files[0]);
     }
 
-    let url = 'niveau/add_niveau.php';
-    let messageSucces = "Niveau ajouté avec succès !";
-    if (id !== "") {
-        url = 'niveau/modify_niveau.php';
-        formData.append('idNiveau', id);
-        messageSucces = "Niveau modifié avec succès !";
-    }
+    let url = id !== "" ? 'niveau/modify_niveau.php' : 'niveau/add_niveau.php';
+    let messageSucces = id !== "" ? "Niveau modifié avec succès !" : "Niveau ajouté avec succès !";
+    
+    if (id !== "") formData.append('idNiveau', id);
 
     const resultat = await postDonnees(url, formData);
     if (resultat && resultat.status === 'success') {
@@ -856,11 +811,11 @@ async function sauvegarderNiveau() {
 
 async function supprimerNiveau(id) {
     if (id == 1) { 
-        afficherNotification("Tu ne peux pas supprimer le Niveau n°1 car il sert de 'Reserve Secours' !", "warning"); 
+        afficherNotification("Opération interdite : Le Niveau n°1 sert de structure de secours.", "warning"); 
         return; 
     }
     
-    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce niveau (étagère) définitivement ?<br><br><small class='text-muted'>⚠️ Les habits qui s'y trouvent seront redirigés vers la 'Reserve' (ID 1).</small>";
+    const messageAvertissement = "Êtes-vous sûr de vouloir supprimer ce niveau définitivement ?<br><br><small class='text-muted'>⚠️ Les vêtements qui s'y trouvent seront reclassés vers le niveau de secours global.</small>";
     
     if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/niveau/delete_niveau.php', {
@@ -878,9 +833,11 @@ async function supprimerNiveau(id) {
     }
 }
 
-// ==========================================
-// CRUD : UTILISATEURS (ADMIN)
-// ==========================================
+/* ==========================================
+   GESTION DES UTILISATEURS (ADMIN)
+   ========================================== */
+
+// Récupère l'intégralité des comptes utilisateurs pour la gestion des rôles et les suppressions
 async function chargerUtilisateurs() {
     const tbody = document.getElementById('liste-utilisateurs');
     tbody.innerHTML = '<tr><td colspan="5" class="text-center">Chargement...</td></tr>';
@@ -896,10 +853,9 @@ async function chargerUtilisateurs() {
             const userConnecte = JSON.parse(sessionStorage.getItem('user'));
 
             data.forEach(u => {
-                // Empêcher l'admin de se bloquer/supprimer lui-même
+                // Un admin ne peut pas altérer ses propres droits
                 const isMe = u.idutilisateur == userConnecte.idutilisateur;
                 
-                // Le selecteur de rôle
                 const roleSelect = `
                     <select class="form-select form-select-sm border-0 bg-light" onchange="changerRole(${u.idutilisateur}, this.value)" ${isMe ? 'disabled' : ''}>
                         <option value="user" ${u.role === 'user' ? 'selected' : ''}>User (Consulter & Emprunter)</option>
@@ -922,10 +878,11 @@ async function chargerUtilisateurs() {
             });
         }
     } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erreur de chargement</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erreur de chargement des utilisateurs</td></tr>';
     }
 }
 
+// Modifie le niveau de privilège d'un utilisateur cible
 async function changerRole(id, nouveauRole) {
     const response = await fetch('backend/utilisateur/modify_role.php', {
         method: 'POST',
@@ -937,13 +894,13 @@ async function changerRole(id, nouveauRole) {
     if (data.status === 'success') {
         afficherNotification("Le rôle de l'utilisateur a été mis à jour.", "success");
     } else {
-        afficherNotification("Erreur : " + data.message, "danger");
-        chargerUtilisateurs(); // On recharge pour remettre l'ancien rôle visible dans le select
+        afficherNotification("Erreur lors de la mise à jour : " + data.message, "danger");
+        chargerUtilisateurs(); 
     }
 }
 
 async function supprimerUtilisateur(id) {
-    const messageAvertissement = "Es-tu sûr de vouloir supprimer cet utilisateur ?<br><br><small class='text-muted'>⚠️ Son compte et ses données de connexion seront définitivement détruits.</small>";
+    const messageAvertissement = "Es-tu sûr de vouloir supprimer définitivement cet utilisateur ?<br><br><small class='text-muted'>⚠️ Cette action est irréversible et détruira l'ensemble de ses accès.</small>";
 
     if (await demanderConfirmation(messageAvertissement)) {
         const response = await fetch('backend/utilisateur/delete_utilisateur_admin.php', {
@@ -957,7 +914,7 @@ async function supprimerUtilisateur(id) {
             afficherNotification("Utilisateur banni et supprimé avec succès.", "success");
             chargerUtilisateurs();
         } else {
-            afficherNotification("Erreur : " + data.message, "danger");
+            afficherNotification("Erreur de suppression : " + data.message, "danger");
         }
     }
 }
