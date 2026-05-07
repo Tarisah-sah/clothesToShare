@@ -3,6 +3,7 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 
+// Vérifie le role
 if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
     exit;
@@ -17,7 +18,7 @@ if (!$id || !$role) {
     exit;
 }
 
-// Sécurité supplémentaire : On ne peut pas modifier son propre rôle !
+// On ne peut pas modifier son propre rôle
 if ($id == $_SESSION['idutilisateur']) {
     echo json_encode(['status' => 'error', 'message' => 'Tu ne peux pas dégrader ton propre compte !']);
     exit;

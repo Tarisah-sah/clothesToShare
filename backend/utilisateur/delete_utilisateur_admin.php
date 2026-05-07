@@ -27,7 +27,7 @@ try {
     $stmt->execute([$id]);
     echo json_encode(['status' => 'success']);
 } catch (Exception $e) {
-    // S'il a encore des vêtements enregistrés ou des prêts en cours, la BD bloquera la suppression (Sécurité)
+    // S'il a encore des vêtements enregistrés ou des prêts en cours, on bloquera la suppression
     echo json_encode(['status' => 'error', 'message' => 'Impossible de supprimer ce compte : l\'utilisateur possède ou emprunte encore des vêtements.']);
 }
 ?>

@@ -3,14 +3,13 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 
-// SÉCURITÉ ABSOLUE : On vérifie juste que la personne est connectée
+// On vérifie juste que la personne est connectée
 if (!isset($_SESSION['idutilisateur'])) {
     echo json_encode(['status' => 'error', 'message' => 'Tu dois être connecté pour faire cela.']);
     exit;
 }
 
-// ON NE PREND PAS l'ID du Javascript (trop dangereux) ! 
-// On prend l'ID directement dans le coffre-fort du serveur (la session)
+// On utilise l'id de la session
 $idUtilisateur = $_SESSION['idutilisateur'];
 
 try {
@@ -24,7 +23,7 @@ try {
     
     echo json_encode(['status' => 'success']);
 } catch (Exception $e) {
-    // La base de données va bloquer la suppression si l'utilisateur a encore des vêtements ou des prêts !
+    // On va bloquer la suppression si l'utilisateur a encore des vêtements ou des prêts
     echo json_encode(['status' => 'error', 'message' => 'Impossible de supprimer ton compte. Assure-toi de ne plus posséder ou emprunter de vêtements.']);
 }
 ?>

@@ -16,10 +16,13 @@ $mdp = $_POST['mdp'] ?? null;
 
 try {
     if ($mdp) {
-        // Hachage conseillé mais optionnel selon tes consignes actuelles
+        // On sécurise le nouveau mot de passe
+        $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
+        
         $sql = "UPDATE utilisateur SET nom = ?, prenom = ?, login = ?, mdp = ? WHERE idUtilisateur = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$nom, $prenom, $login, $mdp, $_SESSION['idutilisateur']]);
+        // on renvoie le hash 
+        $stmt->execute([$nom, $prenom, $login, $mdpHash, $_SESSION['idutilisateur']]);
     } else {
         $sql = "UPDATE utilisateur SET nom = ?, prenom = ?, login = ? WHERE idUtilisateur = ?";
         $stmt = $conn->prepare($sql);
@@ -27,5 +30,5 @@ try {
     }
     echo json_encode(['status' => 'success']);
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la mise à jour du profil.']);
 }
