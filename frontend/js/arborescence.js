@@ -18,7 +18,6 @@ function initialiserArborescence() {
             
             document.getElementById('section-arborescence').style.display = 'block';
             
-            // MODIFICATION ICI : On commence par les sites !
             chargerBulles('sites', null);
         });
     }

@@ -1,27 +1,27 @@
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // 1. On attend que TOUS les composants HTML soient injectés
+    // On attend que ts les composants HTML soient injectés
     await chargerComposant('composant-navbar', 'frontend/components/navbar.html');
     await chargerComposant('composant-modals', 'frontend/components/modals.html');
     await chargerComposant('composant-recherche', 'frontend/components/recherche.html');
     await chargerComposant('composant-formulaire', 'frontend/components/formulaireAjout.html');
     await chargerCategoriesSelect('search-categorie', 'Toutes les catégories');
 
-    // 2. Vérification de connexion
+    // Vérification de connexion
     verifierSession();
 
-    // 3. On active les boutons du menu
+    // On active les boutons du menu
     initialiserMenuVetements();
     initialiserArborescence();
 
-    // --- NOUVEAUTÉ : On active les clics des modales (Mise à jour, Prêt, Emprunt) ---
+    // On active les clics des modales
     initialiserEcouteursVetements();
 
-    // --- NOUVEAUTÉ : On active le "suivi" des listes déroulantes (pour détecter les clics) ---
+    // On active les clics des listes déroulantes
     attacherEventCascades('');      // Formulaire d'ajout
     attacherEventCascades('edit-'); // Fenêtre de modification
 
-    // 4. On charge le contenu principal 
+    // On charge le contenu principal 
     const urlParams = new URLSearchParams(window.location.search);
     const tab = urlParams.get('tab') || 'accueil';
     
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         chargerVetements('accueil');
     }
     
-    // 5. Bouton "Ajouter un vêtement"
+    // Bouton "Ajouter un vêtement"
     document.getElementById('btn-afficher-ajout').addEventListener('click', async () => {
         reinitialiserFormulaire();
         await chargerCategoriesSelect('idcategorie_ajout', 'Choisir une catégorie...');
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('form-recherche').addEventListener('submit', filtrerVetements);
     document.getElementById('btn-reset-recherche').addEventListener('click', reinitialiserRecherche);
 
-    // 6. Gestion du champ "Etat" (pour afficher la zone d'emprunt si "En prêt" est choisi)
+    // Gestion du champ "Etat"
     const champEtat = document.getElementById('etat');
     if (champEtat) {
         champEtat.addEventListener('change', async function() {

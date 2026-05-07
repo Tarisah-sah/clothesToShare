@@ -1,12 +1,4 @@
-/**
- * Ce fichier gère l'authentification, la vérification de session 
- * et les fonctions d'administration (validation des comptes).
- */
-
-/**
- * Vérifie si un utilisateur est connecté via le sessionStorage
- * et met à jour l'interface (Navbar, Avatar, Admin) en conséquence.
- */
+// Vérifie si un utilisateur est connecté via le sessionStorage et met à jour l'interface
 function verifierSession() {
     const userJson = sessionStorage.getItem('user');
     const user = userJson ? JSON.parse(userJson) : null;
@@ -31,7 +23,7 @@ function verifierSession() {
             actualiserBadgeDemandes();
         }
 
-        // SI L'UTILISATEUR EST ADMIN, ON AFFICHE LE LIEN
+        // Si l'utilisateur est admin, on met le lien
         const adminLink = document.getElementById('nav-admin-link');
         if (adminLink && user.role === 'admin') {
             adminLink.style.display = 'block';
@@ -59,9 +51,7 @@ function verifierSession() {
     }
 }
 
-/**
- * Récupère le nombre de demandes en attente pour mettre à jour le badge dans le menu.
- */
+// Récupère le nombre de demandes en attente pour mettre à jour le badge dans le menu
 function actualiserBadgeDemandes() {
     fetch('backend/utilisateur/getpending_utilisateurs.php')
         .then(r => r.json())
@@ -77,9 +67,7 @@ function actualiserBadgeDemandes() {
         .catch(() => {});
 }
 
-/**
- * Charge et affiche la liste des utilisateurs en attente de validation dans le panneau admin.
- */
+// Charge et affiche la liste des utilisateurs en attente de validation dans le panneau admin
 function chargerDemandes() {
     const liste = document.getElementById('liste-demandes');
     liste.innerHTML = '<p class="text-muted">Chargement...</p>';
@@ -115,11 +103,7 @@ function chargerDemandes() {
         });
 }
 
-/**
- * Envoie la décision de l'admin (accepter/refuser) au serveur pour un utilisateur donné.
- * @param {number} id - L'ID de l'utilisateur concerné.
- * @param {string} action - 'accepter' ou 'refuser'.
- */
+// Envoie la décision de l'admin (accepter/refuser) au serveur pour un utilisateur donné
 async function validerDemande(id, action) {
     try {
         const response = await fetch('backend/valider_inscription.php', { 
@@ -143,7 +127,7 @@ async function validerDemande(id, action) {
                 }, 2000);
             }
         } else {
-            // Utiliser une div d'erreur dans ton HTML au lieu de alert()
+            // Div d'erreur
             console.error("Erreur serveur :", data.message);
         }
     } catch (error) {

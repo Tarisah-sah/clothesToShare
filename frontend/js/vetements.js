@@ -271,7 +271,6 @@ async function preparerEdition(id) {
     modal.show();
 }
 
-// AJOUT DE ASYNC ICI
 async function supprimerVetement(id) {
     if (await demanderConfirmation("Es-tu sûr de vouloir supprimer ce vêtement définitivement ?")) {
         const response = await fetch('backend/vetement/delete_vetement.php', {
@@ -281,7 +280,7 @@ async function supprimerVetement(id) {
         const data = await response.json();
         if (data.status === 'success') {
             afficherNotification("Vêtement supprimé !", "success");
-            chargerVetements(modeActuel); // <-- C'est ça qui te maintient dans ton dressing !
+            chargerVetements(modeActuel);
         } else {
             afficherNotification("Erreur : " + data.message, "danger");
         }
@@ -309,7 +308,7 @@ async function ouvrirModalDetails(id) {
     document.getElementById('detail-type').textContent = vetement.type;
     document.getElementById('detail-description').textContent = vetement.description || 'Aucune description fournie.';
     
-    // Animation de chargement le temps d'aller chercher le nom du propriétaire
+    // Animation de chargement
     document.getElementById('detail-proprio').innerHTML = '<span class="spinner-border spinner-border-sm text-secondary me-2" role="status"></span> <span class="text-muted small">Recherche...</span>';
     
     const utilisateurs = await fetchDonnees('utilisateur/get_all_utilisateurs.php');

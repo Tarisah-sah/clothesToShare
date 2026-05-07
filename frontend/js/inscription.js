@@ -47,7 +47,7 @@ document.getElementById('btnInscription').addEventListener('click', function () 
         }
     })
     .catch(() => {
-        // Notification silencieuse pour l'utilisateur, pas de console.error
+        // Notification silencieuse pour l'utilisateur
         erreur.textContent = "Une erreur technique est survenue. Veuillez réessayer plus tard.";
         erreur.classList.remove('d-none');
     })

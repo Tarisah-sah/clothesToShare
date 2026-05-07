@@ -1,5 +1,5 @@
 // ==========================================
-// 1. INJECTION DE COMPOSANTS HTML (AVEC ANTI-CACHE)
+// INJECTION DE COMPOSANTS HTML
 // ==========================================
 async function chargerComposant(idConteneur, urlFichier) {
     try {
@@ -198,7 +198,7 @@ function basculerAffichageFormulaire(afficher) {
 }
 
 // ==========================================
-// BOÎTE À OUTILS UX (Toasts & Modales)
+// BOÎTE À OUTILS UX
 // ==========================================
 
 function afficherNotification(message, type = 'success') {
