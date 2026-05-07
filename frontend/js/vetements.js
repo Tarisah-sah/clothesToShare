@@ -430,7 +430,10 @@ async function chargerSelectNiveaux(prefix, idRangement) {
 
     const data = await fetchDonnees(`niveau/get_niveaux.php?idRangement=${idRangement}`);
     selectNiv.innerHTML = '<option value="">Choisir...</option>';
-    if(data) data.forEach(n => selectNiv.innerHTML += `<option value="${n.idNiveau}">${n.nom}</option>`);
+    if(data) data.forEach(n => { 
+        const info = n.infoNiveau ? ` (${n.infoNiveau})` : '';
+        selectNiv.innerHTML += `<option value="${n.idNiveau}">${n.nom}${info}</option>`;
+    });
     selectNiv.disabled = false;
 }
 
