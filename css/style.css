@@ -1,5 +1,5 @@
 /* ==========================================
-   1. THÈME GLOBAL ET UTILITAIRES
+   THÈME GLOBAL ET UTILITAIRES
    ========================================== */
 
 /* Le fond dégradé fixe pour TOUTES les pages */
@@ -24,7 +24,7 @@ body {
 .lien-rose:hover { text-decoration: underline; }
 
 /* ==========================================
-   2. FORMULAIRES (Login & Inscription)
+   FORMULAIRES (Login & Inscription)
    ========================================== */
 
 /* Centrage vertical de la page de connexion/inscription */
@@ -66,7 +66,7 @@ body {
 .btn-rose:disabled { background: #f48fb1; cursor: not-allowed; }
 
 /* ==========================================
-   3. CARTES VÊTEMENTS & ANIMATIONS
+   CARTES VÊTEMENTS & ANIMATIONS
    ========================================== */
 
 /* Design global des cartes (Vêtements, Admin, etc.) */
@@ -96,7 +96,7 @@ body {
 }
 
 /* ==========================================
-   4. ARBORESCENCE (Bulles d'exploration)
+   Bulles d'exploration
    ========================================== */
 
 .bulle {
@@ -142,7 +142,7 @@ body {
 }
 
 /* ==========================================
-   5. COMPOSANTS SPÉCIFIQUES & FILTRES
+   COMPOSANTS SPÉCIFIQUES & FILTRES
    ========================================== */
 
 /* Bulle de profil */
@@ -172,7 +172,7 @@ input#c-marron:checked + label {
 }
 
 /* ==========================================
-   6. ESPACE ADMIN & DEMANDES D'INSCRIPTION
+   ESPACE ADMIN & DEMANDES D'INSCRIPTION
    ========================================== */
 
 #panneau-admin { display: none; }
@@ -224,7 +224,7 @@ input#c-marron:checked + label {
 }
 
 /* ==========================================
-   7. ANIMATIONS DE TRANSITION (FLUIDITÉ DE L'APP)
+   ANIMATIONS DE TRANSITION (FLUIDITÉ DE L'APP)
    ========================================== */
 
 /* Création de l'animation douce */
@@ -239,7 +239,7 @@ input#c-marron:checked + label {
     }
 }
 
-/* Classe à appliquer sur nos conteneurs */
+
 .section-animee {
     animation: apparitionDouce 0.4s ease-out forwards;
 }
