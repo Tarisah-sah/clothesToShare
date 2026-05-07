@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// Vérification session role
 if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
@@ -29,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':id' => $idLocal
     ];
 
+    // Vérifie l'ajout d'une nouvelle photo
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         
         $stmtOld = $conn->prepare("SELECT photo FROM local WHERE idLocal = :id");

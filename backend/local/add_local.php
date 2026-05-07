@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// Vérification roles
 if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé. Réservé aux administrateurs.']);
@@ -20,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Ajout du chemin de la photo
     $chemin_db = null;
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
@@ -33,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // On prépare et execute la requete d'ajout
     try {
         $stmt = $conn->prepare("INSERT INTO local (nom, infoLocal, idSite, photo) VALUES (:nom, :infoLocal, :idSite, :photo)");
         $stmt->execute([':nom' => $nom, ':infoLocal' => $infoLocal, ':idSite' => $idSite, ':photo' => $chemin_db]);

@@ -16,7 +16,7 @@ function pdo_connectDB() {
     try {
         return new PDO($dsn, $user, $pass, $options);
     } catch (\PDOException $e) {
-        // Sécurité : On ne renvoie pas $e->getMessage() qui contient des infos sensibles
+        // On renvoie un message d'erreur générique pour la sécurité.
         header('Content-Type: application/json');
         echo json_encode(["status" => "error", "message" => "Impossible de se connecter à la base de données."]);
         exit;

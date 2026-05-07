@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// Vérifier les droits
 if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
@@ -20,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     }
 
     try {
-        // Sécurité : On vérifie si des vêtements utilisent cette catégorie
+        // On vérifie si des vêtements utilisent cette catégorie
         $stmtCheck = $conn->prepare("SELECT COUNT(*) FROM vetement WHERE idcategorie = ?");
         $stmtCheck->execute([$id]);
         if ($stmtCheck->fetchColumn() > 0) {
