@@ -15,6 +15,7 @@ try {
     $stmtPhoto->execute([$id]);
     $niveau = $stmtPhoto->fetch(PDO::FETCH_ASSOC);
 
+    // On déplace les habits et on supprime le niveau
     $conn->prepare("UPDATE vetement SET idniveau = 1 WHERE idniveau = ?")->execute([$id]);
     $conn->prepare("DELETE FROM niveau WHERE idNiveau = ?")->execute([$id]);
 

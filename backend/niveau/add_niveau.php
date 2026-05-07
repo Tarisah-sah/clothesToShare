@@ -3,7 +3,7 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 
-// Petit contrôle de sécurité
+// Contrôle de sécurité
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
     exit;

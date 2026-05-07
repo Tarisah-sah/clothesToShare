@@ -15,6 +15,7 @@ try {
     $stmtPhoto->execute([$id]);
     $rangement = $stmtPhoto->fetch(PDO::FETCH_ASSOC);
 
+    // On déplace les habits et on supprime les niveaux associés avant de supprimer le rangement en lui mm
     $conn->prepare("UPDATE vetement v JOIN niveau n ON v.idniveau = n.idNiveau SET v.idniveau = 1 WHERE n.idRangement = ?")->execute([$id]);
     $conn->prepare("DELETE FROM niveau WHERE idRangement = ?")->execute([$id]);
     $conn->prepare("DELETE FROM rangement WHERE idRangement = ?")->execute([$id]);

@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conn->beginTransaction();
 
-        // 1. On passe le vêtement dans l'état "Au lavage"
+        // On passe le vêtement dans l'état "Au lavage"
         $stmtVet = $conn->prepare("UPDATE vetement SET etat = 'Au lavage' WHERE idvetement = ?");
         $stmtVet->execute([$idvetement]);
 
-        // 2. On clôture le prêt actif dans l'historique
+        // On clôture le prêt actif
         $stmtPret = $conn->prepare("UPDATE pret SET statutpret = 'Terminé', datefinreelle = NOW() WHERE idvetement = ? AND statutpret IN ('En prêt', 'Retour en attente')");
         $stmtPret->execute([$idvetement]);
 

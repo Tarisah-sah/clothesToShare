@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idvetement = $_POST['idvetement'];
     
     try {
-        // SÉCURITÉ : Vérifier que celui qui clique est bien l'emprunteur
         $stmtCheck = $conn->prepare("SELECT idemprunteur FROM pret WHERE idvetement = ? AND statutpret = 'En prêt'");
         $stmtCheck->execute([$idvetement]);
         $emprunteur = $stmtCheck->fetchColumn();

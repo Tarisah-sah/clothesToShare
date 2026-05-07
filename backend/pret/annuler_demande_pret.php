@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->beginTransaction();
 
     try {
-        // 1. On supprime la demande de prêt uniquement si elle est "En attente"
+        // On supprime la demande de prêt uniquement si elle est "En attente"
         $sqlDeletePret = "DELETE FROM pret WHERE idvetement = :idv AND idemprunteur = :idu AND statutpret = 'En attente'";
         $stmt = $conn->prepare($sqlDeletePret);
         $stmt->execute([':idv' => $idVetement, ':idu' => $idUtilisateur]);

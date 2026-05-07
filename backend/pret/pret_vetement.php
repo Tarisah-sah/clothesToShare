@@ -15,8 +15,7 @@ $conn = pdo_connectDB();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vetement_idvetement = $_POST['idvetement'];
     
-    // Si un emprunteur spécifique est envoyé (cas du propriétaire qui prête à un ami)
-    // on l'utilise. Sinon, c'est l'utilisateur connecté qui s'auto-emprunte le vêtement.
+    // Soit on choisit l'emprunteur, soit on s'auto-prete
     if (isset($_POST['idutilisateur']) && !empty($_POST['idutilisateur'])) {
         $utilisateur_idutilisateur = $_POST['idutilisateur'];
     } else {
@@ -26,8 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vetement_datefinpret = $_POST['datefinpret'] ?? null;
     $vetement_datedebut = $_POST['datedebut'] ?? null;
     
-    // Quand on force un prêt via le bouton "Prêter" de l'Admin/Owner, le prêt est directement "En prêt", pas "En attente" !
-    // Il faut qu'on distingue les deux cas.
     $estProprietaire = false;
     
     // On vérifie si l'utilisateur qui fait l'action est le propriétaire du vêtement
@@ -39,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $estProprietaire = true;
     }
 
-    // Si c'est le proprio qui force le prêt, c'est direct "En prêt", sinon c'est "Demande en cours" / "En attente"
+    // Si c'est le proprio qui fait le prêt, c'est direct "En prêt", sinon c'est "Demande en cours" / "En attente"
     $statutpret = $estProprietaire ? 'En prêt' : 'En attente'; 
     $etat_vetement = $estProprietaire ? 'En prêt' : 'Demande en cours';
     
@@ -63,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':statutpret' => $statutpret
         ];
 
-        // Si le propriétaire valide directement le prêt, la date de début c'est "maintenant" !
+        // Si le propriétaire valide directement le prêt, la date de début c'est "maintenant"
         if ($estProprietaire && empty($vetement_datedebut)) {
              $vetement_datedebut = date('Y-m-d');
         }
