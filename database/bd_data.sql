@@ -1,6 +1,6 @@
+CREATE Database if not EXISTS clothet53;
 USE clothet53;
 
-/* BASES DE DONNEES */
 CREATE TABLE IF NOT EXISTS site (
 	idSite INT(20) NOT NULL AUTO_INCREMENT,
 	nom VARCHAR(50) NOT NULL,
@@ -122,14 +122,14 @@ ALTER TABLE pret
 
 /* DONNEES */
 INSERT INTO site(idSite, nom, adresse, code_postal, localite, photo) VALUES
-(1, 'CToS - Durbuy', "Chaussée de la Princesse 67", 6940, "Durbuy", 'assets/icons/ctos.png'),
-(2, 'CToS - Charleroi', "Grand Rue 1", 6000, "Charleroi", 'assets/icons/ctos.png'),
-(3, 'CToS - La Louvière', "Rue Ferrer 193", 7100, "Haine-Saint-Paul", 'assets/icons/ctos.png'),
-(4, 'CToS - Tournai', "Rue Frinoise 12", 7500, "Tournai", 'assets/icons/ctos.png'),
-(5, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/icons/ctos.png');
+(1, 'CToS - Durbuy', "Chaussée de la Princesse 67", 6940, "Durbuy", ' assets/img/site/site_69fccf164bce5.png'),
+(2, 'CToS - Charleroi', "Grand Rue 1", 6000, "Charleroi", 'assets/img/site/site_69fccf631ee50.png'),
+(3, 'CToS - La Louvière', "Rue Ferrer 193", 7100, "Haine-Saint-Paul", 'assets/img/site/site_69fcce2fea8fc.png'),
+(4, 'CToS - Tournai', "Rue Frinoise 12", 7500, "Tournai", 'assets/img/site/site_69fcce9268edf.png'),
+(5, 'CToS - Mons', "Chaussée de Binche 159", 7000, "Mons", 'assets/img/site/site_69fcceeb05c24.png');
 
 INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
-(1, 'Reserve CToS', "Vetements et accessoires en attente de catégorisation.", 1, 'assets/icons/ctos.png'),
+(1, 'Reserve CToS', "Vetements et accessoires en attente de catégorisation.", 1, 'assets/img/local/local_69fccfa094172.png'),
 (2, 'Chic', "Vetements et accessoires chic.", 2, 'assets/img/local/chic.jpg'),
 (3, 'Business', "Vetements et accessoires professionnels.", 3, 'assets/img/local/Business.jpg'),
 (4, 'Boheme', "Vetements et accessoires boho.", 4, 'assets/img/local/boho.jpg'),
@@ -143,7 +143,7 @@ INSERT INTO local(idLocal, nom, infoLocal, idSite, photo) VALUES
 
 /* RANGEMENTS */
 INSERT INTO `rangement` (`idRangement`, `nom`, `infoRangement`, `idLocal`, `photo`) VALUES
-(1, 'Armoire réserve', 'Grande armoire pour toutes sortes de vetements et accessoires.', 1, NULL),
+(1, 'Armoire réserve', 'Grande armoire pour toutes sortes de vetements et accessoires.', 1, 'assets/img/rangement/rangement_69fc90e1abe35.png'),
 (2, 'Armoire pour vetements', 'Grande armoire avec portes coulissantes contenant toutes sortes de vetements basiques.', 10, 'assets/img/rangement/rangement_69efcf479356c.jpg'),
 (3, 'Commode pour accessoires', 'Commode à tiroirs pour les accessoires basiques.', 10, 'assets/img/rangement/rangement_69efcf829fdc8.jpg'),
 (4, 'Meuble à chaussures', 'Rangement pour les chaussures.', 10, 'assets/img/rangement/rangement_69efcfa99dfe4.jpg'),
@@ -177,7 +177,7 @@ INSERT INTO `rangement` (`idRangement`, `nom`, `infoRangement`, `idLocal`, `phot
 
 /* NIVEAUX */
 INSERT INTO `niveau` (`idNiveau`, `nom`, `infoNiveau`, `idRangement`, `photo`) VALUES
-(1, 'Penderie reserve', 'Pour tout type des vetements et accessoires.', 1, NULL),
+(1, 'Penderie reserve', 'Pour tout type des vetements et accessoires.', 1, 'assets/img/niveau/niveau_69fcc761edb4e.png'),
 (2, 'Penderie', 'Pour les vestes, chemises et manteaux basiques', 2, 'assets/img/niveau/niveau_69efd382daa48.jpg'),
 (3, 'Étagères', 'Pour les t-shirts et pulls', 2, 'assets/img/niveau/niveau_69efd2c68c4a1.jpg'),
 (4, 'Tiroirs bas', 'Pour les pantalons, jeans et shorts', 2, 'assets/img/niveau/niveau_69efd3e751333.jpg'),
@@ -269,7 +269,5 @@ INSERT INTO utilisateur(idutilisateur, email, nom, prenom, adresse, login, mdp, 
 (4, 'feliciaKan@example.com', 'Kanud', "Felicia", "321 Super Rd", "fekan", "$2y$10$s3uvW27negmw1w/eHQ6HhO7JdX7yj3WB78Y/1TV8DJMvdOykRWD7i", 'user');
 
 INSERT INTO vetement(idvetement, nom, taille, type, couleur, etat, genre, marque, photo, idcategorie, idniveau, idproprietaire, description) VALUES
-(1, 'T-shirt Running Pro', 'M', 'Haut', 'Noir', 'Disponible', 'homme', 'Nike', 'assets/img/wardrobe/tshirt_nike.jpg', 8, 3, 1, 'T-shirt très respirant, idéal pour le jogging. Très bon état.'),
-(2, 'Sacoche en cuir', 'TU', 'Sac', 'Marron', 'Disponible', 'mixte', 'Fossil', 'assets/img/wardrobe/sacoche_fossil.jpg', 6, 6, 2, 'Petite sacoche pratique pour tous les jours.'),
-(3, 'Pyjama Ensemble', 'L', 'Ensemble', 'Noir', 'Au lavage', 'femme', 'Etam', 'assets/img/wardrobe/pyjama_etam.jpg', 9, 4, 3, 'Ensemble classique tres beau. Ideal pour les soirée pyjama.'),
-(4, 'Bijoux vancleef', 'TU', 'Bracelet', 'Doré', 'Disponible', 'femme', 'VanCleef', 'assets/img/wardrobe/vancleef.jpg', 7, 12, 1, 'Bijoux Vancleef tendance.');
+(1, 'Talons hauts bottines', '38', 'Chaussures', 'Rose', 'Disponible', 'femme', 'Sans marque', 'assets/img/wardrobe/v_69fcd1b2682df.jpg', 5, 64, 1, 'Super comfortable !'),
+(2, 'Bracelet Vancleef', 'TU', 'Bracelet', 'Doré', 'Disponible', 'Femme', 'VanCleef', 'assets/img/wardrobe/v_69fcd3637ab36.jpg', 7, 12, 1, 'Ajout parfait à votre tenue chic !');
