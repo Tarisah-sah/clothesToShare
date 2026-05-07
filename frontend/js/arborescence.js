@@ -97,7 +97,15 @@ async function chargerBulles(type, parentId) {
         return; 
     }
 
+    // On récupère les données principales (les bulles à afficher)
     const data = await fetchDonnees(url);
+    
+    // Sur l'écran des sites, on télécharge les locaux en avance
+    let locauxData = [];
+    if (type === 'sites') {
+        locauxData = await fetchDonnees('local/get_locaux.php');
+    }
+
     conteneur.innerHTML = '';
 
     if (data && data.length > 0) {
@@ -112,14 +120,38 @@ async function chargerBulles(type, parentId) {
             if (type === 'rangements') { prochainType = 'niveaux'; itemId = item.idRangement; }
             if (type === 'niveaux') { prochainType = 'vetements'; itemId = item.idNiveau; }
 
+            // On crée la bulle standard
             const bulle = document.createElement('div');
             bulle.className = 'bulle shadow-sm';
             bulle.style.backgroundImage = `url('${photoUrl}')`;
             bulle.innerHTML = `<div class="bulle-texte">${item.nom}</div>`;
-            
             bulle.addEventListener('click', () => chargerBulles(prochainType, itemId));
             
-            conteneur.appendChild(bulle);
+            // Injection du tooltip UNIQUEMENT pour les sites
+            if (type === 'sites') {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bulle-container';
+                
+                // On cherche les locaux qui appartiennent à ce site
+                const locauxDuSite = locauxData ? locauxData.filter(l => l.idSite == item.idSite) : [];
+                
+                let htmlPreview = '';
+                if (locauxDuSite.length > 0) {
+                    const listeNoms = locauxDuSite.map(l => `<i class="bi bi-door-open-fill me-1"></i> ${l.nom}`).join('<br>');
+                    htmlPreview = `<div class="locaux-preview fw-bold text-start">${listeNoms}</div>`;
+                } else {
+                    htmlPreview = `<div class="locaux-preview text-muted small">Aucun local</div>`;
+                }
+                
+                // On met le tout dans le wrapper
+                wrapper.appendChild(bulle);
+                wrapper.insertAdjacentHTML('beforeend', htmlPreview);
+                conteneur.appendChild(wrapper);
+            } 
+            // Pour les autres (locaux, rangements, etc.), on affiche la bulle normalement
+            else {
+                conteneur.appendChild(bulle);
+            }
         });
     } else {
         conteneur.innerHTML = '<p class="text-muted">Aucun élément trouvé ici.</p>';

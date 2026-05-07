@@ -2,7 +2,7 @@
    THÈME GLOBAL ET UTILITAIRES
    ========================================== */
 
-/* Le fond dégradé fixe pour TOUTES les pages */
+/* Le fond dégradé fixe */
 body {
     min-height: 100vh;
     background: linear-gradient(135deg, #fce4ec 0%, #fdf6f9 60%, #f8bbd0 100%);
@@ -10,13 +10,13 @@ body {
     color: #333;
 }
 
-/* Couleur unifiée pour la barre de navigation */
+/* Couleur pour la barre de navigation */
 .navbar-theme {
     background-color: #ad1457 !important;
     box-shadow: 0 2px 10px rgba(173, 20, 87, 0.3);
 }
 
-/* Couleurs des textes et liens (Centralisées) */
+/* Couleurs des textes et liens */
 .titre-app  { color: #ad1457 !important; }
 .sous-titre { color: #c2185b !important; }
 .text-theme { color: #e91e8c !important; }
@@ -42,7 +42,6 @@ body {
     padding: 2rem;
 }
 
-/* Style des champs de saisie */
 .champ-rose {
     border: 1.5px solid #f48fb1;
     border-radius: 12px;
@@ -142,6 +141,58 @@ body {
 }
 
 /* ==========================================
+   Tooltip des locaux pour les bulles sites
+   ========================================== */
+
+/* Le conteneur qui englobe la bulle ET le tooltip */
+.bulle-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* La boîte qui contient le texte */
+.locaux-preview {
+    position: absolute;
+    top: 100%;
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #f48fb1;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    color: #ad1457;
+    box-shadow: 0 4px 12px rgba(233, 30, 140, 0.15);
+    
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 10;
+    
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.locaux-preview::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 6px 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent #f48fb1 transparent;
+}
+
+.bulle-container:hover .locaux-preview {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ==========================================
    COMPOSANTS SPÉCIFIQUES & FILTRES
    ========================================== */
 
@@ -224,10 +275,9 @@ input#c-marron:checked + label {
 }
 
 /* ==========================================
-   ANIMATIONS DE TRANSITION (FLUIDITÉ DE L'APP)
+   Animations de transitions
    ========================================== */
 
-/* Création de l'animation douce */
 @keyframes apparitionDouce {
     from {
         opacity: 0;
@@ -250,16 +300,15 @@ input#c-marron:checked + label {
             color: white;
             padding: 100px 0;
             margin-bottom: 2rem;
-            border-radius: 0 0 40px 40px; /* Arrondi moderne en bas */
+            border-radius: 0 0 40px 40px;
             box-shadow: 0 10px 30px rgba(173, 20, 87, 0.2);
         }
         .feature-icon {
             font-size: 3.5rem;
-            color: #e91e8c; /* Rose du thème */
+            color: #e91e8c;
             margin-bottom: 15px;
             transition: transform 0.3s ease;
         }
-        /* Petite animation de l'icône quand on survole la carte */
         .card:hover .feature-icon {
             transform: scale(1.1) translateY(-5px); 
         }
