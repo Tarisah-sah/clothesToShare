@@ -171,7 +171,7 @@ async function chargerSites() {
 function ouvrirModalAjoutSite() {
     document.getElementById('form-site').reset();
     document.getElementById('site-id').value = "";
-    document.getElementById('modalSiteTitre').textContent = "Ajouter une site";
+    document.getElementById('modalSiteTitre').textContent = "Ajouter un site";
 
     const inputPhoto = document.getElementById('site-photo');
     if (inputPhoto) inputPhoto.value = "";

@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['idutilisateur']) || $_SESSION['role'] !== 'admin') {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['status' => 'error', 'message' => 'Accès refusé.']);
@@ -47,23 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        // A. On va d'abord chercher l'ancienne photo pour pouvoir la supprimer plus tard
         $stmtOld = $conn->prepare("SELECT photo FROM site WHERE idSite = :id");
         $stmtOld->execute([':id' => $id]);
         $oldData = $stmtOld->fetch();
 
-        // B. On sauvegarde la nouvelle image
         $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
         $nomFichier = uniqid('site_') . '.' . $extension;
         $chemin_db = 'assets/img/site/' . $nomFichier;
         $chemin_physique = '../../' . $chemin_db;
 
         if (move_uploaded_file($_FILES['photo']['tmp_name'], $chemin_physique)) {
-            // C. On ajoute la modification de la photo à la requête SQL
             $sql .= ", photo = :photo";
             $params[':photo'] = $chemin_db;
 
-            // D. On supprime physiquement l'ancienne image du serveur !
             if ($oldData && !empty($oldData['photo']) && file_exists('../../' . $oldData['photo'])) {
                 unlink('../../' . $oldData['photo']);
             }
@@ -73,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // 3. On finalise et exécute la requête
     $sql .= " WHERE idSite = :id";
 
     try {
