@@ -15,12 +15,12 @@ $conn = pdo_connectDB();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->beginTransaction();
     try {
-        // 1. Récupérer l'ancienne photo
+        // Récupérer l'ancienne photo
         $stmtPhoto = $conn->prepare("SELECT photo FROM vetement WHERE idvetement = ?");
         $stmtPhoto->execute([$_POST['idvetement']]);
         $vetement_photo = $stmtPhoto->fetchColumn();
 
-        // 2. Si une NOUVELLE photo est uploadée
+        // Si une nvelle photo est chargée
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
             $nomFichier = uniqid('v_') . '.' . $extension;
@@ -28,14 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cheminFichierPhysique = '../../' . $cheminFichierDB;
 
             if (move_uploaded_file($_FILES['photo']['tmp_name'], $cheminFichierPhysique)) {
-                // Si l'upload réussit, on met à jour la variable avec le nouveau chemin
+                // Si l'ajout réussit, on met à jour la variable avec le nouveau chemin
                 $vetement_photo = $cheminFichierDB;
             } else {
                  throw new Exception("Erreur lors de la sauvegarde de la nouvelle image.");
             }
         }
 
-        // 3. Mise à jour de la base (SÉCURITÉ : On ne permet PAS de modifier le propriétaire ici)
+        // Mise à jour de la bd
         $vetementModifSQL = "UPDATE vetement SET 
             nom = :nom, taille = :taille, type = :type, description = :description, couleur = :couleur, 
             etat = :etat, genre = :genre, marque = :marque, photo = :photo, idcategorie = :idcategorie, 
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':idcategorie' => $_POST['idcategorie'],
             ':idniveau' => $_POST['idniveau'],
             ':idvetement' => $_POST['idvetement'],
-            ':idproprietaire_session' => $_SESSION['idutilisateur'] // Sécurité : On s'assure qu'il modifie SON vêtement
+            ':idproprietaire_session' => $_SESSION['idutilisateur'] 
         ]);
 
         if ($stmt->rowCount() === 0) {
@@ -67,8 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
         $conn->rollBack();
-        // Masquage de l'erreur brute en production
-        $messageErreur = strpos($e->getMessage(), 'SQLSTATE') !== false ? "Erreur base de données lors de la modification." : $e->getMessage();
+        $messageErreur = 'Erreur lors de la modification.';
         echo json_encode(['status' => 'error', 'message' => $messageErreur]);
     }
 }

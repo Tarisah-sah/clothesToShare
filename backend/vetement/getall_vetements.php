@@ -20,7 +20,7 @@ try {
         $sql = $sqlBase . " WHERE v.idniveau = :idNiveau";
         $params = [':idNiveau' => $idNiveau];
         
-        // MODIFICATION : On exclut les vêtements de l'utilisateur de l'Explorer
+        // On exclut les vêtements de l'utilisateur de l'Explorer
         if ($userId) {
             $sql .= " AND v.idproprietaire != :uid1 AND (p.idemprunteur IS NULL OR p.idemprunteur != :uid2)";
             $params[':uid1'] = $userId;

@@ -3,7 +3,7 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 include('../connexion/db_connect.php');
 
-// Vérification de sécurité basique
+// Sécurité basique
 if (!isset($_SESSION['idutilisateur'])) {
     echo json_encode(['status' => 'error', 'message' => 'Non autorisé.']);
     exit;
@@ -18,21 +18,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || $_SERVER['REQUEST_METHOD'] === 'P
 
     if ($idVetement) {
         try {
-            // 1. AVANT de supprimer, on récupère le chemin de la photo
+            // on récupère le chemin de la photo
             $stmtInfo = $conn->prepare("SELECT photo FROM vetement WHERE idvetement = :id");
             $stmtInfo->execute([':id' => $idVetement]);
             $vetement = $stmtInfo->fetch(PDO::FETCH_ASSOC);
 
-            // 2. On supprime tout l'historique des prêts de ce vêtement
+            // On supprime tout l'historique des prêts de ce vêtement
             $stmtDeletePret = $conn->prepare("DELETE FROM pret WHERE idvetement = :id");
             $stmtDeletePret->execute([':id' => $idVetement]);
 
-            // 3. Maintenant on peut supprimer le vêtement de la base de données en toute sécurité
+            // on peut supprime le vêtement de la base de données en toute sécurité
             $stmtDelete = $conn->prepare("DELETE FROM vetement WHERE idvetement = :id");
             
             if ($stmtDelete->execute([':id' => $idVetement])) {
                 
-                // 4. On efface le vrai fichier image du serveur s'il existe
+                // On efface le vrai fichier image du serveur s'il existe
                 if ($vetement && !empty($vetement['photo'])) {
                     $cheminPhysique = '../../' . $vetement['photo'];
                     if (file_exists($cheminPhysique)) {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || $_SERVER['REQUEST_METHOD'] === 'P
                 echo json_encode(['status' => 'error', 'message' => 'Échec de la suppression en base.']);
             }
         } catch (Exception $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'Echec de la suppression']);
         }
     } else {
         echo json_encode(['status' => 'error', 'message' => 'ID du vêtement manquant.']);

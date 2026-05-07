@@ -7,7 +7,7 @@ $conn = pdo_connectDB();
 $userId = $_GET['userId'] ?? null;
 $mode = $_GET['mode'] ?? 'accueil';
 
-// 1. Requête principale alignée avec l'affichage de l'accueil
+// Requête principale
 $sql = "SELECT v.*, p.idemprunteur, p.datefinprevue, p.datedebut, u.login as nom_emprunteur, n.idRangement, r.idLocal 
         FROM vetement v 
         LEFT JOIN pret p ON v.idvetement = p.idvetement AND p.statutpret IN ('En prêt', 'Retour en attente', 'En attente')
@@ -18,7 +18,7 @@ $sql = "SELECT v.*, p.idemprunteur, p.datefinprevue, p.datedebut, u.login as nom
 
 $params = [];
 
-// 2. Application dynamique de TOUS les filtres
+// Appliction de tous les filtres
 if (!empty($_GET['motcle'])) {
     $sql .= " AND (v.nom LIKE :txt1 OR v.marque LIKE :txt2 OR v.description LIKE :txt3)";
     $motcle = "%" . $_GET['motcle'] . "%";
@@ -51,7 +51,7 @@ if (!empty($_GET['marque'])) {
     $params[':marque'] = "%" . $_GET['marque'] . "%";
 }
 
-// 3. Gestion spécifique des couleurs (Sélection multiple)
+// Gestion des couleurs (Sélection multiple)
 if (!empty($_GET['couleurs'])) {
     $listeCouleurs = explode(',', $_GET['couleurs']);
     $couleurConditions = [];
@@ -63,7 +63,7 @@ if (!empty($_GET['couleurs'])) {
     $sql .= " AND (" . implode(" OR ", $couleurConditions) . ")";
 }
 
-// 4. CORRECTION DU BUG : Utilisation de variables uniques (:uid1 et :uid2)
+// Utilisation de variables uniques (:uid1 et :uid2)
 if ($mode === 'accueil' && $userId) {
     $sql .= " AND v.idproprietaire != :uid1 AND (p.idemprunteur IS NULL OR p.idemprunteur != :uid2)";
     $params[':uid1'] = $userId;
@@ -79,6 +79,6 @@ try {
     $stmt->execute($params);
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la recherche.']);
 }
 ?>
