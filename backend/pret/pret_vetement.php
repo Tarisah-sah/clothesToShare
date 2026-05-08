@@ -23,7 +23,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $vetement_datefinpret = $_POST['datefinpret'] ?? null;
-    $vetement_datedebut = $_POST['datedebut'] ?? null;
+    $vetement_datedebut = $_POST['datedebut'] ?? null; 
+    $aujourdhui = date('Y-m-d');
+
+    // Pas de dates dans le passé
+    if (!empty($vetement_datedebut) && $vetement_datedebut < $aujourdhui) {
+        echo json_encode(['status' => 'error', 'message' => 'La date de début ne peut pas être dans le passé.']);
+        exit;
+    }
+
+    if (!empty($vetement_datefinpret) && $vetement_datefinpret < $aujourdhui) {
+        echo json_encode(['status' => 'error', 'message' => 'La date de fin ne peut pas être dans le passé.']);
+        exit;
+    }
+
+    if (!empty($vetement_datedebut) && !empty($vetement_datefinpret)) {
+        if ($vetement_datefinpret < $vetement_datedebut) {
+            echo json_encode(['status' => 'error', 'message' => 'La date de fin doit être ultérieure au début.']);
+            exit;
+        }
+    }
     
     $estProprietaire = false;
     

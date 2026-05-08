@@ -13,8 +13,8 @@
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="search-texte" placeholder="Ex: Zara, L, Rouge...">
-                            <label for="search-texte">Mot-clé (Général)</label>
+                            <input type="text" class="form-control" id="search-texte" placeholder="Ex: Zara, Rouge, Veste...">
+                            <label for="search-texte">Mot-clé (Nom, Marque, Couleur...)</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
@@ -70,46 +70,11 @@
                     </div>
                 </div>
 
-                <div class="row align-items-center bg-light p-3 rounded mx-0 border">
-                    
-                    <div class="col-12 col-xl-8 mb-3 mb-xl-0">
-                        <label class="form-label small fw-bold text-muted mb-2 d-block">Couleurs</label>
-                        <div class="d-flex flex-wrap gap-2">
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-noir" value="Noir">
-                            <label class="btn btn-outline-dark btn-sm rounded-pill px-3" for="c-noir">Noir</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-blanc" value="Blanc">
-                            <label class="btn btn-outline-secondary btn-sm rounded-pill px-3" for="c-blanc">Blanc</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-rouge" value="Rouge">
-                            <label class="btn btn-outline-danger btn-sm rounded-pill px-3" for="c-rouge">Rouge</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-bleu" value="Bleu">
-                            <label class="btn btn-outline-primary btn-sm rounded-pill px-3" for="c-bleu">Bleu</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-rose" value="Rose">
-                            <label class="btn btn-sm rounded-pill px-3" for="c-rose" style="color: #e91e8c; border: 1px solid #f48fb1;">Rose</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-marron" value="Marron">
-                            <label class="btn btn-sm rounded-pill px-3" for="c-marron" style="color: #795548; border: 1px solid #795548;">Marron</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-vert" value="Vert">
-                            <label class="btn btn-outline-success btn-sm rounded-pill px-3" for="c-vert">Vert</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-jaune" value="Jaune">
-                            <label class="btn btn-outline-warning btn-sm rounded-pill px-3" for="c-jaune">Jaune</label>
-
-                            <input type="checkbox" class="btn-check couleur-checkbox" id="c-autre" value="Autre">
-                            <label class="btn btn-sm rounded-pill px-3" for="c-autre" style="border-style: dashed;">Autre</label>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-xl-4 d-flex gap-2 justify-content-xl-end mt-2 mt-xl-0 border-start-xl ps-xl-4">
-                        <button type="button" class="btn btn-light border" id="btn-reset-recherche">Réinitialiser</button>
-                        <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm" style="background-color: #ad1457; border-color: #ad1457;">Filtrer</button>
-                    </div>
-                    
+                <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                    <button type="button" class="btn btn-light border" id="btn-reset-recherche">Réinitialiser</button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm" style="background-color: #ad1457; border-color: #ad1457;">Filtrer</button>
                 </div>
+                
             </form>
         </div>
     </div>

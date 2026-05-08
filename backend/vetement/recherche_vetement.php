@@ -20,11 +20,12 @@ $params = [];
 
 // Appliction de tous les filtres
 if (!empty($_GET['motcle'])) {
-    $sql .= " AND (v.nom LIKE :txt1 OR v.marque LIKE :txt2 OR v.description LIKE :txt3)";
+    $sql .= " AND (v.nom LIKE :txt1 OR v.marque LIKE :txt2 OR v.description LIKE :txt3 OR v.couleur LIKE :txt4)";
     $motcle = "%" . $_GET['motcle'] . "%";
     $params[':txt1'] = $motcle;
     $params[':txt2'] = $motcle;
     $params[':txt3'] = $motcle;
+    $params[':txt4'] = $motcle;
 }
 if (!empty($_GET['categorie'])) {
     $sql .= " AND v.idcategorie = :cat";
@@ -49,18 +50,6 @@ if (!empty($_GET['type'])) {
 if (!empty($_GET['marque'])) {
     $sql .= " AND v.marque LIKE :marque";
     $params[':marque'] = "%" . $_GET['marque'] . "%";
-}
-
-// Gestion des couleurs (Sélection multiple)
-if (!empty($_GET['couleurs'])) {
-    $listeCouleurs = explode(',', $_GET['couleurs']);
-    $couleurConditions = [];
-    foreach ($listeCouleurs as $index => $couleur) {
-        $paramName = ":coul" . $index;
-        $couleurConditions[] = "v.couleur LIKE " . $paramName;
-        $params[$paramName] = "%" . trim($couleur) . "%";
-    }
-    $sql .= " AND (" . implode(" OR ", $couleurConditions) . ")";
 }
 
 // Utilisation de variables uniques (:uid1 et :uid2)

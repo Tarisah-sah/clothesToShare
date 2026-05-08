@@ -115,9 +115,6 @@ async function filtrerVetements(event) {
     const type = document.getElementById('search-type').value.trim();
     const marque = document.getElementById('search-marque').value.trim();
 
-    const checkboxesCouleurs = document.querySelectorAll('.couleur-checkbox:checked');
-    const couleurs = Array.from(checkboxesCouleurs).map(cb => cb.value).join(',');
-
     const params = new URLSearchParams();
     if (texte) params.append('motcle', texte);
     if (categorie) params.append('categorie', categorie);
@@ -126,7 +123,6 @@ async function filtrerVetements(event) {
     if (genre) params.append('genre', genre);
     if (type) params.append('type', type);
     if (marque) params.append('marque', marque);
-    if (couleurs) params.append('couleurs', couleurs);
 
     const userJson = sessionStorage.getItem('user');
     const user = userJson ? JSON.parse(userJson) : null;
@@ -506,9 +502,20 @@ function initialiserEcouteursVetements() {
         btnEmprunt.addEventListener('click', async () => {
             const dateDebut = document.getElementById('emprunt-date-debut').value; 
             const dateFin = document.getElementById('emprunt-date-fin').value;
+            const aujourdhui = new Date().toISOString().split('T')[0];
             
             if(!dateDebut || !dateFin) {
-                afficherNotification("Merci d'indiquer les dates de début et de fin de ton emprunt !", "warning");
+                afficherNotification("Merci d'indiquer les dates de ton emprunt !", "warning");
+                return;
+            }
+
+            // Vérification du temps
+            if (dateDebut < aujourdhui) {
+                afficherNotification("La date de début ne peut pas être dans le passé !", "danger");
+                return;
+            }
+            if (dateFin < dateDebut) {
+                afficherNotification("La date de fin doit être après la date de début !", "danger");
                 return;
             }
 
@@ -522,14 +529,11 @@ function initialiserEcouteursVetements() {
             const resultat = await postDonnees('pret/pret_vetement.php', formData);
             
             if (resultat && resultat.status === 'success') {
-                const modalElement = document.getElementById('modalDetailsVetement');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                modalInstance.hide();
-                
-                afficherNotification("Demande d'emprunt en attente !", "success");
+                bootstrap.Modal.getInstance(document.getElementById('modalDetailsVetement')).hide();
+                afficherNotification("Demande d'emprunt envoyée !", "success");
                 chargerVetements(modeActuel); 
             } else {
-                afficherNotification("Erreur lors de l'emprunt : " + (resultat.message || "Erreur inconnue"), "danger");
+                afficherNotification("Erreur : " + resultat.message, "danger");
             }
         });
     }
@@ -537,27 +541,38 @@ function initialiserEcouteursVetements() {
     const btnValiderPret = document.getElementById('btn-valider-pret');
     if (btnValiderPret) {
         btnValiderPret.addEventListener('click', async () => {
-            const formData = new FormData();
-            formData.append('idvetement', document.getElementById('pret-id-vetement').value);
-            formData.append('idutilisateur', document.getElementById('pret-emprunteur').value);
-            formData.append('datefinpret', document.getElementById('pret-date-fin').value);
+            const idVetement = document.getElementById('pret-id-vetement').value;
+            const idEmprunteur = document.getElementById('pret-emprunteur').value;
+            const dateFin = document.getElementById('pret-date-fin').value;
+            
+            const aujourdhui = new Date().toISOString().split('T')[0];
 
-            if (!document.getElementById('pret-emprunteur').value || !document.getElementById('pret-date-fin').value) {
+            // Vérification des champs vides
+            if (!idEmprunteur || !dateFin) {
                 afficherNotification("Merci de sélectionner un emprunteur et une date de fin.", "warning");
                 return;
             }
 
+            // Vérification de la date de fin
+            if (dateFin < aujourdhui) {
+                afficherNotification("La date de fin ne peut pas être antérieure à aujourd'hui !", "danger");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('idvetement', idVetement);
+            formData.append('idutilisateur', idEmprunteur);
+            formData.append('datefinpret', dateFin);
+            formData.append('datedebut', aujourdhui); 
+
             const resultat = await postDonnees('pret/pret_vetement.php', formData);
             
             if (resultat && resultat.status === 'success') {
-                const modalElement = document.getElementById('modalPret');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                modalInstance.hide();
-                
+                bootstrap.Modal.getInstance(document.getElementById('modalPret')).hide();
                 afficherNotification('Vêtement prêté avec succès !', 'success');
-                chargerVetements(); 
+                chargerVetements(modeActuel); 
             } else {
-                afficherNotification("Erreur lors du prêt : " + (resultat.message || "Erreur inconnue"), "danger");
+                afficherNotification("Erreur : " + (resultat.message || "Erreur inconnue"), "danger");
             }
         });
     }
