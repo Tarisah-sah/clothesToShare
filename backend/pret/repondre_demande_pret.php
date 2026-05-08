@@ -18,12 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt2->execute([$idvetement]);
             
         } else if ($action === 'refuser') {
-            // Le propriétaire refuse : le vêtement redevient "Disponible", et le prêt est annulé
+            // Le propriétaire refuse : le vêtement redevient "Disponible"
             $stmt = $conn->prepare("UPDATE vetement SET etat = 'Disponible' WHERE idvetement = ?");
             $stmt->execute([$idvetement]);
             
-            // On modifie le statut
-            $stmt2 = $conn->prepare("UPDATE pret SET statutpret = 'Refusé', datefinreelle = NOW() WHERE idvetement = ? AND statutpret = 'En attente'");
+            // On supprime purement et simplement la ligne de la demande de prêt
+            $stmt2 = $conn->prepare("DELETE FROM pret WHERE idvetement = ? AND statutpret = 'En attente'");
             $stmt2->execute([$idvetement]);
         }
 
