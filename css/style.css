@@ -210,18 +210,6 @@ body {
     justify-content: center;
 }
 
-/* Filtres de recherche personnalisés (Couleurs) */
-input#c-rose:checked + label {
-    background-color: #e91e8c !important;
-    color: white !important;
-    border-color: #e91e8c !important;
-}
-input#c-marron:checked + label {
-    background-color: #795548 !important;
-    color: white !important;
-    border-color: #795548 !important;
-}
-
 /* ==========================================
    ESPACE ADMIN & DEMANDES D'INSCRIPTION
    ========================================== */
