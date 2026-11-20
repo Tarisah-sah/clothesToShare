@@ -1,0 +1,81 @@
+<div class="card shadow-sm mb-4 border-0" id="section-recherche" style="border-radius: 12px;" class="section-animee">
+    
+    <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3 pb-2" 
+        data-bs-toggle="collapse" data-bs-target="#contenuRecherche" style="cursor: pointer;">
+        <h5 class="card-title mb-0 fw-bold" style="color: #ad1457;">Rechercher & Filtrer</h5>
+        <button class="btn btn-sm btn-light rounded-circle text-muted"><i class="bi bi-chevron-double-down"></i></button>
+    </div>
+    
+    <div class="collapse" id="contenuRecherche">
+        <div class="card-body pt-2">
+            <form id="form-recherche">
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-texte" placeholder="Ex: Zara, Rouge, Veste...">
+                            <label for="search-texte">Mot-clé (Nom, Marque, Couleur...)</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" id="search-categorie">
+                                <option value="">Toutes les catégories</option>
+                            </select>
+                            <label for="search-categorie">Catégorie</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" id="search-etat">
+                                <option value="">Tous</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="En prêt">En prêt</option>
+                                <option value="Au lavage">Au lavage</option>
+                            </select>
+                            <label for="search-etat">Statut</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-marque" placeholder="Ex: Nike">
+                            <label for="search-marque">Marque</label>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-type" placeholder="Ex: Haut">
+                            <label for="search-type">Type</label>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="search-taille" placeholder="Ex: M, 38">
+                            <label for="search-taille">Taille</label>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-floating">
+                            <select class="form-select" id="search-genre">
+                                <option value="">Tous</option>
+                                <option value="mixte">Mixte</option>
+                                <option value="homme">Homme</option>
+                                <option value="femme">Femme</option>
+                            </select>
+                            <label for="search-genre">Genre</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                    <button type="button" class="btn btn-light border" id="btn-reset-recherche">Réinitialiser</button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm" style="background-color: #ad1457; border-color: #ad1457;">Filtrer</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>

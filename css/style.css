@@ -1,0 +1,302 @@
+/* ==========================================
+   THÈME GLOBAL ET UTILITAIRES
+   ========================================== */
+
+/* Le fond dégradé fixe */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fce4ec 0%, #fdf6f9 60%, #f8bbd0 100%);
+    background-attachment: fixed;
+    color: #333;
+}
+
+/* Couleur pour la barre de navigation */
+.navbar-theme {
+    background-color: #ad1457 !important;
+    box-shadow: 0 2px 10px rgba(173, 20, 87, 0.3);
+}
+
+/* Couleurs des textes et liens */
+.titre-app  { color: #ad1457 !important; }
+.sous-titre { color: #c2185b !important; }
+.text-theme { color: #e91e8c !important; }
+.lien-rose  { color: #e91e8c; font-weight: 500; text-decoration: none; }
+.lien-rose:hover { text-decoration: underline; }
+
+/* ==========================================
+   FORMULAIRES (Login & Inscription)
+   ========================================== */
+
+/* Centrage vertical de la page de connexion/inscription */
+.page-centree {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+/* Style des cartes contenant les formulaires */
+.carte-formulaire {
+    background: #fff0f5;
+    border-radius: 20px;
+    border: 1px solid #f48fb1;
+    padding: 2rem;
+}
+
+.champ-rose {
+    border: 1.5px solid #f48fb1;
+    border-radius: 12px;
+    color: #ad1457;
+}
+.champ-rose:focus {
+    border-color: #e91e8c;
+    box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.15);
+    outline: none;
+}
+
+/* Boutons d'action principaux */
+.btn-rose {
+    background: #e91e8c;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+}
+.btn-rose:hover { background: #c2185b; color: white; }
+.btn-rose:disabled { background: #f48fb1; cursor: not-allowed; }
+
+/* ==========================================
+   CARTES VÊTEMENTS & ANIMATIONS
+   ========================================== */
+
+/* Design global des cartes (Vêtements, Admin, etc.) */
+.card {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(233, 30, 140, 0.08) !important;
+    border: none !important;
+    overflow: hidden;
+}
+
+/* Animations spécifiques au dressing */
+#liste-vetements .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; 
+    border-radius: 12px; 
+}
+#liste-vetements .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(233, 30, 140, 0.15) !important;
+}
+#liste-vetements .card .card-img-top {
+    transition: transform 0.4s ease;
+}
+#liste-vetements .card:hover .card-img-top {
+    transform: scale(1.08);
+}
+
+/* ==========================================
+   Bulles d'exploration
+   ========================================== */
+
+.bulle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.bulle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transition: background 0.3s ease;
+}
+.bulle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(233, 30, 140, 0.4); 
+}
+.bulle:hover::before {
+    background: rgba(0, 0, 0, 0.2);
+}
+.bulle-texte {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    padding: 0 10px;
+}
+
+/* ==========================================
+   Tooltip des locaux pour les bulles sites
+   ========================================== */
+
+/* Le conteneur qui englobe la bulle ET le tooltip */
+.bulle-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* La boîte qui contient le texte */
+.locaux-preview {
+    position: absolute;
+    top: 100%;
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #f48fb1;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    color: #ad1457;
+    box-shadow: 0 4px 12px rgba(233, 30, 140, 0.15);
+    
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 10;
+    
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.locaux-preview::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 6px 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent #f48fb1 transparent;
+}
+
+.bulle-container:hover .locaux-preview {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ==========================================
+   COMPOSANTS SPÉCIFIQUES & FILTRES
+   ========================================== */
+
+/* Bulle de profil */
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e91e8c;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   ESPACE ADMIN & DEMANDES D'INSCRIPTION
+   ========================================== */
+
+#panneau-admin { display: none; }
+
+.carte-demande {
+    background: #fff0f5;
+    border: 1px solid #f48fb1;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.carte-demande .info-user { flex: 1; }
+.carte-demande .info-user strong { display: block; color: #ad1457; }
+.carte-demande .info-user span  { font-size: 13px; color: #c2185b; }
+
+.btn-accepter {
+    background: #e91e8c;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.btn-accepter:hover { background: #c2185b; }
+
+.btn-refuser {
+    background: white;
+    border: 1px solid #f48fb1;
+    border-radius: 10px;
+    color: #ad1457;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.btn-refuser:hover { background: #fce4ec; }
+
+.badge-pending {
+    background: #fce4ec;
+    color: #ad1457;
+    border: 1px solid #f48fb1;
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 2px 10px;
+}
+
+/* ==========================================
+   Animations de transitions
+   ========================================== */
+
+@keyframes apparitionDouce {
+    from {
+        opacity: 0;
+        transform: translateY(15px); /* Part légèrement d'en bas */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Remonte à sa place normale */
+    }
+}
+
+
+.section-animee {
+    animation: apparitionDouce 0.4s ease-out forwards;
+}
+
+
+.hero-section {
+            background: linear-gradient(135deg, #f58bb9 0%, #d81b60 100%);
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 10px 30px rgba(173, 20, 87, 0.2);
+        }
+        .feature-icon {
+            font-size: 3.5rem;
+            color: #e91e8c;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .feature-icon {
+            transform: scale(1.1) translateY(-5px); 
+        }

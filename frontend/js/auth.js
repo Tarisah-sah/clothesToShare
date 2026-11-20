@@ -1,0 +1,136 @@
+// Vérifie si un utilisateur est connecté via le sessionStorage et met à jour l'interface
+function verifierSession() {
+    const userJson = sessionStorage.getItem('user');
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    if (user) {
+
+        // Mise à jour de la Navbar : cache le bouton Connexion, montre le Profil
+        document.getElementById('nav-login').classList.add('d-none');
+        document.getElementById('nav-profil').classList.remove('d-none');
+
+        // Calcul et affichage des initiales de l'avatar
+        const initiales = (user.prenom[0] + user.nom[0]).toUpperCase();
+        document.getElementById('avatar-initiales').textContent = initiales;
+        document.getElementById('profil-nom').textContent = user.prenom + ' ' + user.nom;
+        
+        // Affichage du rôle
+        document.getElementById('profil-role').textContent = user.role === 'admin' ? 'Administrateur' : 'Utilisateur';
+
+        // Si l'utilisateur est admin, on active les outils de gestion
+        if (user.role === 'admin') {
+            document.getElementById('lien-admin-demandes').classList.remove('d-none');
+            actualiserBadgeDemandes();
+        }
+
+        // Si l'utilisateur est admin, on met le lien
+        const adminLink = document.getElementById('nav-admin-link');
+        if (adminLink && user.role === 'admin') {
+            adminLink.style.display = 'block';
+        }
+
+        // Configuration du bouton de déconnexion
+        document.getElementById('btn-deconnexion').addEventListener('click', function (e) {
+            e.preventDefault();
+            sessionStorage.removeItem('user');
+            window.location.href = 'index.html';
+        });
+
+        // Écouteur pour ouvrir le panneau admin des demandes
+        document.getElementById('btn-voir-demandes')?.addEventListener('click', function (e) {
+            e.preventDefault();
+            chargerDemandes();
+            document.getElementById('panneau-admin').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Écouteur pour fermer le panneau admin
+        document.getElementById('btn-fermer-admin')?.addEventListener('click', function () {
+            document.getElementById('panneau-admin').style.display = 'none';
+        });
+    }
+}
+
+// Récupère le nombre de demandes en attente pour mettre à jour le badge dans le menu
+function actualiserBadgeDemandes() {
+    fetch('backend/utilisateur/getpending_utilisateurs.php')
+        .then(r => r.json())
+        .then(data => {
+            if (data.length > 0) {
+                const badge = document.getElementById('badge-nb-demandes');
+                badge.textContent = data.length;
+                badge.style.display = 'inline';
+            } else {
+                document.getElementById('badge-nb-demandes').style.display = 'none';
+            }
+        })
+        .catch(() => {});
+}
+
+// Charge et affiche la liste des utilisateurs en attente de validation dans le panneau admin
+function chargerDemandes() {
+    const liste = document.getElementById('liste-demandes');
+    liste.innerHTML = '<p class="text-muted">Chargement...</p>';
+
+    fetch('backend/utilisateur/getpending_utilisateurs.php')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.length) {
+                liste.innerHTML = '<p class="text-muted fst-italic">Aucune demande en attente.</p>';
+                return;
+            }
+            liste.innerHTML = '';
+            data.forEach(u => {
+                const div = document.createElement('div');
+                div.className = 'carte-demande mb-3';
+                div.id = 'demande-' + u.idutilisateur;
+                div.innerHTML = `
+                    <div class="info-user">
+                        <strong>${u.prenom} ${u.nom}</strong>
+                        <span>${u.email} · @${u.login}</span>
+                        <span class="d-block">${u.adresse}</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn-accepter" onclick="validerDemande(${u.idutilisateur}, 'accepter')">Accepter</button>
+                        <button class="btn-refuser"  onclick="validerDemande(${u.idutilisateur}, 'refuser')">Refuser</button>
+                    </div>
+                `;
+                liste.appendChild(div);
+            });
+        })
+        .catch(() => {
+            liste.innerHTML = '<p class="text-danger">Erreur lors du chargement des demandes.</p>';
+        });
+}
+
+// Envoie la décision de l'admin (accepter/refuser) au serveur pour un utilisateur donné
+async function validerDemande(id, action) {
+    try {
+        const response = await fetch('backend/valider_inscription.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idutilisateur: id, action: action })
+        });
+        
+        const data = await response.json(); 
+        
+        if (data.status === 'success') {
+            const carte = document.getElementById('demande-' + id);
+            if (carte) {
+                const actionLabel = action === 'accepter' ? 'Accepté' : 'Refusé';
+                carte.innerHTML = `<div class="info-user">
+                    <span class="text-success">${actionLabel}</span>
+                </div>`;
+                setTimeout(() => {
+                    carte.remove();
+                    actualiserBadgeDemandes();
+                }, 2000);
+            }
+        } else {
+            // Div d'erreur
+            console.error("Erreur serveur :", data.message);
+        }
+    } catch (error) {
+        console.error("Échec de la requête.");
+    }
+}

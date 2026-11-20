@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Administration - ClothesToShare</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body class="bg-light">
+
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-theme">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="#"><i class="bi bi-house-gear"></i> Espace Admin</a>
+                <div class="d-flex gap-3 align-items-center">
+                    <a href="dressing.html" class="text-white text-decoration-none">Retour au site</a>
+                    <button class="btn btn-sm btn-outline-light" id="btn-deconnexion-admin">Déconnexion</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container my-5">
+            <h2 class="mb-4">Tableau de bord Administrateur</h2>
+
+            <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold active" id="sites-tab" data-bs-toggle="tab" data-bs-target="#sites" type="button" role="tab">Sites</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">Catégories</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="locaux-tab" data-bs-toggle="tab" data-bs-target="#locaux" type="button" role="tab">Locaux</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="rangements-tab" data-bs-toggle="tab" data-bs-target="#rangements" type="button" role="tab">Rangements</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="niveaux-tab" data-bs-toggle="tab" data-bs-target="#niveaux" type="button" role="tab">Niveaux</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="utilisateurs-tab" data-bs-toggle="tab" data-bs-target="#utilisateurs" type="button" role="tab">Utilisateurs</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="adminTabsContent">
+
+                <div class="tab-pane fade show active" id="sites" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="input-group w-50">
+                            <span class="input-group-text bg-white border-end-0"></span>
+                            <input type="text" id="search-sites" class="form-control border-start-0 ps-0" placeholder="Rechercher un site...">
+                        </div>
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-site">+ Nouveau Site</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Adresse</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-sites">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="categories" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="input-group w-50">
+                            <span class="input-group-text bg-white border-end-0"></span>
+                            <input type="text" id="search-categories" class="form-control border-start-0 ps-0" placeholder="Rechercher une catégorie...">
+                        </div>
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-categorie">+ Nouvelle Catégorie</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Nom</th><th>Description</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-categories">
+                                    <tr><td colspan="4" class="text-center text-muted">Chargement...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="locaux" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="input-group w-50">
+                            <span class="input-group-text bg-white border-end-0"></span>
+                            <input type="text" id="search-locaux" class="form-control border-start-0 ps-0" placeholder="Rechercher un local...">
+                        </div>
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-local">+ Nouveau Local</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Informations</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-locaux">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="rangements" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="input-group w-50">
+                            <span class="input-group-text bg-white border-end-0"></span>
+                            <input type="text" id="search-rangements" class="form-control border-start-0 ps-0" placeholder="Rechercher un rangement...">
+                        </div>
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-rangement">+ Nouveau Rangement</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Local</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-rangements">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="niveaux" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="input-group w-50">
+                            <span class="input-group-text bg-white border-end-0"></span>
+                            <input type="text" id="search-niveaux" class="form-control border-start-0 ps-0" placeholder="Rechercher un niveau...">
+                        </div>
+                        <button class="btn btn-success fw-bold" id="btn-ajouter-niveau">+ Nouveau Niveau</button>
+                    </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Rangement</th><th>Informations</th><th class="text-end">Actions</th></tr>
+                                </thead>
+                                <tbody id="liste-niveaux">
+                                    <tr><td colspan="6" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="utilisateurs" role="tabpanel">
+                    <div class="d-flex justify-content-start mb-3 mt-3">
+                        <div class="input-group w-50">
+                            <span class="input-group-text bg-white border-end-0"></span>
+                            <input type="text" id="search-utilisateurs" class="form-control border-start-0 ps-0" placeholder="Rechercher un utilisateur (nom, login, rôle)...">
+                        </div>
+                    </div>
+                    <div class="card shadow-sm border-0 mt-3">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Identité</th>
+                                        <th>Login</th>
+                                        <th>Rôle (Privilèges)</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="liste-utilisateurs">
+                                    <tr><td colspan="5" class="text-center text-muted">Cliquez sur l'onglet pour charger...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+        <div class="modal fade" id="modalSite" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalSiteTitre">Site</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-site">
+                            <input type="hidden" id="site-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom *</label>
+                                <input type="text" class="form-control" id="site-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Adresse *</label>
+                                <input type="text" class="form-control" id="site-adresse" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">CP *</label>
+                                <input type="number" class="form-control" id="site-cp" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Localite *</label>
+                                <input type="text" class="form-control" id="site-localite" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du site *</label>
+                                <input type="file" class="form-control" id="site-photo" accept="image/*" capture="environment">
+                                <div class="form-text text-muted small">
+                                    Formats acceptés : JPG, PNG, WEBP. Taille max : 2 Mo.
+                                </div>
+                                <img id="site-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-site">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalCategorie" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalCategorieTitre">Catégorie</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-categorie">
+                            <input type="hidden" id="cat-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom *</label>
+                                <input type="text" class="form-control" id="cat-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Informations</label>
+                                <textarea class="form-control" id="cat-info" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-cat">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalLocal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalLocalTitre">Ajouter un local</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-local">
+                            <input type="hidden" id="local-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom du local *</label>
+                                <input type="text" class="form-control" id="local-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du local *</label>
+                                <input type="file" class="form-control" id="local-photo" accept="image/*" capture="environment">
+                                <div class="form-text text-muted small">
+                                    Formats acceptés : JPG, PNG, WEBP. Taille max : 2 Mo.
+                                </div>
+                                <img id="local-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Informations</label>
+                                <textarea class="form-control" id="local-info" rows="2"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Site *</label>
+                                <select class="form-select" id="local-idsite" required aria-placeholder="test">
+                                    <option value="">Choisir un site...</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-local">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalRangement" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalRangementTitre">Ajouter un rangement</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-rangement">
+                            <input type="hidden" id="rangement-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom du rangement *</label>
+                                <input type="text" class="form-control" id="rangement-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du rangement *</label>
+                                <input type="file" class="form-control" id="rangement-photo" accept="image/*" capture="environment">
+                                <div class="form-text text-muted small">
+                                    Formats acceptés : JPG, PNG, WEBP. Taille max : 2 Mo.
+                                </div>
+                                <img id="rangement-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Local auquel il appartient *</label>
+                                <select class="form-select" id="rangement-idlocal" required>
+                                    <option value="">Choisir un local...</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Informations</label>
+                                <textarea class="form-control" id="rangement-info" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-rangement">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalNiveau" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="modalNiveauTitre">Ajouter un niveau</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-niveau">
+                            <input type="hidden" id="niveau-id">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom du niveau (Étagère) *</label>
+                                <input type="text" class="form-control" id="niveau-nom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Photo du niveau *</label>
+                                <input type="file" class="form-control" id="niveau-photo" accept="image/*" capture="environment">
+                                <div class="form-text text-muted small">
+                                    Formats acceptés : JPG, PNG, WEBP. Taille max : 2 Mo.
+                                </div>
+                                <img id="niveau-photo-preview" src="" class="img-thumbnail mt-2 d-none" style="height: 100px;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Rangement auquel il appartient *</label>
+                                <select class="form-select" id="niveau-idrangement" required>
+                                    <option value="">Choisir un rangement...</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Informations</label>
+                                <textarea class="form-control" id="niveau-info" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="btn-sauvegarder-niveau">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="frontend/js/api.js"></script>
+        <script src="frontend/js/ui.js"></script>
+        <script src="frontend/js/admin.js"></script>
+    </body>
+</html>

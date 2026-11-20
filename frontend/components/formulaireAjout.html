@@ -1,0 +1,178 @@
+<div id="section-formulaire" style="display: none;" class="section-animee">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h3 class="card-title h5 mb-0" id="form-titre">Ajouter un vêtement</h3>
+            <button type="button" class="btn-close btn-close-white" id="btn-fermer-form"></button>
+        </div>
+        <div class="card-body">
+            <form id="form-vetement">
+                <input type="hidden" id="idproprietaire" value="1">
+                <input type="hidden" id="edit-idvetement" value="">
+
+                <div class="col-12 mb-3">
+                    <label class="form-label fw-bold">Photo du vêtement *</label>
+                    <input type="file" class="form-control" id="photo" accept="image/*" capture="environment">
+                    
+                    <div class="form-text text-muted small">
+                        Formats acceptés : JPG, PNG, WEBP. Taille max : 2 Mo.
+                    </div>
+                    
+                    <div id="preview-ajout" class="mt-2 d-none">
+                        <img src="" class="img-thumbnail" style="height: 100px;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label fw-bold">Nom du vêtement *</label>
+                        <input type="text" class="form-control" id="nom" required>
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label fw-bold">Marque</label>
+                        <input type="text" class="form-control" id="marque">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Taille *</label>
+                        <select class="form-select" id="taille" required>
+                            <option value="">Choisir...</option>
+                            <optgroup label="Universel">
+                                <option value="TU">TU (Unique)</option>
+                                <option value="XXS">XXS</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </optgroup>
+                            <optgroup label="Vêtements">
+                                <option value="34">34</option>
+                                <option value="36">36</option>
+                                <option value="38">38</option>
+                                <option value="40">40</option>
+                                <option value="42">42</option>
+                                <option value="44">44</option>
+                                <option value="46">46</option>
+                                <option value="48">48</option>
+                            </optgroup>
+                            <optgroup label="Chaussures">
+                                <option value="35">35</option>
+                                <option value="36">36</option>
+                                <option value="37">37</option>
+                                <option value="38">38</option>
+                                <option value="39">39</option>
+                                <option value="40">40</option>
+                                <option value="41">41</option>
+                                <option value="42">42</option>
+                                <option value="43">43</option>
+                                <option value="44">44</option>
+                                <option value="45">45</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Couleur *</label>
+                        <select class="form-select" id="couleur" required>
+                            <option value="">Choisir...</option>
+                            <option value="Noir">Noir</option>
+                            <option value="Blanc">Blanc</option>
+                            <option value="Gris">Gris</option>
+                            <option value="Beige">Beige</option>
+                            <option value="Marron">Marron</option>
+                            <option value="Rouge">Rouge</option>
+                            <option value="Rose">Rose</option>
+                            <option value="Bleu">Bleu</option>
+                            <option value="Vert">Vert</option>
+                            <option value="Jaune">Jaune</option>
+                            <option value="Orange">Orange</option>
+                            <option value="Violet">Violet</option>
+                            <option value="Or">Or</option>
+                            <option value="Argent">Argent</option>
+                            <option value="Multicolore">Multicolore</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Genre</label>
+                        <select class="form-select" id="genre">
+                            <option value="mixte">Mixte</option>
+                            <option value="homme">Homme</option>
+                            <option value="femme">Femme</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Type * (ex: Haut, Pantalon)</label>
+                        <input type="text" class="form-control" id="type" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Catégorie *</label>
+                        <select class="form-select" id="idcategorie_ajout" required>
+                            <option value="">Chargement...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row bg-light p-3 rounded mb-3 border mx-0">
+                    <h6 class="fw-bold text-secondary mb-3">Emplacement du vêtement *</h6>
+                    <div class="col-12 col-md-4 mb-2">
+                        <label class="form-label small fw-bold">Local</label>
+                        <select class="form-select" id="idlocal" required>
+                            <option value="">Choisir...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <label class="form-label small fw-bold">Rangement *</label>
+                        <select class="form-select" id="idrangement" required disabled>
+                            <option value="">Choisir un local d'abord...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <label class="form-label small fw-bold">Niveau (Étagère) *</label>
+                        <select class="form-select" id="idniveau" required disabled>
+                            <option value="">Choisir un rangement d'abord...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">État *</label>
+                    <select class="form-select" id="etat" required>
+                        <option value="Disponible">Disponible</option>
+                        <option value="En prêt">En prêt</option>
+                        <option value="Au lavage">Au lavage</option>
+                    </select>
+                </div>
+
+                <div id="section-pret-dynamique" class="bg-warning bg-opacity-10 p-3 rounded mb-3 border border-warning" style="display: none;">
+                    <h6 class="fw-bold text-warning-emphasis">Détails du prêt en cours</h6>
+                    <div class="mb-2">
+                        <label class="form-label small">Prêté à qui ? *</label>
+                        <select class="form-select" id="idemprunteur">
+                            <option value="">Sélectionner un utilisateur...</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Date de fin prévue *</label>
+                        <input type="date" class="form-control" id="datefinprevue">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Description *</label>
+                    <textarea class="form-control" id="description" rows="3" required></textarea>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-danger" id="btn-annuler">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
